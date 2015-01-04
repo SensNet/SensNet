@@ -143,4 +143,9 @@ public class NodesOverviewPage extends Page {
 		return lat;
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }

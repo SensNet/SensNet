@@ -38,4 +38,9 @@ public class AuthAPIPage extends APIPage {
 		resp.getWriter().println(u != null && u.isReadOnly());
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }

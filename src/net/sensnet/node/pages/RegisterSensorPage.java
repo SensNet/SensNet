@@ -25,4 +25,9 @@ public class RegisterSensorPage extends APIPage {
 		sensor.commit();
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }

@@ -79,4 +79,9 @@ public class MapPage extends Page {
 		return true;
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }

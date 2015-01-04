@@ -22,4 +22,9 @@ public class RegisterNodePage extends APIPage {
 		Node n = new Node(req);
 		n.commit();
 	}
+
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
 }

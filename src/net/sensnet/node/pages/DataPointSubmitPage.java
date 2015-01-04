@@ -22,4 +22,9 @@ public class DataPointSubmitPage extends APIPage {
 		dp.commit();
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }

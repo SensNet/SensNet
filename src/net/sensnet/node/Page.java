@@ -46,6 +46,8 @@ public abstract class Page {
 
 	public abstract boolean needsLogin();
 
+	public abstract boolean reallyNeedsLogin();
+
 	public abstract boolean needsTemplate();
 
 	public static boolean isLoggedIn(HttpServletRequest req) {

@@ -47,4 +47,9 @@ public class MainPage extends Page {
 		return false;
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }

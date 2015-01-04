@@ -29,4 +29,9 @@ public class TypeDumpPage extends APIPage {
 		}
 	}
 
+	@Override
+	public boolean reallyNeedsLogin() {
+		return false;
+	}
+
 }
