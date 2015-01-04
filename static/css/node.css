@@ -1,22 +1,24 @@
 #map {
 	width: 100vw;
-	height: 100vh;
+	height:calc(100vh - 51px);
 }
 #half-map {
 	width: 60vw;
-	height: 100vh;
+	height: calc(100vh - 51px);
 	display: inline-block;
 	float: left;
 	
 }
-
+#half-map < body {
+	overflow-y: hidden;
+}
 #node-overview {
 	width: 40vw;
 	float: right;
 	display: inline;
 	padding: 15px;
 	overflow-y:scroll;
-	height: 100vh;
+	height: calc(100vh - 51px);
 }
 .mouse-click {
 	cursor: pointer;

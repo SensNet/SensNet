@@ -39,6 +39,7 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(RegisterSensorPage.PATH, new RegisterSensorPage("Sensor"));
 		mapping.put(DataPointSubmitPage.PATH, new DataPointSubmitPage(
 				"Datapoint submit"));
+		mapping.put(MainPage.PATH, mainPage);
 		mapping.put(NodesOverviewPage.PATH, new NodesOverviewPage("Nodes"));
 		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
 	}
@@ -73,9 +74,9 @@ public class SensNetNode extends HttpServlet {
 				return;
 			}
 		}
-		if (p.needsLogin()
-				&& SensNetNodeConfiguration.getInstance().isLoginRequired()) {
-			resp.sendError(403);
+		if ((p.needsLogin() && SensNetNodeConfiguration.getInstance()
+				.isLoginRequired()) || p.reallyNeedsLogin()) {
+			resp.sendRedirect("/login");
 			return;
 		}
 		if (p.needsTemplate()) {

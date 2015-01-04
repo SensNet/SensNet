@@ -11,7 +11,7 @@ import net.sensnet.node.Page;
 import net.sensnet.node.SensNetNodeConfiguration;
 
 public class MainPage extends Page {
-
+	public static final String PATH = "/login";
 	public MainPage(String name) {
 		super(name);
 	}
@@ -19,7 +19,8 @@ public class MainPage extends Page {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		if (!isLoggedIn(req)
-				&& SensNetNodeConfiguration.getInstance().isLoginRequired()) {
+				&& (SensNetNodeConfiguration.getInstance().isLoginRequired() || req
+						.getPathInfo().equals(PATH))) {
 			LoginForm f = new LoginForm(req);
 			HashMap<String, Object> vars = new HashMap<String, Object>();
 			f.output(resp.getWriter(), vars);
