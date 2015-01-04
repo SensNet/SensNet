@@ -10,7 +10,7 @@ import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.dbobjects.DataPoint;
 
 public class DataPointSubmitPage extends APIPage {
-	public static final String PATH = "/submit/datapoint";
+	public static final String PATH = "/api/submit/datapoint";
 	public DataPointSubmitPage(String name) {
 		super(name);
 	}
