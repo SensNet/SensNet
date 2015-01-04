@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="SensNetNode">
+    <path id="jufogasradio.classpath">
+        <pathelement location="bin" />
+        <fileset dir="lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+    <target name="init">
+        <mkdir dir="bin" />
+
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src/">
+                <exclude name="**/*.launch" />
+                <exclude name="**/*.java" />
+            </fileset>
+        </copy>
+    </target>
+    <target depends="init" name="build">
+        <javac debug="true" destdir="bin" includeantruntime="false"
+            source="1.7" target="1.7">
+            <src path="src" />
+            <classpath refid="jufogasradio.classpath" />
+        </javac>
+    </target>
+    <target depends="build" name="pack">
+        <jar destfile="SensNetNode.jar" basedir="bin" manifest="SensNetNode.MF" />
+    </target>
+    <target depends="build" name="pack-full">
+        <jar
+            destfile="SensNetNode-full.jar"
+            basedir="bin"
+            manifest="SensNetNode.MF"
+            >
+            <restrict>
+                <not>
+                    <or>
+                        <name name="META-INF/LICENSE" />
+                        <name name="META-INF/NOTICE" />
+                    </or>
+                </not>
+                <archives>
+                    <zips>
+                        <fileset dir="lib">
+                            <include name="**/*.jar" />
+                        </fileset>
+                    </zips>
+                </archives>
+            </restrict>
+        </jar>
+        <echo
+            level="warning"
+            message="WARNING: add proper copyright notice before distributing JufoGasRadio-full.jar."
+            />
+    </target>
+    <target name="all" depends="pack,pack-full" />
+    <target name="run" depends="pack">
+        <java
+            classname="net.sensnet.node.Launcher"
+            fork="true"
+            failonerror="true"
+            >
+            <classpath>
+                <pathelement location="SensNetNode.jar" />
+                <path refid="jufogasradio.classpath" />
+            </classpath>
+        </java>
+    </target>
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset dir=".">
+                <include name="bin/**/*" />
+                <include name="SensNetNode.jar" />
+                <include name="SensNetNode-full.jar" />
+            </fileset>
+        </delete>
+    </target>
+</project>

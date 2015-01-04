@@ -1,0 +1,15 @@
+<div id="map" class="half"></div>
+<script src="static/js/leaflet.js"></script>
+<script>
+		var map = L.map('map').setView([51.00, 10], 5);
+
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
+				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		}).addTo(map);
+		<? foreach($sensors) { ?>
+		L.marker([<?=$lat?>, <?=$long?>]).addTo(map)
+			.bindPopup('<b>Sensor #<?=$sensorid?></b>');
+			<? } ?>
+	</script>

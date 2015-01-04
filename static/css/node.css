@@ -1,0 +1,31 @@
+#map {
+	width: 100vw;
+	height: 100vh;
+}
+.leaflet-control-container .leaflet-control-zoom {
+	margin-top: 60px;
+}
+#half-map {
+	width: 60vw;
+	height: 100vh;
+	display: inline-block;
+	float: left;
+	
+}
+#half-map < body {
+	overflow-y: hidden;
+}
+#node-overview {
+	width: 40vw;
+	float: right;
+	display: inline;
+	padding: 65px 15px 15px 15px;
+	overflow-y:scroll;
+	height: 100vh;
+}
+.mouse-click {
+	cursor: pointer;
+}
+.navbar-brand {
+	padding: 0 25px;
+}

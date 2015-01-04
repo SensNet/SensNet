@@ -1,0 +1,4 @@
+/bin/
+*.jar
+*.DS_Store
+/conf/
