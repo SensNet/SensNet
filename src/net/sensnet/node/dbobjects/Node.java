@@ -1,13 +1,22 @@
 package net.sensnet.node.dbobjects;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import net.sensnet.node.DatabaseConnection;
+import javax.servlet.http.HttpServletRequest;
 
-public class Node {
+import net.sensnet.node.DatabaseConnection;
+import net.sensnet.node.ExceptionRunnable;
+import net.sensnet.node.InvalidNodeAuthException;
+import net.sensnet.node.SensNetNodeConfiguration;
+import net.sensnet.node.SuperCommunicationsManager;
+import net.sensnet.node.pages.RegisterNodePage;
+import net.sensnet.node.util.ConnUtils;
+
+public class Node implements Syncable {
 	private int id;
 	private String name, description;
 	private static HashMap<Integer, Node> cache = new HashMap<Integer, Node>();
@@ -23,6 +32,13 @@ public class Node {
 		this.name = res.getString(3);
 		this.description = res.getString(4);
 	}
+
+	public Node(HttpServletRequest req) {
+		this.id = Integer.parseInt(req.getParameter("uid"));
+		this.description = req.getParameter("description");
+		this.name = req.getParameter("name");
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -43,12 +59,36 @@ public class Node {
 				"SELECT * FROM nodes WHERE uid = ?");
 		prep.setInt(1, uid);
 		ResultSet query = prep.executeQuery();
-		if(query.next()) {
-		Node node = new Node(query);
-		cache.put(uid, node);
-		return node;
+		if (query.next()) {
+			Node node = new Node(query);
+			cache.put(uid, node);
+			return node;
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public void commit() throws IOException, SQLException,
+			InvalidNodeAuthException {
+		if (!SensNetNodeConfiguration.getInstance().isRootNode()) {
+			SuperCommunicationsManager.getInstance().putJob(
+					new ExceptionRunnable() {
+
+						@Override
+						public void run() throws Exception {
+							ConnUtils.postNodeAuthenticatedData(
+									RegisterNodePage.PATH, "&desciption="
+											+ description + "&name=" + name
+											+ "&uid=" + id);
+						}
+					});
+		}
+		PreparedStatement prep = DatabaseConnection.getInstance().prepare(
+				"INSERT INTO nodes SET uid=?, name=?, description=?");
+		prep.setInt(1, id);
+		prep.setString(2, name);
+		prep.setString(3, description);
+		prep.executeUpdate();
 	}
 }

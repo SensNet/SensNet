@@ -76,7 +76,7 @@ public class Launcher {
 				ServletContextHandler.SESSIONS);
 		h.setInitParameter(SessionManager.__SessionCookieProperty,
 				"Node-Session");
-		h.addServlet(Node.class, "/*");
+		h.addServlet(SensNetNode.class, "/*");
 		HandlerList hl = new HandlerList();
 		hl.setHandlers(new Handler[] { generateStaticContext(), h });
 		s.setHandler(hl);

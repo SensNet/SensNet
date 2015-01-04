@@ -17,13 +17,14 @@ import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.pages.MainPage;
 import net.sensnet.node.pages.MapPage;
 import net.sensnet.node.pages.NodesOverviewPage;
+import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.TypeDumpPage;
 
 import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
 
-public class Node extends HttpServlet {
+public class SensNetNode extends HttpServlet {
 	private HashMap<String, Page> mapping = new HashMap<>();
 	private Page mainPage = new MainPage("Node");
 	private Template mainTemplate;
@@ -31,7 +32,7 @@ public class Node extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		mainTemplate = new Template(Node.class.getResource("Node.templ"));
+		mainTemplate = new Template(SensNetNode.class.getResource("Node.templ"));
 		mapping.put("/auth", new AuthAPIPage("Auth API"));
 		mapping.put("/typedump", new TypeDumpPage(""));
 		mapping.put("/map", new MapPage("Map"));
@@ -39,6 +40,7 @@ public class Node extends HttpServlet {
 		mapping.put(DataPointSubmitPage.PATH, new DataPointSubmitPage(
 				"Datapoint submit"));
 		mapping.put(NodesOverviewPage.PATH, new NodesOverviewPage("Nodes"));
+		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
 	}
 
 	@Override
