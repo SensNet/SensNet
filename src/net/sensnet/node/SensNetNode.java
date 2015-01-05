@@ -17,6 +17,7 @@ import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.pages.MainPage;
 import net.sensnet.node.pages.MapPage;
 import net.sensnet.node.pages.NodesOverviewPage;
+import net.sensnet.node.pages.RegisterDirectSubNodePage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.TypeDumpPage;
@@ -26,7 +27,7 @@ import org.cacert.gigi.output.template.Template;
 
 public class SensNetNode extends HttpServlet {
 	private HashMap<String, Page> mapping = new HashMap<>();
-	private Page mainPage = new MainPage("Node");
+	private Page mainPage = new MainPage("Login");
 	private Template mainTemplate;
 
 	@Override
@@ -42,6 +43,8 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(MainPage.PATH, mainPage);
 		mapping.put(NodesOverviewPage.PATH, new NodesOverviewPage("Nodes"));
 		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
+		mapping.put(RegisterDirectSubNodePage.PATH,
+				new RegisterDirectSubNodePage("Register Node"));
 	}
 
 	@Override
@@ -61,6 +64,7 @@ public class SensNetNode extends HttpServlet {
 			throws IOException {
 		String pathInfo = req.getPathInfo();
 		resp.setContentType("text/html; charset=utf-8");
+		resp.setHeader("Strict-Transport-Security", 60 * 60 * 24 * 366 + "");
 		HashMap<String, Object> vars = new HashMap<String, Object>();
 		final Page p;
 		if (pathInfo == null || pathInfo == "/") {
@@ -74,8 +78,9 @@ public class SensNetNode extends HttpServlet {
 				return;
 			}
 		}
-		if ((p.needsLogin() && SensNetNodeConfiguration.getInstance()
-				.isLoginRequired()) || p.reallyNeedsLogin()) {
+		if (((p.needsLogin() && SensNetNodeConfiguration.getInstance()
+				.isLoginRequired()) || p.reallyNeedsLogin())
+				&& !MainPage.isLoggedIn(req)) {
 			resp.sendRedirect("/login");
 			return;
 		}

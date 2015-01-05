@@ -128,7 +128,7 @@ public class NodesOverviewPage extends Page {
 
 	@Override
 	public boolean needsLogin() {
-		return false;
+		return true;
 	}
 
 	@Override
