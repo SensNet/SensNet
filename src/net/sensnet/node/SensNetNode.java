@@ -64,7 +64,8 @@ public class SensNetNode extends HttpServlet {
 			throws IOException {
 		String pathInfo = req.getPathInfo();
 		resp.setContentType("text/html; charset=utf-8");
-		resp.setHeader("Strict-Transport-Security", 60 * 60 * 24 * 366 + "");
+		resp.setHeader("Strict-Transport-Security", "max-age=" + 60 * 60 * 24
+				* 366 + "; includeSubDomains; preload");
 		HashMap<String, Object> vars = new HashMap<String, Object>();
 		final Page p;
 		if (pathInfo == null || pathInfo == "/") {
