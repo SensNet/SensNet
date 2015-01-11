@@ -1,14 +1,13 @@
-== Sensor -> Node protocoll version 1.2==
+== Sensor -> Node protocol version 2==
 
 Definitions:
 <int>: 32bit signed integer
 <uint>: 32bit unsigned integer
-<float>: 32bit signed float
 major version: breaking change
 minor version: non-breaking change
 punctuation is only for clarity.
 
 Proto:
-<2 byte> version[first byte: major, second byte: minor]{0x01 0x02},<byte>sensortype, <2 byte> SensorId, <int> lat, <int> long, <byte> battery, <uint> timestamp, <byte> ttl, <2float> data, <byte> rssi (assumed positive)
+<2 byte> version[first byte: major, second byte: minor]{0x01 0x00}, <2 byte> SensorId,<byte> sensortype, <int> lat, <int> long, <byte> battery, <uint> timestamp, <byte> ttl, <byte> rssi (assumed positive), <byte> length, <byte[length]> data
 
 The TTL is to be increased with each hop form sensor to sensor and limited to 8bit. If ttl == 255 is reached, the packet must be droped to avoid endless circles.
