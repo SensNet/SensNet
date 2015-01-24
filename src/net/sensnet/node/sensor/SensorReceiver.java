@@ -20,8 +20,8 @@ import net.sensnet.node.dbobjects.SensorType;
 
 public class SensorReceiver implements Runnable {
 	private File inter;
-	public static final byte MAJOR_VERSION = 0x01;
-	public static final byte MINOR_VERSION = 0x01;
+	public static final byte MAJOR_VERSION = 0x02;
+	public static final byte MINOR_VERSION = 0x00;
 
 	public static void main(String[] args) throws UnknownHostException,
 			IOException {
@@ -46,8 +46,8 @@ public class SensorReceiver implements Runnable {
 					if (major == MAJOR_VERSION) {
 						int lat = buffer.getInt(5);
 						int longitude = buffer.getInt(9);
-						byte sensortype = buf[2];
-						int sensorid = buf[3];
+						byte sensortype = buf[4];
+						int sensorid = buf[2];
 						sensorid = sensorid & 0xFF;
 						sensorid = sensorid << 8;
 						sensorid = sensorid | (buf[4] & 0xff);
@@ -56,14 +56,17 @@ public class SensorReceiver implements Runnable {
 						long timestamp = buffer.getInt(14) & 0xFFFFFFFFl;
 						timestamp *= 1000;
 						byte ttl = buf[18];
-						float data1 = buffer.getFloat(19);
-						float data2 = buffer.getFloat(23);
+						byte rssi = buf[19];
+						byte[] datas = new byte[buf[20]];
+						for (int i = 0; i < buf[20]; i++) {
+							datas[i] = buf[21 + i];
+						}
 						try {
 							DataPoint datapoint = new DataPoint(
 									SensorType.getById(sensortype),
-									Sensor.getBySensorUid(sensorid), data1,
-									data2, timestamp, battery,
-									new LocationLatLong(lat, longitude),
+									Sensor.getBySensorUid(sensorid), datas,
+									timestamp, battery, new LocationLatLong(
+											lat, longitude),
 									SensNetNodeConfiguration.getInstance()
 											.getThisNode());
 							datapoint.commit();

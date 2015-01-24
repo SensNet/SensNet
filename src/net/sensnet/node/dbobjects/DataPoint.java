@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,18 +21,17 @@ import net.sensnet.node.util.ConnUtils;
 public class DataPoint implements Syncable {
 	private SensorType type;
 	private Sensor from;
-	private float value, value2;
 	private LocationLatLong location;
 	private long time;
 	private int battery;
 	private Node receiverNode;
+	private byte[] values;
 
-	public DataPoint(SensorType type, Sensor from, float value, float value2,
-			long time, int battery, LocationLatLong location, Node receiverNode) {
+	public DataPoint(SensorType type, Sensor from, byte[] values, long time,
+			int battery, LocationLatLong location, Node receiverNode) {
 		this.type = type;
 		this.from = from;
-		this.value = value;
-		this.value2 = value2;
+		this.values = values;
 		this.time = time;
 		this.battery = battery;
 		this.location = location;
@@ -44,8 +44,8 @@ public class DataPoint implements Syncable {
 				.getParameter("type")));
 		this.from = Sensor.getBySensorUid(Integer.parseInt(req
 				.getParameter("sensor")));
-		this.value = Float.parseFloat(req.getParameter("value"));
-		this.value2 = Float.parseFloat(req.getParameter("value2"));
+		this.values = Base64.getDecoder().decode(
+				req.getParameter("data").getBytes());
 		this.location = new LocationLatLong(Integer.parseInt(req
 				.getParameter("lat")), Integer.parseInt(req
 				.getParameter("long")));
@@ -63,12 +63,8 @@ public class DataPoint implements Syncable {
 		return type;
 	}
 
-	public double getValue() {
-		return value;
-	}
-
-	public float getValue2() {
-		return value2;
+	public byte[] getValues() {
+		return values;
 	}
 
 	public LocationLatLong getLocation() {
@@ -90,13 +86,17 @@ public class DataPoint implements Syncable {
 						public void run() throws Exception {
 							ConnUtils.postNodeAuthenticatedData(
 									DataPointSubmitPage.PATH,
-									"&type=" + type.getId() + "&sensor="
-											+ from.getId() + "&value=" + value
-											+ "&value2=" + value2 + "&lat="
-											+ location.getLat() + "&long="
-											+ location.getLng() + "&battery="
-											+ battery + "&time=" + time
-											+ "&receiver="
+									"&type="
+											+ type.getId()
+											+ "&sensor="
+											+ from.getId()
+											+ "&data="
+											+ Base64.getEncoder()
+													.encodeToString(values)
+											+ "&lat=" + location.getLat()
+											+ "&long=" + location.getLng()
+											+ "&battery=" + battery + "&time="
+											+ time + "&receiver="
 											+ receiverNode.getId());
 						}
 					});
@@ -105,16 +105,15 @@ public class DataPoint implements Syncable {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, value2=?, receivernode=?");
+						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, receivernode=?");
 		prep.setInt(1, from.getId());
 		prep.setInt(2, type.getId());
 		prep.setInt(3, location.getLat());
 		prep.setInt(4, location.getLng());
 		prep.setInt(5, battery);
 		prep.setTimestamp(6, new Timestamp(time));
-		prep.setFloat(7, value);
-		prep.setFloat(8, value2);
-		prep.setInt(9, receiverNode.getId());
+		prep.setBytes(7, values);
+		prep.setInt(8, receiverNode.getId());
 		prep.executeUpdate();
 		Logger.getAnonymousLogger().log(Level.INFO, "Datapoint commited.");
 	}
