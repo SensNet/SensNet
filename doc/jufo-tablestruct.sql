@@ -34,8 +34,7 @@ CREATE TABLE IF NOT EXISTS `datapoints` (
   `locationlong` int(11) NOT NULL,
   `battery` int(11) NOT NULL,
   `received` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `value` float NOT NULL,
-  `value2` float DEFAULT NULL,
+  `value` binary(100) NOT NULL,
   `receivernode` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
