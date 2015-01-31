@@ -16,7 +16,6 @@ import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.dbobjects.LocationLatLong;
 import net.sensnet.node.dbobjects.Sensor;
-import net.sensnet.node.dbobjects.SensorType;
 
 public class SensorReceiver implements Runnable {
 	private File inter;
@@ -63,7 +62,7 @@ public class SensorReceiver implements Runnable {
 						}
 						try {
 							DataPoint datapoint = new DataPoint(
-									SensorType.getById(sensortype),
+									sensortype,
 									Sensor.getBySensorUid(sensorid), datas,
 									timestamp, battery, new LocationLatLong(
 											lat, longitude),

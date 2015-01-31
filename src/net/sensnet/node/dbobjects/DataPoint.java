@@ -19,7 +19,7 @@ import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.util.ConnUtils;
 
 public class DataPoint implements Syncable {
-	private SensorType type;
+	private int type;
 	private Sensor from;
 	private LocationLatLong location;
 	private long time;
@@ -27,7 +27,7 @@ public class DataPoint implements Syncable {
 	private Node receiverNode;
 	private byte[] values;
 
-	public DataPoint(SensorType type, Sensor from, byte[] values, long time,
+	public DataPoint(int type, Sensor from, byte[] values, long time,
 			int battery, LocationLatLong location, Node receiverNode) {
 		this.type = type;
 		this.from = from;
@@ -40,8 +40,7 @@ public class DataPoint implements Syncable {
 
 	public DataPoint(HttpServletRequest req) throws NumberFormatException,
 			SQLException, IOException, InvalidNodeAuthException {
-		this.type = SensorType.getById(Integer.parseInt(req
-				.getParameter("type")));
+		this.type = Integer.parseInt(req.getParameter("type"));
 		this.from = Sensor.getBySensorUid(Integer.parseInt(req
 				.getParameter("sensor")));
 		this.values = Base64.getDecoder().decode(
@@ -59,7 +58,7 @@ public class DataPoint implements Syncable {
 		return from;
 	}
 
-	public SensorType getType() {
+	public int getType() {
 		return type;
 	}
 
@@ -87,7 +86,7 @@ public class DataPoint implements Syncable {
 							ConnUtils.postNodeAuthenticatedData(
 									DataPointSubmitPage.PATH,
 									"&type="
-											+ type.getId()
+											+ type
 											+ "&sensor="
 											+ from.getId()
 											+ "&data="
@@ -107,7 +106,7 @@ public class DataPoint implements Syncable {
 				.prepare(
 						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, receivernode=?");
 		prep.setInt(1, from.getId());
-		prep.setInt(2, type.getId());
+		prep.setInt(2, type);
 		prep.setInt(3, location.getLat());
 		prep.setInt(4, location.getLng());
 		prep.setInt(5, battery);

@@ -20,7 +20,6 @@ import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.pages.RegisterDirectSubNodePage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
-import net.sensnet.node.pages.TypeDumpPage;
 
 import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
@@ -35,7 +34,6 @@ public class SensNetNode extends HttpServlet {
 		super.init();
 		mainTemplate = new Template(SensNetNode.class.getResource("Node.templ"));
 		mapping.put("/auth", new AuthAPIPage("Auth API"));
-		mapping.put("/typedump", new TypeDumpPage(""));
 		mapping.put("/map", new MapPage("Map"));
 		mapping.put(RegisterSensorPage.PATH, new RegisterSensorPage("Sensor"));
 		mapping.put(DataPointSubmitPage.PATH, new DataPointSubmitPage(

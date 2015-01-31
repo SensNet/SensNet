@@ -1,17 +1,11 @@
 package net.sensnet.node;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.regex.Pattern;
 
-import net.sensnet.node.dbobjects.SensorType;
 import net.sensnet.node.sensor.SensorReceiver;
-import net.sensnet.node.util.ConnUtils;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -22,8 +16,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 public class Launcher {
-	private static HashMap<Integer, SensorType> sensorTypes;
-
 	public static void main(String[] args) throws Exception {
 		SensNetNodeConfiguration conf;
 		if (args.length != 1) {
@@ -40,36 +32,6 @@ public class Launcher {
 					args[0])));
 		}
 		DatabaseConnection.init(conf);
-		sensorTypes = new HashMap<Integer, SensorType>();
-		if (!conf.isRootNode()) {
-			SuperCommunicationsManager.getInstance().putJob(
-					new ExceptionRunnable() {
-
-						@Override
-						public void run() throws Exception {
-							System.out.println("Prestart DB Sync...");
-							BufferedReader read = ConnUtils
-									.postNodeAuthenticatedData("/typedump", "");
-							String tmp;
-							while ((tmp = read.readLine()) != null) {
-								String[] split = tmp.split(Pattern.quote(", "));
-								SensorType e = new SensorType(Integer
-										.parseInt(split[0]), split[1],
-										split[3], split[2]);
-								e.updateToDB();
-								sensorTypes.put(e.getId(), e);
-							}
-						}
-					});
-
-		} else {
-			ResultSet res = DatabaseConnection.getInstance()
-					.prepare("SELECT * FROM sensortypes").executeQuery();
-			while (res.next()) {
-				sensorTypes.put(res.getInt(1), new SensorType(res));
-			}
-			res.close();
-		}
 		Server s = new Server(new InetSocketAddress(conf.getHostName(),
 				conf.getPort()));
 		ServletContextHandler h = new ServletContextHandler(
@@ -91,9 +53,5 @@ public class Launcher {
 		ContextHandler ch = new ContextHandler("/static");
 		ch.setHandler(rh);
 		return ch;
-	}
-
-	public static HashMap<Integer, SensorType> getSensorTypes() {
-		return sensorTypes;
 	}
 }
