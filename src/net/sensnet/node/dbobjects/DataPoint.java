@@ -2,6 +2,7 @@ package net.sensnet.node.dbobjects;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Base64;
@@ -15,6 +16,8 @@ import net.sensnet.node.ExceptionRunnable;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.SuperCommunicationsManager;
+import net.sensnet.node.dbobjects.sensors.GasSensor;
+import net.sensnet.node.dbobjects.sensors.RadioDoseSensor;
 import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.util.ConnUtils;
 
@@ -113,7 +116,18 @@ public class DataPoint implements Syncable {
 		prep.setTimestamp(6, new Timestamp(time));
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getId());
-		prep.executeUpdate();
+		prep.execute();
+		ResultSet id = prep.getGeneratedKeys();
+		id.next();
+		switch (type) {
+		case 0: // radio dose
+			RadioDoseSensor.insert(this, id.getInt(1));
+			break;
+		case 1: // gas phase shift
+			GasSensor.insert(this, id.getInt(1));
+		default:
+			break; // no known sensor.
+		}
 		Logger.getAnonymousLogger().log(Level.INFO, "Datapoint commited.");
 	}
 
