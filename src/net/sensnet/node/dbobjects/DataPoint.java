@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,7 +112,7 @@ public class DataPoint implements Syncable {
 		prep.setInt(3, location.getLat());
 		prep.setInt(4, location.getLng());
 		prep.setInt(5, battery);
-		prep.setTimestamp(6, new Timestamp(time));
+		prep.setInt(6, (int) (time / 1000));
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getId());
 		prep.execute();

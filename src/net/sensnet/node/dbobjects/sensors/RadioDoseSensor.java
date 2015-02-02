@@ -35,10 +35,10 @@ public class RadioDoseSensor {
 		PreparedStatement pre = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"INSERT INTO sensor_radiodose (id,datapoint,phaseshift) VALUES('',?,?)");
-		pre.setInt(2, id);
-		ByteBuffer bf = ByteBuffer.allocateDirect(4);
-		pre.setInt(3, bf.getInt(0));
+				"INSERT INTO sensor_radiodose (datapoint,dose) VALUES(?,?)");
+		pre.setInt(1, id);
+		ByteBuffer bf = ByteBuffer.wrap(point.getValues());
+		pre.setInt(2, bf.getInt(0));
 		return pre.execute();
 	}
 

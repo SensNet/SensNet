@@ -37,7 +37,7 @@ public class GasSensor {
 				.prepare(
 						"INSERT INTO sensor_radiodose (id,datapoint,phaseshift) VALUES('',?,?)");
 		pre.setInt(2, id);
-		ByteBuffer bf = ByteBuffer.allocateDirect(4);
+		ByteBuffer bf = ByteBuffer.wrap(point.getValues());
 		pre.setInt(3, bf.getInt(0));
 		return pre.execute();
 	}

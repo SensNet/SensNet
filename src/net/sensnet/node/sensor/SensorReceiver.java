@@ -23,7 +23,7 @@ public class SensorReceiver implements Runnable {
 	public static final byte MINOR_VERSION = 0x00;
 
 	public static void main(String[] args) throws UnknownHostException,
-			IOException {
+			IOException, InterruptedException {
 		new Thread(new SensorReceiver(DummySender.TTY)).start();
 		DummySender.main(new String[0]);
 	}
@@ -72,7 +72,6 @@ public class SensorReceiver implements Runnable {
 						} catch (SQLException | InvalidNodeAuthException e) {
 							e.printStackTrace();
 						}
-						break;
 					} else {
 						Logger.getAnonymousLogger().log(
 								Level.WARNING,
