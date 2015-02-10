@@ -98,7 +98,7 @@ public class DataPoint implements Syncable {
 											+ "&long=" + location.getLng()
 											+ "&battery=" + battery + "&time="
 											+ time + "&receiver="
-											+ receiverNode.getId());
+											+ receiverNode.getUid());
 						}
 					});
 
@@ -114,7 +114,7 @@ public class DataPoint implements Syncable {
 		prep.setInt(5, battery);
 		prep.setInt(6, (int) (time / 1000));
 		prep.setBytes(7, values);
-		prep.setInt(8, receiverNode.getId());
+		prep.setInt(8, receiverNode.getUid());
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();

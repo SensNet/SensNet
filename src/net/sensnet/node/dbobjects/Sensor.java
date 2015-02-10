@@ -72,14 +72,14 @@ public class Sensor implements Syncable {
 						public void run() throws Exception {
 							ConnUtils.postNodeAuthenticatedData(
 									RegisterSensorPage.PATH, "&uid=" + id
-											+ "&node=" + node.getId());
+											+ "&node=" + node.getUid());
 						}
 					});
 		}
 		PreparedStatement prep = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO sensors SET uid=?, node=?");
 		prep.setInt(1, id);
-		prep.setInt(2, node.getId());
+		prep.setInt(2, node.getUid());
 		prep.executeUpdate();
 	}
 }

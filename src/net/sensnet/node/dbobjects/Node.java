@@ -17,24 +17,24 @@ import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.util.ConnUtils;
 
 public class Node implements Syncable {
-	private int id;
+	private int uid;
 	private String name, description;
 	private static HashMap<Integer, Node> cache = new HashMap<Integer, Node>();
 
 	public Node(int id, String name, String description) {
-		this.id = id;
+		this.uid = id;
 		this.name = name;
 		this.description = description;
 	}
 
 	public Node(ResultSet res) throws SQLException {
-		this.id = res.getInt(2);
+		this.uid = res.getInt(2);
 		this.name = res.getString(3);
 		this.description = res.getString(4);
 	}
 
 	public Node(HttpServletRequest req) {
-		this.id = Integer.parseInt(req.getParameter("uid"));
+		this.uid = Integer.parseInt(req.getParameter("uid"));
 		this.description = req.getParameter("description");
 		this.name = req.getParameter("name");
 	}
@@ -43,8 +43,8 @@ public class Node implements Syncable {
 		return description;
 	}
 
-	public int getId() {
-		return id;
+	public int getUid() {
+		return uid;
 	}
 
 	public String getName() {
@@ -80,15 +80,16 @@ public class Node implements Syncable {
 							ConnUtils.postNodeAuthenticatedData(
 									RegisterNodePage.PATH, "&desciption="
 											+ description + "&name=" + name
-											+ "&uid=" + id);
+											+ "&uid=" + uid);
 						}
 					});
 		}
 		PreparedStatement prep = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO nodes SET uid=?, name=?, description=?");
-		prep.setInt(1, id);
+		prep.setInt(1, uid);
 		prep.setString(2, name);
 		prep.setString(3, description);
 		prep.executeUpdate();
 	}
+
 }
