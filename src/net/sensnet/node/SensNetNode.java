@@ -20,6 +20,7 @@ import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.pages.RegisterDirectSubNodePage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
+import net.sensnet.node.pages.SettingsPage;
 
 import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
@@ -43,6 +44,7 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
 		mapping.put(RegisterDirectSubNodePage.PATH,
 				new RegisterDirectSubNodePage("Register Node"));
+		mapping.put(SettingsPage.PATH, new SettingsPage());
 	}
 
 	@Override
