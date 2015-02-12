@@ -17,7 +17,6 @@ import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.pages.MainPage;
 import net.sensnet.node.pages.MapPage;
 import net.sensnet.node.pages.NodesOverviewPage;
-import net.sensnet.node.pages.RegisterDirectSubNodePage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.SettingsPage;
@@ -42,8 +41,6 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(MainPage.PATH, mainPage);
 		mapping.put(NodesOverviewPage.PATH, new NodesOverviewPage("Nodes"));
 		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
-		mapping.put(RegisterDirectSubNodePage.PATH,
-				new RegisterDirectSubNodePage("Register Node"));
 		mapping.put(SettingsPage.PATH, new SettingsPage());
 	}
 
