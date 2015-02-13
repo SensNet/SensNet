@@ -37,6 +37,14 @@ public class MainPage extends Page {
 		if (!lg.submit(resp.getWriter(), req)) {
 			resp.getWriter().println("Invalid Login");
 			doGet(req, resp, vars);
+		} else {
+			String redir = (String) req.getSession().getAttribute("redirOrig");
+			if (redir == null) {
+				redir = "/";
+			} else {
+				req.getSession().setAttribute("redirOrig", null);
+			}
+			resp.sendRedirect(redir);
 		}
 	}
 
