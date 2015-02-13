@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface Outputable {
 
-    public void output(PrintWriter out, Map<String, Object> vars);
+	public void output(PrintWriter out, Map<String, Object> vars);
 }

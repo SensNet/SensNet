@@ -102,6 +102,9 @@ public class SensNetNode extends HttpServlet {
 			vars.put("content", contnet);
 			vars.put("year", Calendar.getInstance().get(Calendar.YEAR));
 			vars.put("title", p.getName());
+			vars.put("isRootNode", SensNetNodeConfiguration.getInstance()
+					.isRootNode());
+
 			try {
 				vars.put("mynodename", "#"
 						+ SensNetNodeConfiguration.getInstance().getNodeID()
