@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -32,9 +31,8 @@ public class NodesOverviewPage extends Page {
 	}
 
 	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		HashMap<String, Object> vars = new HashMap<String, Object>();
+	public void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		try {
 			PreparedStatement nodes = DatabaseConnection.getInstance().prepare(
 					"SELECT * FROM nodes");

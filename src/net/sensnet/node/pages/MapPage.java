@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +22,8 @@ public class MapPage extends Page {
 	}
 
 	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		HashMap<String, Object> vars = new HashMap<String, Object>();
+	public void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		try {
 			PreparedStatement prep = DatabaseConnection
 					.getInstance()
@@ -65,8 +63,7 @@ public class MapPage extends Page {
 			e.printStackTrace();
 		}
 
-		getDefaultTemplate().output(resp.getWriter(), vars
-				);
+		getDefaultTemplate().output(resp.getWriter(), vars);
 	}
 
 	@Override

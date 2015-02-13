@@ -83,15 +83,15 @@ public class SensNetNode extends HttpServlet {
 			return;
 		}
 		if (p.needsTemplate()) {
-			Outputable contnet = new Outputable() {
+			Outputable content = new Outputable() {
 
 				@Override
 				public void output(PrintWriter out, Map<String, Object> vars) {
 					try {
 						if (post) {
-							p.doPost(req, resp);
+							p.doPost(req, resp, vars);
 						} else {
-							p.doGet(req, resp);
+							p.doGet(req, resp, vars);
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -99,7 +99,7 @@ public class SensNetNode extends HttpServlet {
 				}
 			};
 			vars.put(p.getName(), "");
-			vars.put("content", contnet);
+			vars.put("content", content);
 			vars.put("year", Calendar.getInstance().get(Calendar.YEAR));
 			vars.put("title", p.getName());
 			vars.put("isRootNode", SensNetNodeConfiguration.getInstance()
@@ -114,9 +114,9 @@ public class SensNetNode extends HttpServlet {
 			}
 			mainTemplate.output(resp.getWriter(), vars);
 		} else if (post) {
-			p.doPost(req, resp);
+			p.doPost(req, resp, vars);
 		} else {
-			p.doGet(req, resp);
+			p.doGet(req, resp, vars);
 		}
 	}
 }

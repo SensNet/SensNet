@@ -1,7 +1,7 @@
 package net.sensnet.node.pages;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,29 +12,31 @@ import net.sensnet.node.SensNetNodeConfiguration;
 
 public class MainPage extends Page {
 	public static final String PATH = "/login";
+
 	public MainPage(String name) {
 		super(name);
 	}
+
 	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		if (!isLoggedIn(req)
 				&& (SensNetNodeConfiguration.getInstance().isLoginRequired() || req
 						.getPathInfo().equals(PATH))) {
 			LoginForm f = new LoginForm(req);
-			HashMap<String, Object> vars = new HashMap<String, Object>();
 			f.output(resp.getWriter(), vars);
 		} else {
 			resp.sendRedirect(MapPage.PATH);
 		}
 	}
+
 	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		LoginForm lg = Form.getForm(req, LoginForm.class);
 		if (!lg.submit(resp.getWriter(), req)) {
 			resp.getWriter().println("Invalid Login");
-			doGet(req, resp);
+			doGet(req, resp, vars);
 		}
 	}
 

@@ -2,6 +2,7 @@ package net.sensnet.node.pages;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,13 +18,13 @@ public abstract class APIPage extends Page {
 	}
 
 	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		try {
 			if (AuthUtils.checkNodeAuth(req)) {
 				doAction(req, resp);

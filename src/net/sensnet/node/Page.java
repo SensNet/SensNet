@@ -2,6 +2,7 @@ package net.sensnet.node;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,12 +29,13 @@ public abstract class Page {
 	/**
 	 * By default, {@link #doGet()} is called.
 	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		doGet(req, resp);
+	public void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
+		doGet(req, resp, vars);
 	}
 
-	public abstract void doGet(HttpServletRequest req, HttpServletResponse resp)
+	public abstract void doGet(HttpServletRequest req,
+			HttpServletResponse resp, Map<String, Object> vars)
 			throws IOException;
 
 	public String getName() {

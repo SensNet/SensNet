@@ -2,13 +2,15 @@ package net.sensnet.node.pages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
+import java.sql.SQLException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sensnet.node.Form;
 import net.sensnet.node.Page;
+import net.sensnet.node.SensNetNodeConfiguration;
 
 public class SettingsPage extends Page {
 	public static final String PATH = "/settings";
@@ -18,8 +20,8 @@ public class SettingsPage extends Page {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		if (req.getParameter("registernode") != null) {
 			RegisterDirectSubNodeForm form = Form.getForm(req,
 					RegisterDirectSubNodeForm.class);
@@ -32,16 +34,25 @@ public class SettingsPage extends Page {
 				wr.write("<div class=\"container\"><div class=\"alert alert-danger\" role=\"alert \"><b><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span></b> Please check the inserted data.</div></div>");
 			}
 		}
-		super.doPost(req, resp);
+		super.doPost(req, resp, vars);
 	}
 
 	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		HashMap<String, Object> vars = new HashMap<String, Object>();
+	public void doGet(HttpServletRequest req, HttpServletResponse resp,
+			Map<String, Object> vars) throws IOException {
 		vars.put("generalSettingsFormNode", new GeneralSettingsFormNode(req));
 		vars.put("generalSettingsFormSuper", new GeneralSettingsFormSuper(req));
 		vars.put("registerNodeForm", new RegisterDirectSubNodeForm(req));
+		try {
+			vars.put("authtoken", SensNetNodeConfiguration.getInstance()
+					.getSuperNodeAuth());
+			vars.put("nodeuid", SensNetNodeConfiguration.getInstance()
+					.getNodeID());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		vars.put("supernode", SensNetNodeConfiguration.getInstance()
+				.getSuperNode());
 		getDefaultTemplate().output(resp.getWriter(), vars);
 	}
 
