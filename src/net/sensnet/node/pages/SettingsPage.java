@@ -48,6 +48,10 @@ public class SettingsPage extends Page {
 					.getSuperNodeAuth());
 			vars.put("nodeuid", SensNetNodeConfiguration.getInstance()
 					.getNodeID());
+			vars.put("thisnodename", SensNetNodeConfiguration.getInstance()
+					.getNodeName());
+			vars.put("thisnodedescription", SensNetNodeConfiguration
+					.getInstance().getNodeDescription());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
