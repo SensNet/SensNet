@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sensnet.node.Form;
+import net.sensnet.node.SensNetNodeConfiguration;
 
 import org.cacert.gigi.output.template.Template;
 
@@ -23,6 +24,14 @@ public class GeneralSettingsFormNode extends Form {
 
 	@Override
 	public boolean submit(PrintWriter out, HttpServletRequest req) {
+		String superNode = req.getParameter("super");
+		String token = req.getParameter("token");
+		if (token != null && !token.trim().isEmpty() && superNode != null
+				&& !token.trim().isEmpty()) {
+			SensNetNodeConfiguration.getInstance().setSuperNode(superNode);
+			SensNetNodeConfiguration.getInstance().setSuperNodeAuth(token);
+			return true;
+		}
 		return false;
 	}
 
