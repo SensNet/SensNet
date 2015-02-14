@@ -188,6 +188,8 @@ public class Template implements Outputable {
 
 		if (s == null) {
 			System.out.println("Empty variable: " + varname);
+			// NOTE: Modificated from orig!
+			s = "";
 		}
 		if (s instanceof Outputable) {
 			((Outputable) s).output(out, vars);
