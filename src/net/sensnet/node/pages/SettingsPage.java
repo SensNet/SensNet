@@ -2,7 +2,6 @@ package net.sensnet.node.pages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,18 +42,13 @@ public class SettingsPage extends Page {
 		vars.put("generalSettingsFormNode", new GeneralSettingsFormNode(req));
 		vars.put("generalSettingsFormSuper", new GeneralSettingsFormSuper(req));
 		vars.put("registerNodeForm", new RegisterDirectSubNodeForm(req));
-		try {
-			vars.put("authtoken", SensNetNodeConfiguration.getInstance()
-					.getSuperNodeAuth());
-			vars.put("nodeuid", SensNetNodeConfiguration.getInstance()
-					.getNodeID());
-			vars.put("thisnodename", SensNetNodeConfiguration.getInstance()
-					.getNodeName());
-			vars.put("thisnodedescription", SensNetNodeConfiguration
-					.getInstance().getNodeDescription());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		vars.put("authtoken", SensNetNodeConfiguration.getInstance()
+				.getSuperNodeAuth());
+		vars.put("nodeuid", SensNetNodeConfiguration.getInstance().getNodeID());
+		vars.put("thisnodename", SensNetNodeConfiguration.getInstance()
+				.getNodeName());
+		vars.put("thisnodedescription", SensNetNodeConfiguration.getInstance()
+				.getNodeDescription());
 		vars.put("supernode", SensNetNodeConfiguration.getInstance()
 				.getSuperNode());
 		getDefaultTemplate().output(resp.getWriter(), vars);

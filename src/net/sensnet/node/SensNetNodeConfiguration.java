@@ -1,54 +1,54 @@
 package net.sensnet.node;
 
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import net.sensnet.node.dbobjects.Node;
 
 public class SensNetNodeConfiguration {
-    private Properties p;
+	private Properties p;
 	private static SensNetNodeConfiguration instance;
 	private String superNode;
 	private Node me = null;
 
 	public SensNetNodeConfiguration(InputStream in) throws IOException,
 			SQLException {
-        this.p = new Properties();
-        p.load(in);
+		this.p = new Properties();
+		p.load(in);
 		instance = this;
 		if (!isRootNode()) {
 			superNode = p.getProperty("node.supernode");
 		}
-    }
+	}
 
-    public int getPort() {
+	public int getPort() {
 		return Integer.parseInt(p.getProperty("node.port"));
-    }
+	}
 
-    public String getHostName() {
+	public String getHostName() {
 		return p.getProperty("node.name");
-    }
+	}
 
-    public String getDB() {
+	public String getDB() {
 		return p.getProperty("node.db");
-    }
+	}
 
-    public String getDBUser() {
+	public String getDBUser() {
 		return p.getProperty("node.db.user");
-    }
+	}
 
-    public String getDBPW() {
+	public String getDBPW() {
 		return p.getProperty("node.db.pw");
-    }
+	}
 
-    public String getJDBCDriver() {
+	public String getJDBCDriver() {
 		return p.getProperty("node.db.driver");
-    }
+	}
 
 	public String getTargetNode() {
 		return p.getProperty("node.target");
@@ -56,8 +56,7 @@ public class SensNetNodeConfiguration {
 
 	public boolean isRootNode() {
 		String property = p.getProperty("node.supernode");
-		return property == null
-				|| property.isEmpty();
+		return property == null || property.isEmpty();
 	}
 
 	public static SensNetNodeConfiguration getInstance() {
@@ -68,44 +67,45 @@ public class SensNetNodeConfiguration {
 		return superNode;
 	}
 
-	public String getSuperNodeAuth() throws SQLException {
-		PreparedStatement auth = DatabaseConnection.getInstance().prepare(
-				"SELECT superauthtoken FROM nodeconf");
-		ResultSet executeQuery = auth.executeQuery();
-		executeQuery.first();
-		String token = executeQuery.getString("superauthtoken");
-		executeQuery.close();
-		return token;
+	public String getSuperNodeAuth() {
+		return p.getProperty("node.supernode.auth");
 	}
 
-	public int getNodeID() throws SQLException {
-		PreparedStatement auth = DatabaseConnection.getInstance().prepare(
-				"SELECT id FROM nodeconf");
-		ResultSet executeQuery = auth.executeQuery();
-		executeQuery.first();
-		int id = executeQuery.getInt("id");
-		executeQuery.close();
-		return id;
+	public int getNodeID() {
+		return Integer.parseInt(p.getProperty("node.id.uid"));
 	}
 
-	public String getNodeDescription() throws SQLException {
-		PreparedStatement descr = DatabaseConnection.getInstance().prepare(
-				"SELECT description FROM nodeconf");
-		ResultSet executeQuery = descr.executeQuery();
-		executeQuery.first();
-		String description = executeQuery.getString("description");
-		executeQuery.close();
-		return description;
+	public String getNodeDescription() {
+		return p.getProperty("node.id.description");
 	}
 
-	public String getNodeName() throws SQLException {
-		PreparedStatement name = DatabaseConnection.getInstance().prepare(
-				"SELECT name FROM nodeconf");
-		ResultSet executeQuery = name.executeQuery();
-		executeQuery.first();
-		String nodeName = executeQuery.getString("name");
-		executeQuery.close();
-		return nodeName;
+	public String getNodeName() {
+		return p.getProperty("node.id.name");
+	}
+
+	public void setNodeName(String name) {
+		p.setProperty("node.id.name", name);
+		store();
+	}
+
+	public void setNodeUID(int uid) {
+		p.setProperty("node.id.uid", uid + "");
+		store();
+	}
+
+	public void setNodeDescription(String description) {
+		p.setProperty("node.id.description", description);
+		store();
+	}
+
+	public void setSuperNodeAuth(String token) {
+		p.setProperty("node.supernode.auth", token);
+		store();
+	}
+
+	public void setSuperNode(String superNode) {
+		p.setProperty("node.supernode", superNode);
+		store();
 	}
 
 	public boolean isLoginRequired() {
@@ -121,6 +121,22 @@ public class SensNetNodeConfiguration {
 
 	public String getSerialInputDevice() {
 		return p.getProperty("node.serial");
+	}
+
+	private void store() {
+		File f = new File("conf/");
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		f = new File("conf/node.properties");
+		try {
+			p.store(new FileOutputStream(f), "");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

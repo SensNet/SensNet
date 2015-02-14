@@ -2,7 +2,6 @@ package net.sensnet.node;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,13 +107,9 @@ public class SensNetNode extends HttpServlet {
 			vars.put("isRootNode", SensNetNodeConfiguration.getInstance()
 					.isRootNode());
 
-			try {
-				vars.put("mynodename", "#"
-						+ SensNetNodeConfiguration.getInstance().getNodeID()
-						+ ": "
-						+ SensNetNodeConfiguration.getInstance().getNodeName());
-			} catch (SQLException e) {
-			}
+			vars.put("mynodename", "#"
+					+ SensNetNodeConfiguration.getInstance().getNodeID() + ": "
+					+ SensNetNodeConfiguration.getInstance().getNodeName());
 			mainTemplate.output(resp.getWriter(), vars);
 		} else if (post) {
 			p.doPost(req, resp, vars);
