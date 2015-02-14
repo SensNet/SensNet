@@ -73,5 +73,12 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/static/js/bootstrap.min.js"></script>
+    <script>
+    	$('.dropdown-menu').children('li').each(function() {
+    		if($( this ).hasClass('active')) {
+    			$( this ).parent().parent().addClass('active');
+    		}
+    	});
+    </script>
   </body>
 </html>
