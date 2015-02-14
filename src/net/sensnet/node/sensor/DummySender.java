@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 public class DummySender {
-	public static final String TTY = "/Users/janis/jufo";
+	public static final String TTY = "/home/janis/jufo";
 
 	public static void main(String[] args) throws UnknownHostException,
 			IOException, InterruptedException {
@@ -25,14 +25,14 @@ public class DummySender {
 				// sensortype
 				buf[offset++] = (byte) 0x00;
 				// lat
-				int lat = 488109700;
+				int lat = 498109700;
 				byte[] latar = ByteBuffer.allocate(4).putInt(lat).array();
 				buf[offset++] = latar[0];
 				buf[offset++] = latar[1];
 				buf[offset++] = latar[2];
 				buf[offset++] = latar[3];
 				// long
-				int longi = 91442900;
+				int longi = 90442900;
 				byte[] longar = ByteBuffer.allocate(4).putInt(longi).array();
 				buf[offset++] = longar[0];
 				buf[offset++] = longar[1];
@@ -57,7 +57,7 @@ public class DummySender {
 				byte dataAr[] = ByteBuffer.allocate(4)
 						.putInt((int) Math.max(Math.random() * 5000, 10000))
 						.array();
-				System.out.println(Math.max(Math.random() * 5000, 10000));
+				System.out.println(Math.min(Math.random() * 5000, 10000));
 				buf[offset++] = dataAr[0];
 				buf[offset++] = dataAr[1];
 				buf[offset++] = dataAr[2];

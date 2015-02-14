@@ -24,6 +24,16 @@ public class GeneralSettingsFormSuper extends Form {
 
 	@Override
 	public boolean submit(PrintWriter out, HttpServletRequest req) {
+		String description = req.getParameter("owndescription");
+		String uid = req.getParameter("ownuid");
+		String name = req.getParameter("ownname");
+		if (uid != null && !uid.trim().isEmpty() && description != null
+				&& !description.trim().isEmpty() && description != null
+				&& !description.trim().isEmpty() && name != null
+				&& !name.trim().isEmpty()) {
+
+			return true;
+		}
 		return false;
 	}
 
