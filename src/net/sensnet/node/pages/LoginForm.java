@@ -1,7 +1,6 @@
 package net.sensnet.node.pages;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.security.MessageDigest;
@@ -22,8 +21,7 @@ import org.cacert.gigi.output.template.Template;
 public class LoginForm extends Form {
 	static Template t;
 	static {
-		t = new Template(new InputStreamReader(
-				LoginForm.class.getResourceAsStream("loginform.templ")));
+		t = new Template(LoginForm.class.getResource("loginform.templ"));
 	}
 
 	public LoginForm(HttpServletRequest hsr) {
