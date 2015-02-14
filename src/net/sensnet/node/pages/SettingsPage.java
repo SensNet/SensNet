@@ -21,17 +21,34 @@ public class SettingsPage extends Page {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
+		PrintWriter wr = resp.getWriter();
 		if (req.getParameter("registernode") != null) {
 			RegisterDirectSubNodeForm form = Form.getForm(req,
 					RegisterDirectSubNodeForm.class);
-
-			PrintWriter wr = resp.getWriter();
 			if (form.submit(resp.getWriter(), req)) {
 				wr.write("<div class=\"container\"><div class=\"alert alert-success\" role=\"alert \"><b><span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span></b> Node registerd.<br/>The node auth token is <pre>"
 						+ form.getToken() + "</pre></div></div>");
 			} else {
 				wr.write("<div class=\"container\"><div class=\"alert alert-danger\" role=\"alert \"><b><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span></b> Please check the inserted data.</div></div>");
 			}
+		} else if (req.getParameter("super") != null) {
+			GeneralSettingsFormSuper form = Form.getForm(req,
+					GeneralSettingsFormSuper.class);
+			if (form.submit(resp.getWriter(), req)) {
+				wr.write("<div class=\"container\"><div class=\"alert alert-success\" role=\"alert \"><b><span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span></b> Settings saved.</div></div>");
+			} else {
+				wr.write("<div class=\"container\"><div class=\"alert alert-danger\" role=\"alert \"><b><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span></b> Please check the inserted data.</div></div>");
+			}
+
+		} else if (req.getParameter("clientnode") != null) {
+			GeneralSettingsFormNode form = Form.getForm(req,
+					GeneralSettingsFormNode.class);
+			if (form.submit(resp.getWriter(), req)) {
+				wr.write("<div class=\"container\"><div class=\"alert alert-success\" role=\"alert \"><b><span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span></b> Settings saved.</div></div>");
+			} else {
+				wr.write("<div class=\"container\"><div class=\"alert alert-danger\" role=\"alert \"><b><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span></b> Please check the inserted data.</div></div>");
+			}
+
 		}
 		super.doPost(req, resp, vars);
 	}

@@ -24,7 +24,7 @@ public class GeneralSettingsFormNode extends Form {
 
 	@Override
 	public boolean submit(PrintWriter out, HttpServletRequest req) {
-		String superNode = req.getParameter("super");
+		String superNode = req.getParameter("supernode");
 		String token = req.getParameter("token");
 		if (token != null && !token.trim().isEmpty() && superNode != null
 				&& !token.trim().isEmpty()) {
