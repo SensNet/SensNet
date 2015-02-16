@@ -17,7 +17,12 @@ public class JSONRadioDosePage extends JSONApiPage {
 	public JSONArray getData(HttpServletRequest req) throws JSONException,
 			SQLException {
 		Date from = new Date(Long.parseLong(req.getParameter("from")) * 1000);
-		Date to = new Date(Long.parseLong(req.getParameter("to")) * 1000);
+		Date to;
+		if (req.getParameter("to").equals("now")) {
+			to = new Date(System.currentTimeMillis());
+		} else {
+			to = new Date(Long.parseLong(req.getParameter("to")) * 1000);
+		}
 		int[][] res;
 		if (req.getParameter("node") != null) {
 			res = RadioDoseSensor.getDoses(from, to,
