@@ -33,7 +33,7 @@ public class RadioDosePage extends Page {
 
 				@Override
 				public boolean next(Map<String, Object> vars) {
-					if (data.length == i) {
+					if (data == null || data.length == i) {
 						return false;
 					}
 					int[] dat = data[i++];
