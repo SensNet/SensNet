@@ -14,24 +14,24 @@ public class RadioDoseSensor {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"SELECT dose, datapoints.locationlat AS lat, datapoints.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints ON (datapoint = datapoints.id) WHERE received >= ? AND received <= ?");
-		prep.setLong(1, from.getTime() / 1000);
-		prep.setLong(2, to.getTime() / 1000);
+						"SELECT receivernode, `from`, received, dose, datapoints.locationlat AS lat, datapoints.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints ON (datapoint = datapoints.id) WHERE received >= ? AND received <= ?");
+		prep.setInt(1, (int) (from.getTime() / 1000));
+		prep.setInt(2, (int) (to.getTime() / 1000));
 		ResultSet resSet = prep.executeQuery();
-		if (resSet.last()) {
-			int[][] res = new int[resSet.getRow()][];
-			resSet.beforeFirst();
-			int i = 0;
-			while (resSet.next()) {
-				int[] in = new int[3];
-				in[0] = resSet.getInt("lat");
-				in[1] = resSet.getInt("lng");
-				in[2] = resSet.getInt("dose");
-				res[i++] = in;
-			}
-			return res;
-		}
-		return null;
+		return parseQuery(resSet);
+	}
+
+	public static int[][] getDoses(Date from, Date to, int receiverNode)
+			throws SQLException {
+		PreparedStatement prep = DatabaseConnection
+				.getInstance()
+				.prepare(
+						"SELECT receivernode, `from`, received, dose, datapoints.locationlat AS lat, datapoints.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints ON (datapoint = datapoints.id) WHERE received >= ? AND received <= ? AND receivernode = ?");
+		prep.setInt(1, (int) (from.getTime() / 1000));
+		prep.setInt(2, (int) (to.getTime() / 1000));
+		prep.setInt(3, receiverNode);
+		ResultSet resSet = prep.executeQuery();
+		return parseQuery(resSet);
 	}
 
 	public static boolean insert(DataPoint point, int id) throws SQLException {
@@ -41,6 +41,26 @@ public class RadioDoseSensor {
 		ByteBuffer bf = ByteBuffer.wrap(point.getValues());
 		pre.setInt(2, bf.getInt(0));
 		return pre.execute();
+	}
+
+	private static int[][] parseQuery(ResultSet resSet) throws SQLException {
+		if (resSet.last()) {
+			int[][] res = new int[resSet.getRow()][];
+			resSet.beforeFirst();
+			int i = 0;
+			while (resSet.next()) {
+				int[] in = new int[6];
+				in[0] = resSet.getInt("lat");
+				in[1] = resSet.getInt("lng");
+				in[2] = resSet.getInt("dose");
+				in[3] = resSet.getInt("received");
+				in[4] = resSet.getInt("from");
+				in[5] = resSet.getInt("receivernode");
+				res[i++] = in;
+			}
+			return res;
+		}
+		return new int[0][];
 	}
 
 }
