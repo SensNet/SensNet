@@ -19,6 +19,7 @@ import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.SettingsPage;
+import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
 import net.sensnet.node.pages.api.json.JSONRadioDosePage;
 import net.sensnet.node.pages.sensors.RadioDosePage;
 
@@ -45,6 +46,7 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(SettingsPage.PATH, new SettingsPage());
 		mapping.put(RadioDosePage.PATH, new RadioDosePage());
 		mapping.put(JSONRadioDosePage.PATH, new JSONRadioDosePage());
+		mapping.put(JSONNodeOverviewPage.PATH, new JSONNodeOverviewPage());
 	}
 
 	@Override
