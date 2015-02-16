@@ -25,7 +25,7 @@ public class SensorReceiver implements Runnable {
 	public static void main(String[] args) throws UnknownHostException,
 			IOException, InterruptedException {
 		new Thread(new SensorReceiver(DummySender.TTY)).start();
-		DummySender.main(new String[0]);
+		// DummySender.main(new String[0]);
 	}
 
 	public SensorReceiver(String interfa) {
@@ -37,32 +37,39 @@ public class SensorReceiver implements Runnable {
 		try {
 			while (true) {
 				InputStream r = new FileInputStream(inter);
-				byte[] buf = new byte[255];
-				while (r.read(buf, 0, 255) != -1) {
+				byte[] buf = new byte[256];
+				while (r.read(buf, 0, 256) != -1) {
 					ByteBuffer buffer = ByteBuffer.wrap(buf);
-					byte major = buf[0];
-					byte minor = buf[1];
+					if (buf[0] == 0) {
+						Logger.getAnonymousLogger().log(Level.WARNING,
+								"Received damaged package.");
+						continue;
+					}
+					byte major = buf[1];
+					byte minor = buf[2];
 					if (major == MAJOR_VERSION) {
-						int lat = buffer.getInt(5);
-						int longitude = buffer.getInt(9);
-						byte sensortype = buf[4];
-						int sensorid = buf[2];
+						int lat = buffer.getInt(6);
+						int longitude = buffer.getInt(10);
+						byte sensortype = buf[5];
+						int sensorid = buf[3];
 						sensorid = sensorid & 0xFF;
 						sensorid = sensorid << 8;
-						sensorid = sensorid | (buf[4] & 0xff);
-						byte rawbat = buf[13];
-						int battery = (int) ((rawbat / 255f) * 100f);
-						long timestamp = buffer.getInt(14) & 0xFFFFFFFFl;
-						timestamp *= 1000;
-						byte ttl = buf[18];
-						byte rssi = buf[19];
-						byte[] datas = new byte[buf[20]];
-						for (int i = 0; i < buf[20]; i++) {
-							datas[i] = buf[21 + i];
+						sensorid = sensorid | (buf[5] & 0xff);
+						byte rawbat = buf[14];
+						int battery = rawbat;
+						if (battery < 0) {
+							battery = 127 + (127 - battery);
+						}
+						battery = (int) ((battery / 255f) * 100);
+						long timestamp = buffer.getInt(15) & 0xFFFFFFFFl;
+						byte ttl = buf[19];
+						byte rssi = buf[20];
+						byte[] datas = new byte[buf[21]];
+						for (int i = 0; i < buf[21]; i++) {
+							datas[i] = buf[22 + i];
 						}
 						try {
-							DataPoint datapoint = new DataPoint(
-									sensortype,
+							DataPoint datapoint = new DataPoint(sensortype,
 									Sensor.getBySensorUid(sensorid), datas,
 									timestamp, battery, new LocationLatLong(
 											lat, longitude),

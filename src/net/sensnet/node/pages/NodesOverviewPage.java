@@ -76,11 +76,10 @@ public class NodesOverviewPage extends Page {
 							public boolean next(Map<String, Object> vars) {
 								try {
 									if (res.next()) {
-										vars.put("lastseen", DATE_FORMAT
-												.format(new Date(res
-														.getTimestamp(
-																"received")
-														.getTime())));
+										vars.put(
+												"lastseen",
+												DATE_FORMAT.format(new Date(
+														res.getInt("received") * 1000)));
 										vars.put("sensorid", res.getInt("from"));
 										vars.put("sensorbattery",
 												res.getInt("battery") + " %");

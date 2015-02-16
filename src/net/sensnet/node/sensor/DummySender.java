@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 public class DummySender {
-	public static final String TTY = "/home/janis/jufo";
+	public static final String TTY = "/dev/ttyUSB0";
 
 	public static void main(String[] args) throws UnknownHostException,
 			IOException, InterruptedException {

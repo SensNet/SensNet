@@ -86,8 +86,7 @@ public class DataPoint implements Syncable {
 						@Override
 						public void run() throws Exception {
 							ConnUtils.postNodeAuthenticatedData(
-									DataPointSubmitPage.PATH,
-									"&type="
+									DataPointSubmitPage.PATH, "&type="
 											+ type
 											+ "&sensor="
 											+ from.getId()
@@ -112,7 +111,7 @@ public class DataPoint implements Syncable {
 		prep.setInt(3, location.getLat());
 		prep.setInt(4, location.getLng());
 		prep.setInt(5, battery);
-		prep.setInt(6, (int) (time / 1000));
+		prep.setInt(6, (int) time);
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getUid());
 		prep.execute();
