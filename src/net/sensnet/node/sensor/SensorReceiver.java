@@ -58,7 +58,7 @@ public class SensorReceiver implements Runnable {
 						byte rawbat = buf[14];
 						int battery = rawbat;
 						if (battery < 0) {
-							battery = 127 + (127 - battery);
+							battery = 127 + (127 - (battery * -1));
 						}
 						battery = (int) ((battery / 255f) * 100);
 						long timestamp = buffer.getInt(15) & 0xFFFFFFFFl;
