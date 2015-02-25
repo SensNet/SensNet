@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.Page;
 import net.sensnet.node.SensNetNodeConfiguration;
+import net.sensnet.node.pages.sensors.RadioDosePage;
 
 import org.cacert.gigi.output.template.IterableDataset;
 
@@ -83,24 +84,13 @@ public class NodesOverviewPage extends Page {
 										vars.put("sensorid", res.getInt("from"));
 										vars.put("sensorbattery",
 												res.getInt("battery") + " %");
-										String lat = res.getInt("locationlat")
-												+ "";
-										lat = ammendZero(lat, 8);
-										lat = lat.substring(0, lat.length() - 7)
-												+ "."
-												+ lat.substring(
-														lat.length() - 7,
-														lat.length());
-										vars.put("lat", lat);
-										String lng = res.getInt("locationlong")
-												+ "";
-										lng = ammendZero(lng, 8);
-										lng = lng.substring(0, lng.length() - 7)
-												+ "."
-												+ lng.substring(
-														lng.length() - 7,
-														lng.length());
-										vars.put("long", lng);
+										vars.put("lat", RadioDosePage
+												.makeCoordinate(res
+														.getInt("locationlat")));
+										vars.put(
+												"long",
+												RadioDosePage.makeCoordinate(res
+														.getInt("locationlong")));
 										return true;
 									}
 								} catch (SQLException e) {
