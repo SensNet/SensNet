@@ -111,6 +111,7 @@ public class DataPoint implements Syncable {
 		prep.setInt(3, location.getLat());
 		prep.setInt(4, location.getLng());
 		prep.setInt(5, battery);
+		System.out.println(time);
 		prep.setLong(6, time);
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getUid());

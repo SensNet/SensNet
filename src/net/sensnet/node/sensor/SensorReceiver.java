@@ -2,13 +2,11 @@ package net.sensnet.node.sensor;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -38,8 +36,12 @@ public class SensorReceiver implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-			while (true) {
+		if (!inter.exists()) {
+			System.err.println("Serial interface not found!");
+			return;
+		}
+		while (true) {
+			try {
 				System.out.println("p!");
 				InputStream r = new FileInputStream(inter);
 				byte[] buf = new byte[256];
@@ -74,16 +76,26 @@ public class SensorReceiver implements Runnable {
 						format.setTimeZone(TimeZone.getTimeZone("GMT"));
 						Date date = format.parse(timestamp + "" + timestamp2
 								+ "");
+						System.out.println(date);
 						byte ttl = buf[23];
 						byte rssi = buf[24];
 						int length = buf[25];
 						if (length < 0) {
 							length = 127 + (127 - (length * -1));
 						}
-						byte[] datas = new byte[length];
-						for (int i = 0; i < buf[25]; i++) {
-							datas[i] = buf[27 + i];
+						// FIXME: OMFG FUCKING HACK FIX THAT!
+						byte[] datas = new byte[(length * 2) + 4];
+						ByteBuffer lengbuf = ByteBuffer.allocate(4);
+						lengbuf.putInt(length);
+						datas[0] = lengbuf.get(0);
+						datas[1] = lengbuf.get(1);
+						datas[2] = lengbuf.get(2);
+						datas[3] = lengbuf.get(3);
+
+						for (int i = 0; i < (length * 2); i++) {
+							datas[i + 4] = buf[26 + i];
 						}
+						byte[] tmp = new byte[256];
 						try {
 							DataPoint datapoint = new DataPoint(sensortype,
 									Sensor.getBySensorUid(sensorid), datas,
@@ -106,18 +118,10 @@ public class SensorReceiver implements Runnable {
 				Logger.getAnonymousLogger()
 						.log(Level.WARNING,
 								"Receiver shutdown: Received EOF on interface. Retrying in 5 secounds.");
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				Thread.sleep(5000);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e1) {
-			e1.printStackTrace();
 		}
 	}
 

@@ -1,6 +1,5 @@
 package net.sensnet.node.dbobjects.sensors;
 
-import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +20,15 @@ public class RadioDoseSensor {
 		return parseQuery(resSet);
 	}
 
+	public static int[][] getLatestDosesFromAllSensors() throws SQLException {
+		PreparedStatement prep = DatabaseConnection
+				.getInstance()
+				.prepare(
+						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE NOT EXISTS (SELECT 1 FROM datapoints b WHERE a.`from`=b.`from` and a.received < b.received)");
+		ResultSet resSet = prep.executeQuery();
+		return parseQuery(resSet);
+	}
+
 	public static int[][] getDoses(Date from, Date to, int receiverNode)
 			throws SQLException {
 		PreparedStatement prep = DatabaseConnection
@@ -35,14 +43,15 @@ public class RadioDoseSensor {
 	}
 
 	public static boolean insert(DataPoint point, int id) throws SQLException {
-		if (point.getValues().length == 0) {
-			return true;
-		}
 		PreparedStatement pre = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO sensor_radiodose (datapoint,dose) VALUES(?,?)");
 		pre.setInt(1, id);
-		ByteBuffer bf = ByteBuffer.wrap(point.getValues());
-		pre.setInt(2, bf.getInt(0));
+		// ByteBuffer bf = ByteBuffer.wrap(point.getValues());
+		if (point.getValues().length == 0) {
+			pre.setInt(2, 0);
+		} else {
+			pre.setInt(2, ((point.getValues().length - 4) / 2) * 12);
+		}
 		return pre.execute();
 	}
 

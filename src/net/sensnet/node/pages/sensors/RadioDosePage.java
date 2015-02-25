@@ -29,9 +29,7 @@ public class RadioDosePage extends Page {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
 		try {
-			final int[][] data = RadioDoseSensor.getDoses(
-					new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24),
-					new Date(System.currentTimeMillis()));
+			final int[][] data = RadioDoseSensor.getLatestDosesFromAllSensors();
 			PreparedStatement nodes = DatabaseConnection.getInstance().prepare(
 					"SELECT * FROM nodes");
 			final ResultSet nodeSet = nodes.executeQuery();
