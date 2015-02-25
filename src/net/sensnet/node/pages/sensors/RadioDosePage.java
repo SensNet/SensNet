@@ -77,30 +77,14 @@ public class RadioDosePage extends Page {
 										vars.put(
 												"lastseen",
 												NodesOverviewPage.DATE_FORMAT.format(new Date(
-														res.getInt("received") * 1000)));
+														res.getLong("received") * 1000)));
 										vars.put("sensorid", res.getInt("from"));
 										vars.put("sensorbattery",
 												res.getInt("battery") + " %");
-										String lat = res.getInt("locationlat")
-												+ "";
-										lat = NodesOverviewPage.ammendZero(lat,
-												8);
-										lat = lat.substring(0, lat.length() - 7)
-												+ "."
-												+ lat.substring(
-														lat.length() - 7,
-														lat.length());
-										vars.put("lat", lat);
-										String lng = res.getInt("locationlong")
-												+ "";
-										lng = NodesOverviewPage.ammendZero(lng,
-												8);
-										lng = lng.substring(0, lng.length() - 7)
-												+ "."
-												+ lng.substring(
-														lng.length() - 7,
-														lng.length());
-										vars.put("long", lng);
+										vars.put("lat", makeCoordinate(res
+												.getInt("locationlat")));
+										vars.put("long", makeCoordinate(res
+												.getInt("locationlong")));
 										return true;
 									}
 								} catch (SQLException e) {
@@ -154,9 +138,9 @@ public class RadioDosePage extends Page {
 	}
 
 	private static String makeCoordinate(int coord) {
-		String lng = NodesOverviewPage.ammendZero(coord + "", 8);
-		lng = lng.substring(0, lng.length() - 7) + "."
-				+ lng.substring(lng.length() - 7, lng.length());
+		String lng = NodesOverviewPage.ammendZero(coord + "", 6);
+		lng = lng.substring(0, lng.length() - 5) + "."
+				+ lng.substring(lng.length() - 5, lng.length());
 		return lng;
 	}
 }

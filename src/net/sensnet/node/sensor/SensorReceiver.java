@@ -8,6 +8,10 @@ import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +40,7 @@ public class SensorReceiver implements Runnable {
 	public void run() {
 		try {
 			while (true) {
+				System.out.println("p!");
 				InputStream r = new FileInputStream(inter);
 				byte[] buf = new byte[256];
 				while (r.read(buf, 0, 256) != -1) {
@@ -62,17 +67,28 @@ public class SensorReceiver implements Runnable {
 						}
 						battery = (int) ((battery / 255f) * 100);
 						long timestamp = buffer.getInt(15) & 0xFFFFFFFFl;
-						byte ttl = buf[19];
-						byte rssi = buf[20];
-						byte[] datas = new byte[buf[21]];
-						for (int i = 0; i < buf[21]; i++) {
-							datas[i] = buf[22 + i];
+						long timestamp2 = buffer.getInt(19) & 0xFFFFFFFFl;
+						// 10:59:34 24.02.15
+						SimpleDateFormat format = new SimpleDateFormat(
+								"HHmmssddMMyy");
+						format.setTimeZone(TimeZone.getTimeZone("GMT"));
+						Date date = format.parse(timestamp + "" + timestamp2
+								+ "");
+						byte ttl = buf[23];
+						byte rssi = buf[24];
+						int length = buf[25];
+						if (length < 0) {
+							length = 127 + (127 - (length * -1));
+						}
+						byte[] datas = new byte[length];
+						for (int i = 0; i < buf[25]; i++) {
+							datas[i] = buf[27 + i];
 						}
 						try {
 							DataPoint datapoint = new DataPoint(sensortype,
 									Sensor.getBySensorUid(sensorid), datas,
-									timestamp, battery, new LocationLatLong(
-											lat, longitude),
+									date.getTime() / 1000, battery,
+									new LocationLatLong(lat, longitude),
 									SensNetNodeConfiguration.getInstance()
 											.getThisNode());
 							datapoint.commit();
@@ -100,6 +116,8 @@ public class SensorReceiver implements Runnable {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ParseException e1) {
+			e1.printStackTrace();
 		}
 	}
 

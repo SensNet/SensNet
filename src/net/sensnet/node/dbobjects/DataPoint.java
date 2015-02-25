@@ -15,7 +15,7 @@ import net.sensnet.node.ExceptionRunnable;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.SuperCommunicationsManager;
-import net.sensnet.node.dbobjects.sensors.GasSensor;
+import net.sensnet.node.dbobjects.sensors.BLEGasSensor;
 import net.sensnet.node.dbobjects.sensors.RadioDoseSensor;
 import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.util.ConnUtils;
@@ -111,18 +111,18 @@ public class DataPoint implements Syncable {
 		prep.setInt(3, location.getLat());
 		prep.setInt(4, location.getLng());
 		prep.setInt(5, battery);
-		prep.setInt(6, (int) time);
+		prep.setLong(6, time);
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getUid());
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();
 		switch (type) {
-		case 0: // radio dose
+		case 3: // radio dose
 			RadioDoseSensor.insert(this, id.getInt(1));
 			break;
 		case 1: // gas phase shift
-			GasSensor.insert(this, id.getInt(1));
+			BLEGasSensor.insert(this, id.getInt(1));
 		default:
 			break; // no known sensor.
 		}

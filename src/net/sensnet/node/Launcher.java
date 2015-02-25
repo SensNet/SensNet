@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 
+import net.sensnet.node.sensor.BluetoothSensorReceiver;
 import net.sensnet.node.sensor.SensorReceiver;
 
 import org.eclipse.jetty.server.Handler;
@@ -43,6 +44,7 @@ public class Launcher {
 		hl.setHandlers(new Handler[] { generateStaticContext(), h });
 		s.setHandler(hl);
 		s.start();
+		new Thread(new BluetoothSensorReceiver()).start();
 		new Thread(new SensorReceiver(SensNetNodeConfiguration.getInstance()
 				.getSerialInputDevice())).start();
 	}

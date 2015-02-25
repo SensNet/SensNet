@@ -35,6 +35,9 @@ public class RadioDoseSensor {
 	}
 
 	public static boolean insert(DataPoint point, int id) throws SQLException {
+		if (point.getValues().length == 0) {
+			return true;
+		}
 		PreparedStatement pre = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO sensor_radiodose (datapoint,dose) VALUES(?,?)");
 		pre.setInt(1, id);

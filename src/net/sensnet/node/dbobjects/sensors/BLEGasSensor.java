@@ -1,6 +1,5 @@
 package net.sensnet.node.dbobjects.sensors;
 
-import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +9,7 @@ import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.dbobjects.DataPoint;
 
 //TODO Update before year 2038 ;)
-public class GasSensor {
+public class BLEGasSensor {
 	public static int[] getShifts(Date from, Date to) throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
@@ -32,13 +31,11 @@ public class GasSensor {
 	}
 
 	public static boolean insert(DataPoint point, int id) throws SQLException {
-		PreparedStatement pre = DatabaseConnection
-				.getInstance()
-				.prepare(
-						"INSERT INTO sensor_radiodose (id,datapoint,phaseshift) VALUES('',?,?)");
-		pre.setInt(2, id);
-		ByteBuffer bf = ByteBuffer.wrap(point.getValues());
-		pre.setInt(3, bf.getInt(0));
+		PreparedStatement pre = DatabaseConnection.getInstance().prepare(
+				"INSERT INTO sensor_gas (datapoint,phaseshift) VALUES(?,?)");
+		String data = new String(point.getValues()).trim();
+		pre.setInt(1, point.getBattery() );
+		pre.setInt(2, Integer.parseInt(data.split(";")[0]));
 		return pre.execute();
 	}
 
