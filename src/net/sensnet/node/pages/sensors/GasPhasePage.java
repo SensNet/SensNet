@@ -18,11 +18,11 @@ import net.sensnet.node.pages.NodesOverviewPage;
 
 import org.cacert.gigi.output.template.IterableDataset;
 
-public class RadioDosePage extends Page {
-	public static final String PATH = "/sensors/radio/dose";
+public class GasPhasePage extends Page {
+	public static final String PATH = "/sensors/gas";
 
-	public RadioDosePage() {
-		super("Radiodose sensor");
+	public GasPhasePage() {
+		super("Gas pahse shift");
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class RadioDosePage extends Page {
 						PreparedStatement prep = DatabaseConnection
 								.getInstance()
 								.prepare(
-										"select * from datapoints a where not exists ( select * from datapoints b where b.`from` = a.`from` and a.`received` < b.`received` and b.`receivernode` = ?) and a.`receivernode` = ? and `type`='3'");
+										"select * from datapoints a where not exists ( select * from datapoints b where b.`from` = a.`from` and a.`received` < b.`received` and b.`receivernode` = ?) and a.`receivernode` = ? and `type`='1'");
 						prep.setInt(1, receiver);
 						prep.setInt(2, receiver);
 						final ResultSet res = prep.executeQuery();
@@ -79,10 +79,13 @@ public class RadioDosePage extends Page {
 										vars.put("sensorid", res.getInt("from"));
 										vars.put("sensorbattery",
 												res.getInt("battery") + " %");
-										vars.put("lat", makeCoordinate(res
-												.getInt("locationlat")));
-										vars.put("long", makeCoordinate(res
-												.getInt("locationlong")));
+										vars.put("lat", RadioDosePage
+												.makeCoordinate(res
+														.getInt("locationlat")));
+										vars.put(
+												"long",
+												RadioDosePage.makeCoordinate(res
+														.getInt("locationlong")));
 										return true;
 									}
 								} catch (SQLException e) {
@@ -99,23 +102,8 @@ public class RadioDosePage extends Page {
 					return false;
 				}
 			});
-			vars.put("sensdata", new IterableDataset() {
-				int i = 0;
-
-				@Override
-				public boolean next(Map<String, Object> vars) {
-					if (data == null || data.length == i) {
-						return false;
-					}
-					int[] dat = data[i++];
-					vars.put("lt", makeCoordinate(dat[0]));
-					vars.put("lg", makeCoordinate(dat[1]));
-					vars.put("val", dat[2]);
-					return true;
-				}
-			});
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
 		getDefaultTemplate().output(resp.getWriter(), vars);
 	}
@@ -135,10 +123,4 @@ public class RadioDosePage extends Page {
 		return true;
 	}
 
-	public static String makeCoordinate(int coord) {
-		String lng = NodesOverviewPage.ammendZero(coord + "", 6);
-		lng = lng.substring(0, lng.length() - 5) + "."
-				+ lng.substring(lng.length() - 5, lng.length());
-		return lng;
-	}
 }

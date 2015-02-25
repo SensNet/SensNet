@@ -1,0 +1,45 @@
+<div id="half-map"></div>
+<div id="node-overview">
+<? foreach($nodes) { ?>
+<div class="panel panel-default">
+  <div class="panel-heading"><?=$sensname?></div>
+  <div class="panel-body">
+    <p><?=$sensdescr?></p>
+  </div>
+
+  <!-- Table -->
+  <table class="table">
+	<tr><th>Sensor #</th><th>Battery</th><th>Last seen</th></tr>
+	<? foreach($sensors) {?>
+		<tr class="mouse-click" data-lat="<?=$lat?>" data-id="<?=$sensorid?>" data-long="<?=$long?>"><td><?=$sensorid?></td><td><?=$sensorbattery?></td><td><?=$lastseen?></td></tr>
+	<? } ?>
+  </table>
+</div>
+<? } ?>
+</div>
+<script src="/static/js/leaflet.js"></script>
+<script src="/static/js/heatmap.min.js"></script>
+<script src="/static/js/leaflet-heatmap.js"></script>
+<script>
+		var map = L.map('half-map').setView([51.00, 10], 4);
+
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
+				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		}).addTo(map);
+
+
+		$("tr[data-lat]").each(function(index, element) {
+		var popup = L.popup()
+    .setLatLng([$(element).attr('data-lat'), $(element).attr('data-long')])
+    .setContent("<b>Sensor #"+$(element).attr('data-id')+"</b>");
+			L.marker([$(element).attr('data-lat'), $(element).attr('data-long')]).addTo(map)
+			.bindPopup(popup).on('click', function(e){
+			$(element).fadeTo('fast', 0).fadeTo('middle', 1.0).fadeTo('middle', 0).fadeTo('middle', 1.0);
+			});
+		$(element).click(function() {
+			popup.openOn(map);
+		});
+		});
+	</script>

@@ -46,7 +46,6 @@ public class BluetoothSensorReceiver implements Runnable {
 			}
 			BufferedReader reader = new BufferedReader(read);
 			String lineRead;
-			String nextPart = null;
 			while ((lineRead = reader.readLine()) != null) {
 				try {
 					if (lineRead.contains("value:")) {
@@ -64,7 +63,7 @@ public class BluetoothSensorReceiver implements Runnable {
 										.getThisNode()), rawdata,
 								System.currentTimeMillis() / 1000,
 								Integer.parseInt(dataParts[2]) / 10,
-								new LocationLatLong(490208826, 83705708),
+								new LocationLatLong(4902088, 837057),
 								SensNetNodeConfiguration.getInstance()
 										.getThisNode());
 						point.commit();

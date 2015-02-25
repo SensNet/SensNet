@@ -21,6 +21,7 @@ import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.SettingsPage;
 import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
 import net.sensnet.node.pages.api.json.JSONRadioDosePage;
+import net.sensnet.node.pages.sensors.GasPhasePage;
 import net.sensnet.node.pages.sensors.RadioDosePage;
 
 import org.cacert.gigi.output.template.Outputable;
@@ -47,6 +48,7 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(RadioDosePage.PATH, new RadioDosePage());
 		mapping.put(JSONRadioDosePage.PATH, new JSONRadioDosePage());
 		mapping.put(JSONNodeOverviewPage.PATH, new JSONNodeOverviewPage());
+		mapping.put(GasPhasePage.PATH, new GasPhasePage());
 	}
 
 	@Override
