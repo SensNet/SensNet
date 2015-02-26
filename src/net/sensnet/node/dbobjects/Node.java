@@ -28,9 +28,9 @@ public class Node implements Syncable {
 	}
 
 	public Node(ResultSet res) throws SQLException {
-		this.uid = res.getInt(2);
-		this.name = res.getString(3);
-		this.description = res.getString(4);
+		this.uid = res.getInt(1);
+		this.name = res.getString(2);
+		this.description = res.getString(3);
 	}
 
 	public Node(HttpServletRequest req) {
