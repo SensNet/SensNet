@@ -29,6 +29,41 @@ public class RadioDoseSensor {
 		return parseQuery(resSet);
 	}
 
+	public static int[] getLatestAvgDosesFromSensor(int sensor)
+			throws SQLException {
+		PreparedStatement prep = DatabaseConnection
+				.getInstance()
+				.prepare(
+						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? ORDER BY received DESC LIMIT 0,3 ");
+		prep.setInt(1, sensor);
+		int[] res = new int[3];
+		ResultSet resSet = prep.executeQuery();
+		int count = 0;
+		if (resSet.last()) {
+			count++;
+			resSet.first();
+			res[0] = resSet.getInt("lat");
+			res[1] = resSet.getInt("lng");
+			int avg = resSet.getInt("dose");
+			for (int i = 0; i < 2; i++) {
+				count++;
+				if (resSet.next()) {
+					avg += resSet.getInt("dose");
+				} else {
+					break;
+				}
+			}
+			avg = avg /= count;
+			res[2] = avg;
+			return res;
+		}
+		return null;
+	}
+
+	public static int[][] getLatestAvgDosesFromAllSensors() {
+		return null;
+	}
+
 	public static int[][] getDoses(Date from, Date to, int receiverNode)
 			throws SQLException {
 		PreparedStatement prep = DatabaseConnection

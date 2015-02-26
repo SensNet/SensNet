@@ -110,7 +110,7 @@ public class RadioDosePage extends Page {
 					int[] dat = data[i++];
 					vars.put("lt", makeCoordinate(dat[0]));
 					vars.put("lg", makeCoordinate(dat[1]));
-					vars.put("val", dat[2]);
+					vars.put("val", dat[2] / 12);
 					return true;
 				}
 			});

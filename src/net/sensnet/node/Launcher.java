@@ -44,7 +44,9 @@ public class Launcher {
 		hl.setHandlers(new Handler[] { generateStaticContext(), h });
 		s.setHandler(hl);
 		s.start();
-		new Thread(new BluetoothSensorReceiver()).start();
+		if (SensNetNodeConfiguration.getInstance().isBLEEnabled()) {
+			new Thread(new BluetoothSensorReceiver()).start();
+		}
 		new Thread(new SensorReceiver(SensNetNodeConfiguration.getInstance()
 				.getSerialInputDevice())).start();
 	}

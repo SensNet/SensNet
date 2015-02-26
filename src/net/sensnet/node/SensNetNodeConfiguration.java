@@ -139,4 +139,11 @@ public class SensNetNodeConfiguration {
 
 	}
 
+	public boolean isBLEEnabled() {
+		if (p.getProperty("node.enableble").equals("true")) {
+			return true;
+		}
+		return false;
+	}
+
 }

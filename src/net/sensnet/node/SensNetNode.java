@@ -19,6 +19,7 @@ import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.SettingsPage;
+import net.sensnet.node.pages.api.json.BLEGasPhaseShiftApiPage;
 import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
 import net.sensnet.node.pages.api.json.JSONRadioDosePage;
 import net.sensnet.node.pages.sensors.GasPhasePage;
@@ -49,6 +50,7 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(JSONRadioDosePage.PATH, new JSONRadioDosePage());
 		mapping.put(JSONNodeOverviewPage.PATH, new JSONNodeOverviewPage());
 		mapping.put(GasPhasePage.PATH, new GasPhasePage());
+		mapping.put(BLEGasPhaseShiftApiPage.PATH, new BLEGasPhaseShiftApiPage());
 	}
 
 	@Override

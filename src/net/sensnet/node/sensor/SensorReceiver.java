@@ -70,9 +70,10 @@ public class SensorReceiver implements Runnable {
 						battery = (int) ((battery / 255f) * 100);
 						long timestamp = buffer.getInt(15) & 0xFFFFFFFFl;
 						long timestamp2 = buffer.getInt(19) & 0xFFFFFFFFl;
+						System.out.println(timestamp + "" + timestamp2);
 						// 10:59:34 24.02.15
 						SimpleDateFormat format = new SimpleDateFormat(
-								"HHmmssddMMyy");
+								"HmmssddMMyy");
 						format.setTimeZone(TimeZone.getTimeZone("GMT"));
 						Date date = format.parse(timestamp + "" + timestamp2
 								+ "");

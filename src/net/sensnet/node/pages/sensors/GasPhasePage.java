@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.Page;
 import net.sensnet.node.SensNetNodeConfiguration;
-import net.sensnet.node.dbobjects.sensors.RadioDoseSensor;
+import net.sensnet.node.dbobjects.sensors.BLEGasSensor;
 import net.sensnet.node.pages.NodesOverviewPage;
 
 import org.cacert.gigi.output.template.IterableDataset;
@@ -29,7 +29,7 @@ public class GasPhasePage extends Page {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
 		try {
-			final int[][] data = RadioDoseSensor.getLatestDosesFromAllSensors();
+			final int[][] data = BLEGasSensor.getLatestShifts(20);
 			PreparedStatement nodes = DatabaseConnection.getInstance().prepare(
 					"SELECT * FROM nodes");
 			final ResultSet nodeSet = nodes.executeQuery();
