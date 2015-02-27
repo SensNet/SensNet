@@ -34,7 +34,7 @@ public class RadioDoseSensor {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? ORDER BY received DESC LIMIT 0,3 ");
+						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? ORDER BY received DESC LIMIT 0,5 ");
 		prep.setInt(1, sensor);
 		int[] res = new int[3];
 		ResultSet resSet = prep.executeQuery();
@@ -45,7 +45,7 @@ public class RadioDoseSensor {
 			res[0] = resSet.getInt("lat");
 			res[1] = resSet.getInt("lng");
 			int avg = resSet.getInt("dose");
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 4; i++) {
 				count++;
 				if (resSet.next()) {
 					avg += resSet.getInt("dose");
@@ -60,7 +60,19 @@ public class RadioDoseSensor {
 		return null;
 	}
 
-	public static int[][] getLatestAvgDosesFromAllSensors() {
+	public static int[][] getLatestAvgDosesFromAllSensors() throws SQLException {
+		PreparedStatement sensors = DatabaseConnection.getInstance().prepare(
+				"SELECT `from` FROM datapoints WHERE type=3 GROUP BY `from`");
+		ResultSet resSet = sensors.executeQuery();
+		if (resSet.last()) {
+			int[][] res = new int[resSet.getRow()][];
+			resSet.beforeFirst();
+			int i = 0;
+			while (resSet.next()) {
+				res[i++] = getLatestAvgDosesFromSensor(resSet.getInt("from"));
+			}
+			return res;
+		}
 		return null;
 	}
 
