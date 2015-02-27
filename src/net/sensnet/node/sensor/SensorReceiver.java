@@ -27,7 +27,8 @@ public class SensorReceiver implements Runnable {
 	public static void main(String[] args) throws UnknownHostException,
 			IOException, InterruptedException {
 		new Thread(new SensorReceiver(DummySender.TTY)).start();
-		// DummySender.main(new String[0]);
+		// DummySender.maresource://firefox-at-ghostery-dot-com/ghostery/data/walkthrough.htmin(new
+		// String[0]);
 	}
 
 	public SensorReceiver(String interfa) {
@@ -73,10 +74,10 @@ public class SensorReceiver implements Runnable {
 						System.out.println(timestamp + "" + timestamp2);
 						// 10:59:34 24.02.15
 						SimpleDateFormat format = new SimpleDateFormat(
-								"HmmssddMMyy");
+								"HHmmssddMMyy");
 						format.setTimeZone(TimeZone.getTimeZone("GMT"));
-						Date date = format.parse(timestamp + "" + timestamp2
-								+ "");
+						Date date = format.parse(ammenddateZero(timestamp + "",
+								6) + ammenddateZero(timestamp2 + "", 6));
 						System.out.println(date);
 						byte ttl = buf[23];
 						byte rssi = buf[24];
@@ -98,13 +99,19 @@ public class SensorReceiver implements Runnable {
 						}
 						byte[] tmp = new byte[256];
 						try {
-							DataPoint datapoint = new DataPoint(sensortype,
-									Sensor.getBySensorUid(sensorid), datas,
-									date.getTime() / 1000, battery,
-									new LocationLatLong(lat, longitude),
-									SensNetNodeConfiguration.getInstance()
-											.getThisNode());
-							datapoint.commit();
+							if (date.getTime() > System.currentTimeMillis() + 1000 * 60 * 6) {
+								Logger.getAnonymousLogger()
+										.log(Level.WARNING,
+												"Received timestamp from the future! Droped...");
+							} else {
+								DataPoint datapoint = new DataPoint(sensortype,
+										Sensor.getBySensorUid(sensorid), datas,
+										date.getTime() / 1000, battery,
+										new LocationLatLong(lat, longitude),
+										SensNetNodeConfiguration.getInstance()
+												.getThisNode());
+								datapoint.commit();
+							}
 						} catch (SQLException | InvalidNodeAuthException e) {
 							e.printStackTrace();
 						}
@@ -120,10 +127,18 @@ public class SensorReceiver implements Runnable {
 						.log(Level.WARNING,
 								"Receiver shutdown: Received EOF on interface. Retrying in 5 secounds.");
 				Thread.sleep(5000);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private static String ammenddateZero(String in, int l) {
+		String res = in;
+		while (res.length() != l) {
+			res = "0" + res;
+		}
+		return res;
 	}
 
 }
