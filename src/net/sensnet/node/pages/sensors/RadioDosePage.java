@@ -28,8 +28,10 @@ public class RadioDosePage extends Page {
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
+		resp.setHeader("Refresh", "5; url=/sensors/radio/dose");
 		try {
-			final int[][] data = RadioDoseSensor.getLatestDosesFromAllSensors();
+			final int[][] data = RadioDoseSensor
+					.getLatestAvgDosesFromAllSensors();
 			PreparedStatement nodes = DatabaseConnection.getInstance().prepare(
 					"SELECT * FROM nodes");
 			final ResultSet nodeSet = nodes.executeQuery();
