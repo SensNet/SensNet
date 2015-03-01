@@ -28,7 +28,6 @@ public class RadioDosePage extends Page {
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
-		resp.setHeader("Refresh", "5; url=/sensors/radio/dose");
 		try {
 			final int[][] data = RadioDoseSensor
 					.getLatestAvgDosesFromAllSensors();
