@@ -37,11 +37,13 @@ public class ConnUtils {
 			System.out.println(con.getResponseCode());
 			BufferedReader read = new BufferedReader(new InputStreamReader(
 					con.getInputStream()));
-			String tmp;
-			while ((tmp = read.readLine()) != null) {
-				System.err.println("Server said: " + tmp);
+			if (con.getResponseCode() == 500) {
+				String tmp;
+				while ((tmp = read.readLine()) != null) {
+					System.err.println("Simon says: " + tmp);
+				}
+				read.close();
 			}
-			read.close();
 			throw new InvalidNodeAuthException();
 		}
 		os.close();
