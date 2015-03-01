@@ -14,8 +14,7 @@ import net.sensnet.node.SensNetNodeConfiguration;
 
 public class ConnUtils {
 	public static BufferedReader postNodeAuthenticatedData(String path,
-			String postData)
- throws IOException, SQLException,
+			String postData) throws IOException, SQLException,
 			InvalidNodeAuthException {
 		HttpURLConnection con = (HttpURLConnection) new URL(
 				SensNetNodeConfiguration.getInstance().getSuperNode() + path)
@@ -23,7 +22,8 @@ public class ConnUtils {
 		String data = "node_token=";
 		data += URLEncoder.encode(SensNetNodeConfiguration.getInstance()
 				.getSuperNodeAuth(), "UTF-8");
-		data += "&node_id=" + SensNetNodeConfiguration.getInstance().getNodeID();
+		data += "&node_id="
+				+ SensNetNodeConfiguration.getInstance().getNodeID();
 		data += postData;
 		con.setDoOutput(true);
 		con.setDoInput(true);
@@ -34,8 +34,17 @@ public class ConnUtils {
 		OutputStream os = con.getOutputStream();
 		os.write(data.getBytes());
 		if (con.getResponseCode() != 200) {
+			System.out.println(con.getResponseCode());
+			BufferedReader read = new BufferedReader(new InputStreamReader(
+					con.getInputStream()));
+			String tmp;
+			while ((tmp = read.readLine()) != null) {
+				System.err.println("Server said: " + tmp);
+			}
+			read.close();
 			throw new InvalidNodeAuthException();
 		}
+		os.close();
 		return new BufferedReader(new InputStreamReader(con.getInputStream()));
 	}
 }
