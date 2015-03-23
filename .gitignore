@@ -2,3 +2,4 @@
 *.jar
 *.DS_Store
 /conf/node.properties
+/bin-plugins/
