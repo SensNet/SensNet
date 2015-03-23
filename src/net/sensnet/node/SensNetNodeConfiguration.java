@@ -146,4 +146,8 @@ public class SensNetNodeConfiguration {
 		return false;
 	}
 
+	public String getProperty(String property) {
+		return p.getProperty("plugin." + property);
+	}
+
 }

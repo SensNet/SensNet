@@ -1,4 +1,4 @@
 /bin/
 *.jar
 *.DS_Store
-/conf/
+/conf/node.properties
