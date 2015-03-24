@@ -58,6 +58,9 @@ public class Launcher {
 				"conf/plugins.txt")))) {
 			String line;
 			while ((line = read.readLine()) != null) {
+				if (line.startsWith("#")) {
+					continue;
+				}
 				try {
 					Class<?> forName = Class.forName(line);
 					Constructor<?> c = forName
