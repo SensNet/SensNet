@@ -12,7 +12,6 @@ import java.net.InetSocketAddress;
 
 import net.sensnet.node.plugins.HardwareInputPlugin;
 import net.sensnet.node.plugins.Plugin;
-import net.sensnet.node.sensor.BluetoothSensorReceiver;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -58,7 +57,7 @@ public class Launcher {
 				"conf/plugins.txt")))) {
 			String line;
 			while ((line = read.readLine()) != null) {
-				if (line.startsWith("#")) {
+				if (line.startsWith("#") || line.trim().isEmpty()) {
 					continue;
 				}
 				try {
@@ -87,9 +86,6 @@ public class Launcher {
 					e);
 		}
 		logger.info("Finished plugin loading.");
-		if (SensNetNodeConfiguration.getInstance().isBLEEnabled()) {
-			new Thread(new BluetoothSensorReceiver()).start();
-		}
 	}
 
 	private static Handler generateStaticContext() {

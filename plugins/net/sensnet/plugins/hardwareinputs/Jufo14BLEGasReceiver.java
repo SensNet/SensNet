@@ -1,4 +1,4 @@
-package net.sensnet.node.sensor;
+package net.sensnet.plugins.hardwareinputs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,10 +10,12 @@ import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.dbobjects.LocationLatLong;
 import net.sensnet.node.dbobjects.Sensor;
+import net.sensnet.node.plugins.HardwareInputPlugin;
 
-public class BluetoothSensorReceiver implements Runnable {
-	public static void main(String[] args) throws IOException {
-		new Thread(new BluetoothSensorReceiver()).start();
+public class Jufo14BLEGasReceiver extends HardwareInputPlugin {
+
+	public Jufo14BLEGasReceiver(SensNetNodeConfiguration configuration) {
+		super(configuration);
 	}
 
 	public static byte[] hexStringToByteArray(String s) {
@@ -80,4 +82,5 @@ public class BluetoothSensorReceiver implements Runnable {
 			e.printStackTrace();
 		}
 	}
+
 }
