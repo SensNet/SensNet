@@ -1,10 +1,8 @@
-package net.sensnet.node.sensor;
+package net.sensnet.plugins.hardwareinputs;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -18,25 +16,19 @@ import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.dbobjects.LocationLatLong;
 import net.sensnet.node.dbobjects.Sensor;
+import net.sensnet.node.plugins.HardwareInputPlugin;
 
-public class SensorReceiver implements Runnable {
-	private File inter;
+public class SensNetSensorReceiver extends HardwareInputPlugin {
 	public static final byte MAJOR_VERSION = 0x02;
 	public static final byte MINOR_VERSION = 0x00;
 
-	public static void main(String[] args) throws UnknownHostException,
-			IOException, InterruptedException {
-		new Thread(new SensorReceiver(DummySender.TTY)).start();
-		// DummySender.maresource://firefox-at-ghostery-dot-com/ghostery/data/walkthrough.htmin(new
-		// String[0]);
-	}
-
-	public SensorReceiver(String interfa) {
-		this.inter = new File(interfa);
+	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
+		super(configuration);
 	}
 
 	@Override
 	public void run() {
+		File inter = new File(getProperty("serial"));
 		if (!inter.exists()) {
 			System.err.println("Serial interface not found!");
 			return;

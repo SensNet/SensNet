@@ -10,9 +10,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 
+import net.sensnet.node.plugins.HardwareInputPlugin;
 import net.sensnet.node.plugins.Plugin;
 import net.sensnet.node.sensor.BluetoothSensorReceiver;
-import net.sensnet.node.sensor.SensorReceiver;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -67,6 +67,9 @@ public class Launcher {
 					if (!(plugin instanceof Plugin)) {
 						throw new InstantiationException("Class not a plugin!");
 					}
+					if (plugin instanceof HardwareInputPlugin) {
+						new Thread((HardwareInputPlugin) plugin).start();
+					}
 					logger.info("Loaded plugin '" + forName.getName() + "'.");
 				} catch (ClassNotFoundException | InstantiationException
 						| IllegalAccessException | NoSuchMethodException
@@ -84,8 +87,6 @@ public class Launcher {
 		if (SensNetNodeConfiguration.getInstance().isBLEEnabled()) {
 			new Thread(new BluetoothSensorReceiver()).start();
 		}
-		new Thread(new SensorReceiver(SensNetNodeConfiguration.getInstance()
-				.getSerialInputDevice())).start();
 	}
 
 	private static Handler generateStaticContext() {
