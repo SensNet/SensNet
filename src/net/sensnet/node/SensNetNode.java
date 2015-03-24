@@ -29,9 +29,9 @@ import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
 
 public class SensNetNode extends HttpServlet {
-	private HashMap<String, Page> mapping = new HashMap<>();
 	private Page mainPage = new MainPage("Login");
 	private Template mainTemplate;
+	private PageMapping mapping = PageMapping.getInstance();
 
 	@Override
 	public void init() throws ServletException {
@@ -77,10 +77,8 @@ public class SensNetNode extends HttpServlet {
 		if (pathInfo == null || pathInfo == "/") {
 			p = mainPage;
 		} else {
-			if (mapping.containsKey(pathInfo)) {
-				p = mapping.get(pathInfo);
-			} else {
-				p = null;
+			p = mapping.getPageForPath(pathInfo);
+			if (p == null) {
 				resp.sendError(404);
 				return;
 			}
