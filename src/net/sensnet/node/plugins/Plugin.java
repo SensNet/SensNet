@@ -13,8 +13,15 @@ public abstract class Plugin {
 	}
 
 	public String getProperty(String property) {
-		return configuration.getProperty(getClass().getName().toLowerCase()
-				+ "." + property);
+		String res = configuration.getProperty(getClass().getName()
+				.toLowerCase() + "." + property);
+		if (res == null) {
+			throw new IllegalArgumentException("Misconfigured plugin '"
+					+ getClass().getName()
+					+ "'! Couldn't find configuration property '" + property
+					+ "'.");
+		}
+		return res;
 	}
 
 	public Logger getLoger() {
