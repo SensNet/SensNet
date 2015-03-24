@@ -5,9 +5,9 @@ import net.sensnet.node.pages.api.json.DatapointJSONApiPage;
 
 import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
 
-public abstract class Visualizer extends Plugin {
+public abstract class VisualizerPlugin extends Plugin {
 
-	public Visualizer(SensNetNodeConfiguration configuration) {
+	public VisualizerPlugin(SensNetNodeConfiguration configuration) {
 		super(configuration);
 	}
 
