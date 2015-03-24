@@ -65,7 +65,31 @@
 		<echo level="warning"
 			message="WARNING: add proper copyright notice before distributing JufoGasRadio-full.jar." />
 	</target>
-	<target name="all" depends="pack,pack-full" />
+	<target name="pack-heavy" depends="build">
+		<jar destfile="SensNetNode-heavy.jar" basedir="bin" manifest="SensNetNode.MF">
+			<restrict>
+				<not>
+					<or>
+						<name name="META-INF/LICENSE" />
+						<name name="META-INF/NOTICE" />
+					</or>
+				</not>
+				<archives>
+					<zips>
+						<fileset dir="lib">
+							<include name="**/*.jar" />
+						</fileset>
+						<fileset dir="bin-plugins">
+						    <include name="**/*.class" />
+						</fileset>
+					</zips>
+				</archives>
+			</restrict>
+		</jar>
+		<echo level="warning"
+			message="WARNING: add proper copyright notice before distributing JufoGasRadio-full.jar." />
+	</target>
+	<target name="all" depends="pack,pack-full,pack-heavy" />
 	<target name="run" depends="pack">
 		<java classname="net.sensnet.node.Launcher" fork="true"
 			failonerror="true">
@@ -79,6 +103,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir=".">
 				<include name="bin/**/*" />
+				<include name="bin-plugins/**/*" />
 				<include name="SensNetNode.jar" />
 				<include name="SensNetNode-Plugins.jar" />
 				<include name="SensNetNode-full.jar" />
