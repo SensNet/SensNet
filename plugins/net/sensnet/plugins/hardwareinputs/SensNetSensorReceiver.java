@@ -30,7 +30,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 	public void run() {
 		File inter = new File(getProperty("serial"));
 		if (!inter.exists()) {
-			System.err.println("Serial interface not found!");
+			getLoger().warn("Serial interface not found!");
 			return;
 		}
 		while (true) {
