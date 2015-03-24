@@ -16,7 +16,7 @@ public class SensNetNodeConfiguration {
 	private String superNode;
 	private Node me = null;
 
-	public SensNetNodeConfiguration(InputStream in) throws IOException,
+	protected SensNetNodeConfiguration(InputStream in) throws IOException,
 			SQLException {
 		this.p = new Properties();
 		p.load(in);
@@ -34,19 +34,19 @@ public class SensNetNodeConfiguration {
 		return p.getProperty("node.name");
 	}
 
-	public String getDB() {
+	protected String getDB() {
 		return p.getProperty("node.db");
 	}
 
-	public String getDBUser() {
+	protected String getDBUser() {
 		return p.getProperty("node.db.user");
 	}
 
-	public String getDBPW() {
+	protected String getDBPW() {
 		return p.getProperty("node.db.pw");
 	}
 
-	public String getJDBCDriver() {
+	protected String getJDBCDriver() {
 		return p.getProperty("node.db.driver");
 	}
 
@@ -119,10 +119,6 @@ public class SensNetNodeConfiguration {
 		return me;
 	}
 
-	public String getSerialInputDevice() {
-		return p.getProperty("node.serial");
-	}
-
 	private void store() {
 		File f = new File("conf/");
 		if (!f.exists()) {
@@ -137,13 +133,6 @@ public class SensNetNodeConfiguration {
 			e.printStackTrace();
 		}
 
-	}
-
-	public boolean isBLEEnabled() {
-		if (p.getProperty("node.enableble").equals("true")) {
-			return true;
-		}
-		return false;
 	}
 
 	public String getProperty(String property) {
