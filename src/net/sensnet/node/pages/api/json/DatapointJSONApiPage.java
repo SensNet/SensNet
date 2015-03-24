@@ -24,7 +24,7 @@ public abstract class DatapointJSONApiPage extends JSONApiPage {
 		if (req.getParameter("node") != null) {
 			node = Integer.parseInt(req.getParameter("node"));
 		}
-		if (node == -1) {
+		if (node != -1) {
 			return getData(from, to, node);
 		} else {
 			return getData(from, to);

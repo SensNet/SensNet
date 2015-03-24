@@ -1,4 +1,4 @@
-package net.sensnet.node.dbobjects.sensors;
+package net.sensnet.plugins.visualizer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,9 +6,53 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import net.sensnet.node.DatabaseConnection;
+import net.sensnet.node.IndexizerHolder;
 import net.sensnet.node.dbobjects.DataPoint;
+import net.sensnet.node.plugins.SensorIndexizer;
 
-public class RadioDoseSensor {
+public class RadioDoseSensor extends SensorIndexizer {
+
+	public RadioDoseSensor() throws SQLException {
+		super();
+		IndexizerHolder.getInstance().put(new RadioDoseSensor());
+	}
+
+	@Override
+	public String getSensorName() {
+		return "radiodose";
+	}
+
+	@Override
+	public String createIndexTableArguments() {
+		return "`id` int(11) unsigned NOT NULL, `datapoint` "
+				+ "int(11) unsigned NOT NULL, `dose` int(5) "
+				+ "unsigned NOT NULL";
+	}
+
+	@Override
+	public String getInsertionPreparedQuery() {
+		return "INSERT INTO " + getTableName()
+				+ " (datapoint,dose) VALUES(?,?)";
+	}
+
+	@Override
+	public boolean indexize(PreparedStatement insertQuery, DataPoint target,
+			int id) throws SQLException {
+		insertQuery.setInt(1, id);
+		// ByteBuffer bf = ByteBuffer.wrap(point.getValues());
+		if (target.getValues().length == 0) {
+			insertQuery.setInt(2, 0);
+		} else {
+			insertQuery.setInt(2, ((target.getValues().length - 4) / 2) * 12);
+		}
+		return insertQuery.execute();
+	}
+
+	@Override
+	public int getSensorType() {
+		return 3;
+	}
+
 	public static int[][] getDoses(Date from, Date to) throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
@@ -89,19 +133,6 @@ public class RadioDoseSensor {
 		return parseQuery(resSet);
 	}
 
-	public static boolean insert(DataPoint point, int id) throws SQLException {
-		PreparedStatement pre = DatabaseConnection.getInstance().prepare(
-				"INSERT INTO sensor_radiodose (datapoint,dose) VALUES(?,?)");
-		pre.setInt(1, id);
-		// ByteBuffer bf = ByteBuffer.wrap(point.getValues());
-		if (point.getValues().length == 0) {
-			pre.setInt(2, 0);
-		} else {
-			pre.setInt(2, ((point.getValues().length - 4) / 2) * 12);
-		}
-		return pre.execute();
-	}
-
 	private static int[][] parseQuery(ResultSet resSet) throws SQLException {
 		if (resSet.last()) {
 			int[][] res = new int[resSet.getRow()][];
@@ -121,5 +152,4 @@ public class RadioDoseSensor {
 		}
 		return new int[0][];
 	}
-
 }

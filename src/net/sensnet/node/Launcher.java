@@ -10,6 +10,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 
+import net.sensnet.node.pages.PluginPage;
+import net.sensnet.node.plugins.DataVisualizerPlugin;
 import net.sensnet.node.plugins.HardwareInputPlugin;
 import net.sensnet.node.plugins.Plugin;
 
@@ -71,6 +73,14 @@ public class Launcher {
 					}
 					if (plugin instanceof HardwareInputPlugin) {
 						new Thread((HardwareInputPlugin) plugin).start();
+					} else if (plugin instanceof DataVisualizerPlugin) {
+						DataVisualizerPlugin dvp = (DataVisualizerPlugin) plugin;
+						PageMapping.getInstance().put(
+								"/sensors/" + dvp.getSensorTypeName(),
+								new PluginPage(dvp));
+						PageMapping.getInstance().put(
+								"/api/json/sensors/" + dvp.getSensorTypeName(),
+								dvp.getDatapointJSONApiPage());
 					}
 					logger.info("Loaded plugin '" + forName.getName() + "'.");
 				} catch (ClassNotFoundException | InstantiationException

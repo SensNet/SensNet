@@ -21,9 +21,7 @@ import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.SettingsPage;
 import net.sensnet.node.pages.api.json.BLEGasPhaseShiftApiPage;
 import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
-import net.sensnet.node.pages.api.json.JSONRadioDosePage;
 import net.sensnet.node.pages.sensors.GasPhasePage;
-import net.sensnet.node.pages.sensors.RadioDosePage;
 
 import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
@@ -46,8 +44,6 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(NodesOverviewPage.PATH, new NodesOverviewPage("Nodes"));
 		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
 		mapping.put(SettingsPage.PATH, new SettingsPage());
-		mapping.put(RadioDosePage.PATH, new RadioDosePage());
-		mapping.put(JSONRadioDosePage.PATH, new JSONRadioDosePage());
 		mapping.put(JSONNodeOverviewPage.PATH, new JSONNodeOverviewPage());
 		mapping.put(GasPhasePage.PATH, new GasPhasePage());
 		mapping.put(BLEGasPhaseShiftApiPage.PATH, new BLEGasPhaseShiftApiPage());

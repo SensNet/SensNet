@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import net.sensnet.node.SensNetNodeConfiguration;
-import net.sensnet.node.dbobjects.sensors.RadioDoseSensor;
 import net.sensnet.node.pages.api.json.DatapointJSONApiPage;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
 

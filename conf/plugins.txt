@@ -1,5 +1,10 @@
+## === HARDWARE ===
+
 net.sensnet.plugins.hardwareinputs.SensNetSensorReceiver
 ## Uncomment the following line, if you wan to use the Gas detector by
 ## Niklas Fauth as presented at JuFo 14.
 
 #net.sensnet.plugins.hardwareinputs.Jufo14BLEGasReceiver
+
+## === VISUALIZER ===
+net.sensnet.plugins.visualizer.RadioDoseVisualizer
