@@ -1,40 +1,5 @@
 <div id="half-map"></div>
 <div id="node-overview">
-	<? foreach($nodes) { ?>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<?=$sensname?>
-		</div>
-		<div class="panel-body">
-			<p>
-				<?=$sensdescr?>
-			</p>
-		</div>
-
-		<!-- Table -->
-		<table class="table">
-			<tr>
-				<th>Sensor #</th>
-				<th>Battery</th>
-				<th>Last seen</th>
-			</tr>
-			<? foreach($sensors) {?>
-			<tr class="mouse-click" data-lat="<?=$lat?>" data-id="<?=$sensorid?>"
-				data-long="<?=$long?>">
-				<td>
-					<?=$sensorid?>
-				</td>
-				<td>
-					<?=$sensorbattery?>
-				</td>
-				<td>
-					<?=$lastseen?>
-				</td>
-			</tr>
-			<? } ?>
-		</table>
-	</div>
-	<? } ?>
 </div>
 <script src="/static/js/leaflet.js"></script>
 <script src="/static/js/heatmap.min.js"></script>
@@ -82,6 +47,9 @@ var refresh = function() {
 			var lat = makeCoordinate(data[i][0]);
 			var lng = makeCoordinate(data[i][1]);
 			var m = L.marker([lat, lng]);
+			var popup = L.popup().setLatLng([lat, lng])
+		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][3]+"</b><br/>"+data[i][2] +"CPM<br/>~"+data[i][2]/100+"µSv</p>");
+			m.bindPopup(popup);
 				markers.addLayer(m);
 				dat.push({lat: lat, lng: lng, count: data[i][2]});
 				$.getJSON("/api/json/nodes?forsensor="+data[i][3], function(data) {
