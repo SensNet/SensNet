@@ -1,5 +1,6 @@
 <div id="half-map"></div>
 <div id="node-overview">
+<h4>Sensors providing radio dose measurement</h4>
 </div>
 <script src="/static/js/leaflet.js"></script>
 <script src="/static/js/heatmap.min.js"></script>
@@ -77,7 +78,7 @@ var refresh = function() {
 							overview.append(panel);
 					}
 						var pan = $("#snesorsby"+data[0]);
-						$.getJSON("/api/json/nodes?sensorsbynode="+data[0], function(data){
+						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=3", function(data){
 							for(var j = 0; j< data.length;j++) {	
 								if($("#sensor_"+data[j][0]).length == 0) {	
 								var row = document.createElement("tr");
