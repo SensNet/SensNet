@@ -14,8 +14,12 @@ public abstract class DatapointJSONApiPage extends JSONApiPage {
 	public JSONArray getData(HttpServletRequest req) throws JSONException,
 			SQLException {
 		if (req.getParameter("near") != null) {
-			Date near = new Date(
-					Long.parseLong(req.getParameter("near")) * 1000);
+			Date near;
+			if (req.getParameter("near").equals("now")) {
+				near = new Date();
+			} else {
+				near = new Date(Long.parseLong(req.getParameter("near")) * 1000);
+			}
 			return getLatestDataNear(near);
 		} else {
 			Date from = new Date(

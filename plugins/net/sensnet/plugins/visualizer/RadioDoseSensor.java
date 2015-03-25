@@ -8,6 +8,7 @@ import java.util.Date;
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.IndexizerHolder;
 import net.sensnet.node.dbobjects.DataPoint;
+import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.plugins.SensorIndexizer;
 
 public class RadioDoseSensor extends SensorIndexizer {
@@ -157,5 +158,12 @@ public class RadioDoseSensor extends SensorIndexizer {
 			return res;
 		}
 		return new int[0][];
+	}
+
+	public static String makeCoordinate(int coord) {
+		String lng = NodesOverviewPage.ammendZero(coord + "", 6);
+		lng = lng.substring(0, lng.length() - 5) + "."
+				+ lng.substring(lng.length() - 5, lng.length());
+		return lng;
 	}
 }
