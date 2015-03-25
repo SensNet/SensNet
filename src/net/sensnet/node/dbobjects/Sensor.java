@@ -28,7 +28,12 @@ public class Sensor implements Syncable {
 
 	public Sensor(ResultSet set) throws SQLException {
 		this.id = set.getInt(2);
-		this.node = Node.getByUid(set.getInt(3));
+		int uid = set.getInt(3);
+		if (uid == SensNetNodeConfiguration.getInstance().getNodeID()) {
+			this.node = SensNetNodeConfiguration.getInstance().getThisNode();
+		} else {
+			this.node = Node.getByUid(uid);
+		}
 	}
 
 	public int getId() {

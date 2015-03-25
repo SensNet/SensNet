@@ -16,6 +16,8 @@ import net.sensnet.node.SuperCommunicationsManager;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.util.ConnUtils;
 
+import org.json.JSONArray;
+
 public class Node implements Syncable {
 	private int uid;
 	private String name, description;
@@ -52,6 +54,9 @@ public class Node implements Syncable {
 	}
 
 	public static Node getByUid(int uid) throws SQLException {
+		if (uid == SensNetNodeConfiguration.getInstance().getNodeID()) {
+			return SensNetNodeConfiguration.getInstance().getThisNode();
+		}
 		if (cache.containsKey(uid)) {
 			return cache.get(uid);
 		}
@@ -92,4 +97,25 @@ public class Node implements Syncable {
 		prep.executeUpdate();
 	}
 
+	public JSONArray getLatestSensors() throws SQLException {
+		PreparedStatement prep = DatabaseConnection
+				.getInstance()
+				.prepare(
+						"select * from datapoints a where not exists ( select * from datapoints b where b.`from` = a.`from` and a.`received` < b.`received` and b.`receivernode` = ?) and a.`receivernode` = ?");
+		prep.setInt(1, uid);
+		prep.setInt(2, uid);
+		ResultSet resSet = prep.executeQuery();
+		resSet.last();
+		String[][] res = new String[resSet.getRow()][];
+		resSet.beforeFirst();
+		int count = 0;
+		while (resSet.next()) {
+			String[] thing = new String[3];
+			thing[0] = resSet.getInt("from") + "";
+			thing[1] = resSet.getLong("received") + "";
+			thing[2] = resSet.getInt("battery") + " %";
+			res[count++] = thing;
+		}
+		return new JSONArray(res);
+	}
 }
