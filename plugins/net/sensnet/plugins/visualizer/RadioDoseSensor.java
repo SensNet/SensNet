@@ -82,7 +82,7 @@ public class RadioDoseSensor extends SensorIndexizer {
 						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? AND received <= ? ORDER BY received DESC LIMIT 0,5 ");
 		prep.setInt(1, sensor);
 		prep.setLong(2, upperLimit.getTime() / 1000);
-		int[] res = new int[3];
+		int[] res = new int[4];
 		ResultSet resSet = prep.executeQuery();
 		int count = 0;
 		if (resSet.last()) {
@@ -101,6 +101,7 @@ public class RadioDoseSensor extends SensorIndexizer {
 			}
 			avg = avg /= count;
 			res[2] = avg;
+			res[3] = resSet.getInt("from");
 			return res;
 		}
 		return null;
