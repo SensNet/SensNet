@@ -19,7 +19,7 @@ import net.sensnet.node.dbobjects.Sensor;
 import net.sensnet.node.plugins.HardwareInputPlugin;
 
 public class SensNetSensorReceiver extends HardwareInputPlugin {
-	public static final byte MAJOR_VERSION = 0x03;
+	public static final byte MAJOR_VERSION = 3;
 	public static final byte MINOR_VERSION = 0x00;
 
 	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
@@ -115,9 +115,8 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 					}
 				}
 				r.close();
-				Logger.getAnonymousLogger()
-						.log(Level.WARNING,
-								"Receiver shutdown: Received EOF on interface. Retrying in 5 secounds.");
+				getLoger()
+						.warn("Receiver shutdown: Received EOF on interface. Retrying in 5 secounds.");
 				Thread.sleep(5000);
 			} catch (Throwable e) {
 				e.printStackTrace();
