@@ -15,6 +15,7 @@ import net.sensnet.node.Page;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.sensors.BLEGasSensor;
 import net.sensnet.node.pages.NodesOverviewPage;
+import net.sensnet.node.util.MapUtils;
 
 import org.cacert.gigi.output.template.IterableDataset;
 
@@ -79,12 +80,12 @@ public class GasPhasePage extends Page {
 										vars.put("sensorid", res.getInt("from"));
 										vars.put("sensorbattery",
 												res.getInt("battery") + " %");
-										vars.put("lat", RadioDosePage
+										vars.put("lat", MapUtils
 												.makeCoordinate(res
 														.getInt("locationlat")));
 										vars.put(
 												"long",
-												RadioDosePage.makeCoordinate(res
+												MapUtils.makeCoordinate(res
 														.getInt("locationlong")));
 										return true;
 									}

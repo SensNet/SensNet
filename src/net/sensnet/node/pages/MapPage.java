@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.Page;
-import net.sensnet.node.pages.sensors.RadioDosePage;
+import net.sensnet.node.util.MapUtils;
 
 import org.cacert.gigi.output.template.IterableDataset;
 
@@ -37,9 +37,9 @@ public class MapPage extends Page {
 				public boolean next(Map<String, Object> vars) {
 					try {
 						if (res.next()) {
-							vars.put("lat", RadioDosePage.makeCoordinate(res
+							vars.put("lat", MapUtils.makeCoordinate(res
 									.getInt("locationlat")));
-							vars.put("long", RadioDosePage.makeCoordinate(res
+							vars.put("long", MapUtils.makeCoordinate(res
 									.getInt("locationlong")));
 							vars.put("sensorid", res.getInt("from"));
 							return true;

@@ -81,6 +81,7 @@ public class Launcher {
 						PageMapping.getInstance().put(
 								"/api/json/sensors/" + dvp.getSensorTypeName(),
 								dvp.getDatapointJSONApiPage());
+						Menu.getInstance().addItem(dvp);
 					}
 					logger.info("Loaded plugin '" + forName.getName() + "'.");
 				} catch (ClassNotFoundException | InstantiationException

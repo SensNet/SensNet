@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -22,7 +23,9 @@ import net.sensnet.node.pages.SettingsPage;
 import net.sensnet.node.pages.api.json.BLEGasPhaseShiftApiPage;
 import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
 import net.sensnet.node.pages.sensors.GasPhasePage;
+import net.sensnet.node.plugins.DataVisualizerPlugin;
 
+import org.cacert.gigi.output.template.IterableDataset;
 import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
 
@@ -64,7 +67,7 @@ public class SensNetNode extends HttpServlet {
 	private void handleRequest(final HttpServletRequest req,
 			final HttpServletResponse resp, final boolean post)
 			throws IOException {
-		String pathInfo = req.getPathInfo();
+		final String pathInfo = req.getPathInfo();
 		resp.setContentType("text/html; charset=utf-8");
 		resp.setHeader("Strict-Transport-Security", "max-age=" + 60 * 60 * 24
 				* 366 + "; includeSubDomains; preload");
@@ -108,7 +111,27 @@ public class SensNetNode extends HttpServlet {
 			vars.put("title", p.getName());
 			vars.put("isRootNode", SensNetNodeConfiguration.getInstance()
 					.isRootNode());
+			vars.put("menuitems", new IterableDataset() {
+				private Iterator<DataVisualizerPlugin> iter = Menu
+						.getInstance().getMenu().iterator();
 
+				@Override
+				public boolean next(Map<String, Object> vars) {
+					if (iter.hasNext()) {
+						DataVisualizerPlugin plugin = iter.next();
+						String url = "/sensors/" + plugin.getSensorTypeName();
+						vars.put("url", url);
+						vars.put("menuitemname", plugin.getSensorName());
+						if (pathInfo.equals(url)) {
+							vars.put("active", true);
+						} else {
+							vars.put("active", null);
+						}
+						return true;
+					}
+					return false;
+				}
+			});
 			vars.put("mynodename", "#"
 					+ SensNetNodeConfiguration.getInstance().getNodeID() + ": "
 					+ SensNetNodeConfiguration.getInstance().getNodeName());

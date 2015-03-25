@@ -5,7 +5,8 @@ import net.sensnet.node.pages.api.json.DatapointJSONApiPage;
 
 import org.cacert.gigi.output.template.Template;
 
-public abstract class DataVisualizerPlugin extends Plugin {
+public abstract class DataVisualizerPlugin extends Plugin implements
+		Comparable<DataVisualizerPlugin> {
 	private Template defaultTemplate;
 
 	public DataVisualizerPlugin(SensNetNodeConfiguration configuration) {
@@ -29,5 +30,10 @@ public abstract class DataVisualizerPlugin extends Plugin {
 	}
 
 	public abstract DatapointJSONApiPage getDatapointJSONApiPage();
+
+	@Override
+	public int compareTo(DataVisualizerPlugin o) {
+		return getSensorName().compareTo(o.getSensorName());
+	}
 
 }
