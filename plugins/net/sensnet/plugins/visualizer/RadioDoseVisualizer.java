@@ -28,6 +28,14 @@ public class RadioDoseVisualizer extends DataVisualizerPlugin {
 					SQLException {
 				return new JSONArray(RadioDoseSensor.getDoses(from, to));
 			}
+
+			@Override
+			public JSONArray getLatestDataNear(Date upperLimit)
+					throws JSONException, SQLException {
+				return new JSONArray(
+						RadioDoseSensor
+								.getLatestAvgDosesFromAllSensors(upperLimit));
+			}
 		};
 	}
 

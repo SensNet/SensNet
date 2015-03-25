@@ -73,13 +73,14 @@ public class RadioDoseSensor extends SensorIndexizer {
 		return parseQuery(resSet);
 	}
 
-	public static int[] getLatestAvgDosesFromSensor(int sensor)
+	public static int[] getLatestAvgDosesFromSensor(int sensor, Date upperLimit)
 			throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? ORDER BY received DESC LIMIT 0,5 ");
+						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? AND received <= ? ORDER BY received DESC LIMIT 0,5 ");
 		prep.setInt(1, sensor);
+		prep.setLong(2, upperLimit.getTime() / 1000);
 		int[] res = new int[3];
 		ResultSet resSet = prep.executeQuery();
 		int count = 0;
@@ -104,16 +105,21 @@ public class RadioDoseSensor extends SensorIndexizer {
 		return null;
 	}
 
-	public static int[][] getLatestAvgDosesFromAllSensors() throws SQLException {
-		PreparedStatement sensors = DatabaseConnection.getInstance().prepare(
-				"SELECT `from` FROM datapoints WHERE type=3 GROUP BY `from`");
+	public static int[][] getLatestAvgDosesFromAllSensors(Date upperLimit)
+			throws SQLException {
+		PreparedStatement sensors = DatabaseConnection
+				.getInstance()
+				.prepare(
+						"SELECT `from` FROM datapoints WHERE type=3 AND received <= ? GROUP BY `from`");
+		sensors.setLong(1, upperLimit.getTime() / 1000);
 		ResultSet resSet = sensors.executeQuery();
 		if (resSet.last()) {
 			int[][] res = new int[resSet.getRow()][];
 			resSet.beforeFirst();
 			int i = 0;
 			while (resSet.next()) {
-				res[i++] = getLatestAvgDosesFromSensor(resSet.getInt("from"));
+				res[i++] = getLatestAvgDosesFromSensor(resSet.getInt("from"),
+						upperLimit);
 			}
 			return res;
 		}
