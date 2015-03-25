@@ -35,10 +35,17 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 				return null;
 			}
 		}
-		if (req.getParameter("sensorsbynode") != null) {
+		if (req.getParameter("sensorsbynode") != null
+				&& req.getParameter("type") == null) {
 			Node n = Node.getByUid(Integer.parseInt(req
 					.getParameter("sensorsbynode")));
 			return n.getLatestSensors();
+		} else if (req.getParameter("sensorsbynode") != null
+				&& req.getParameter("type") != null) {
+			Node n = Node.getByUid(Integer.parseInt(req
+					.getParameter("sensorsbynode")));
+			return n.getLatestSensors(Integer.parseInt(req.getParameter("type")));
+
 		}
 		PreparedStatement nodes = DatabaseConnection.getInstance().prepare(
 				"SELECT * FROM nodes");

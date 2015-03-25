@@ -118,4 +118,27 @@ public class Node implements Syncable {
 		}
 		return new JSONArray(res);
 	}
+
+	public JSONArray getLatestSensors(int sensortype) throws SQLException {
+		PreparedStatement prep = DatabaseConnection
+				.getInstance()
+				.prepare(
+						"select * from datapoints a where not exists ( select * from datapoints b where b.`from` = a.`from` and a.`received` < b.`received` and b.`receivernode` = ?) and a.`receivernode` = ? and type = ?");
+		prep.setInt(1, uid);
+		prep.setInt(2, uid);
+		prep.setInt(3, sensortype);
+		ResultSet resSet = prep.executeQuery();
+		resSet.last();
+		String[][] res = new String[resSet.getRow()][];
+		resSet.beforeFirst();
+		int count = 0;
+		while (resSet.next()) {
+			String[] thing = new String[3];
+			thing[0] = resSet.getInt("from") + "";
+			thing[1] = resSet.getLong("received") + "";
+			thing[2] = resSet.getInt("battery") + " %";
+			res[count++] = thing;
+		}
+		return new JSONArray(res);
+	}
 }
