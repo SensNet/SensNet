@@ -27,14 +27,17 @@ public class DataPoint implements Syncable {
 	private long time;
 	private int battery;
 	private Node receiverNode;
+	private short temperature;
 	private byte[] values;
 
 	public DataPoint(int type, Sensor from, byte[] values, long time,
-			int battery, LocationLatLong location, Node receiverNode) {
+			int battery, LocationLatLong location, short temperature,
+			Node receiverNode) {
 		this.type = type;
 		this.from = from;
 		this.values = values;
 		this.time = time;
+		this.temperature = temperature;
 		this.battery = battery;
 		this.location = location;
 		this.receiverNode = receiverNode;
@@ -54,6 +57,7 @@ public class DataPoint implements Syncable {
 		this.battery = Integer.parseInt(req.getParameter("battery"));
 		this.receiverNode = Node.getByUid(Integer.parseInt(req
 				.getParameter("receiver")));
+		this.temperature = Short.parseShort(req.getParameter("temperature"));
 	}
 
 	public Sensor getFrom() {
@@ -97,7 +101,8 @@ public class DataPoint implements Syncable {
 											+ "&long=" + location.getLng()
 											+ "&battery=" + battery + "&time="
 											+ time + "&receiver="
-											+ receiverNode.getUid());
+											+ receiverNode.getUid()
+											+ "&temperature=" + temperature);
 						}
 					});
 
@@ -105,7 +110,7 @@ public class DataPoint implements Syncable {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, receivernode=?");
+						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, receivernode=?, temperature=?");
 		prep.setInt(1, from.getId());
 		prep.setInt(2, type);
 		prep.setInt(3, location.getLat());
@@ -115,6 +120,7 @@ public class DataPoint implements Syncable {
 		prep.setLong(6, time);
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getUid());
+		prep.setShort(9, temperature);
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();
@@ -132,6 +138,10 @@ public class DataPoint implements Syncable {
 
 	public Node getReceiverNode() {
 		return receiverNode;
+	}
+
+	public short getTemperature() {
+		return temperature;
 	}
 
 }

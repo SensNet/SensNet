@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `datapoints` (
   `battery` int(11) NOT NULL,
   `received` int(11) unsigned NOT NULL,
   `value` binary(100) NOT NULL,
+  `temperature` int(6) NOT NULL,
   `receivernode` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=863 DEFAULT CHARSET=utf8;
 

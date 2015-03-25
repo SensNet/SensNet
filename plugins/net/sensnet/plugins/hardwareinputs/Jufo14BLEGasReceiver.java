@@ -66,6 +66,7 @@ public class Jufo14BLEGasReceiver extends HardwareInputPlugin {
 								System.currentTimeMillis() / 1000,
 								Integer.parseInt(dataParts[2]) / 10,
 								new LocationLatLong(4902088, 837057),
+								Short.parseShort(dataParts[1]),
 								SensNetNodeConfiguration.getInstance()
 										.getThisNode());
 						point.commit();

@@ -19,7 +19,7 @@ import net.sensnet.node.dbobjects.Sensor;
 import net.sensnet.node.plugins.HardwareInputPlugin;
 
 public class SensNetSensorReceiver extends HardwareInputPlugin {
-	public static final byte MAJOR_VERSION = 0x02;
+	public static final byte MAJOR_VERSION = 0x03;
 	public static final byte MINOR_VERSION = 0x00;
 
 	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
@@ -55,14 +55,15 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						sensorid = sensorid & 0xFF;
 						sensorid = sensorid << 8;
 						sensorid = sensorid | (buf[5] & 0xff);
-						byte rawbat = buf[14];
+						short temperature = buffer.getShort(14);
+						byte rawbat = buf[16];
 						int battery = rawbat;
 						if (battery < 0) {
 							battery = 127 + (127 - (battery * -1));
 						}
 						battery = (int) ((battery / 255f) * 100);
-						long timestamp = buffer.getInt(15) & 0xFFFFFFFFl;
-						long timestamp2 = buffer.getInt(19) & 0xFFFFFFFFl;
+						long timestamp = buffer.getInt(17) & 0xFFFFFFFFl;
+						long timestamp2 = buffer.getInt(21) & 0xFFFFFFFFl;
 						System.out.println(timestamp + "" + timestamp2);
 						// 10:59:34 24.02.15
 						SimpleDateFormat format = new SimpleDateFormat(
@@ -71,14 +72,13 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						Date date = format.parse(ammenddateZero(timestamp + "",
 								6) + ammenddateZero(timestamp2 + "", 6));
 						System.out.println(date);
-						byte ttl = buf[23];
-						byte rssi = buf[24];
-						int length = buf[25];
+						byte ttl = buf[25];
+						byte rssi = buf[26];
+						int length = buf[27];
 						if (length < 0) {
 							length = 127 + (127 - (length * -1));
 						}
-						// FIXME: OMFG FUCKING HACK FIX THAT!
-						byte[] datas = new byte[(length * 2) + 4];
+						byte[] datas = new byte[length + 4];
 						ByteBuffer lengbuf = ByteBuffer.allocate(4);
 						lengbuf.putInt(length);
 						datas[0] = lengbuf.get(0);
@@ -100,8 +100,8 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 										Sensor.getBySensorUid(sensorid), datas,
 										date.getTime() / 1000, battery,
 										new LocationLatLong(lat, longitude),
-										SensNetNodeConfiguration.getInstance()
-												.getThisNode());
+										temperature, SensNetNodeConfiguration
+												.getInstance().getThisNode());
 								datapoint.commit();
 							}
 						} catch (SQLException | InvalidNodeAuthException e) {
