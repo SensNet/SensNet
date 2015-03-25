@@ -41,11 +41,6 @@
 <script src="/static/js/leaflet-heatmap.js"></script>
 <script>
 window.onload = function() {
-	
-//var testData = {
-//max: 8,
-//data: [<? foreach($sensdata) { ?>{lat: <?=$lt?>, lng:<?=$lg?>, count: <?=$val?>},<? } ?>]
-//};
 var baseLayer = L.tileLayer(
 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
@@ -75,22 +70,30 @@ center: new L.LatLng(51.00, 10),
 zoom: 4,
 layers: [baseLayer, heatmapLayer]
 });
-//heatmapLayer.setData(testData);
-
-$.getJSON("/api/json/sensors/radiodose?near=now", function( data ) {
-	var dat = [];
-	for(var i = 0; i < data.length; i++) {
-		var lat = makeCoordinate(data[i][0]);
-		var lng = makeCoordinate(data[i][1]);
-			L.marker([lat, lng]).addTo(map);
-			dat.push({lat: lat, lng: lng, count: data[i][2]});
-		}
-	heatmapLayer.setData({
-		max: 100,
-		data: dat
+var markers = new L.FeatureGroup();
+map.addLayer(markers);
+var refresh = function() {
+	var old = markers;
+	markers = new L.FeatureGroup();
+	$.getJSON("/api/json/sensors/radiodose?near=now", function( data ) {
+		var dat = [];
+		for(var i = 0; i < data.length; i++) {
+			var lat = makeCoordinate(data[i][0]);
+			var lng = makeCoordinate(data[i][1]);
+			var m = L.marker([lat, lng]);
+				markers.addLayer(m);
+				dat.push({lat: lat, lng: lng, count: data[i][2]});
+			}
+		heatmapLayer.setData({
+			max: 100,
+			data: dat
+			});
+		map.removeLayer(old);
 		});
-	});
-	
+	map.addLayer(markers);
+	};
+refresh();
+setInterval(function() {refresh();} , 10000);
 }
 function makeCoordinate(coord) {
 	var tmp = coord +"";
@@ -100,8 +103,5 @@ function makeCoordinate(coord) {
 	tmp = tmp.substring(0, tmp.length - 5) + "."
 			+ tmp.substring(tmp.length - 5, tmp.length);
 	return tmp;
-}
-function getData() {
-	
 }
 </script>
