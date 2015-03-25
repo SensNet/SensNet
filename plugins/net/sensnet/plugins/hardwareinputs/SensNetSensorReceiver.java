@@ -86,8 +86,8 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						datas[2] = lengbuf.get(2);
 						datas[3] = lengbuf.get(3);
 
-						for (int i = 0; i < (length * 2); i++) {
-							datas[i + 4] = buf[26 + i];
+						for (int i = 0; i < (length); i++) {
+							datas[i + 4] = buf[28 + i];
 						}
 						byte[] tmp = new byte[256];
 						try {
