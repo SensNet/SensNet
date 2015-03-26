@@ -11,6 +11,9 @@
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
+		<fileset dir="bin">
+			<include name="**/*.class" />
+		</fileset>
 	</path>
 	<target name="init">
 		<mkdir dir="bin" />
@@ -34,9 +37,10 @@
 			<src path="src" />
 			<classpath refid="jufogasradio.classpath" />
 		</javac>
-		<javac debug="true" destdir="bin" includeantruntime="false"
+		<javac debug="true" destdir="bin-plugins" includeantruntime="false"
 			source="1.7" target="1.7">
 			<src path="plugins" />
+			<src path="src" />
 			<classpath refid="jufogasradio_plugins.classpath" />
 		</javac>
 	</target>
@@ -79,8 +83,8 @@
 						<fileset dir="lib">
 							<include name="**/*.jar" />
 						</fileset>
-						<fileset dir="bin-plugins">
-						    <include name="**/*.class" />
+						<fileset dir=".">
+						    <include name="SensNetNode-Plugins.jar"></include>
 						</fileset>
 					</zips>
 				</archives>
