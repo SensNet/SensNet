@@ -1,0 +1,112 @@
+<div id="half-map"></div>
+<div id="node-overview">
+<h4>Sensors providing chemical gas measurement</h4>
+</div>
+<script src="/static/js/leaflet.js"></script>
+<script src="/static/js/heatmap.min.js"></script>
+<script src="/static/js/leaflet-heatmap.js"></script>
+<script src="/static/js/date.format.js"></script>
+<script>
+window.onload = function() {
+var baseLayer = L.tileLayer(
+'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+maxZoom: 18
+}
+);
+var map = new L.Map('half-map', {
+center: new L.LatLng(51.00, 10),
+zoom: 4,
+layers: [baseLayer]
+});
+var markers = new L.FeatureGroup();
+map.addLayer(markers);
+var refresh = function() {
+	var old = markers;
+	markers = new L.FeatureGroup();
+	$.getJSON("/api/json/sensors/chemgas?near=now", function( data ) {
+		var dat = [];
+		for(var i = 0; i < data.length; i++) {
+			var lat = makeCoordinate(data[i][0]);
+			var lng = makeCoordinate(data[i][1]);
+			var m = L.marker([lat, lng]);
+			var popup = L.popup().setLatLng([lat, lng])
+		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][4]+"</b><br/>"+data[i][2] +" Volts<br/>...whatever that means. We don't know.</p>");
+			m.bindPopup(popup);
+				markers.addLayer(m);
+				$.getJSON("/api/json/nodes?forsensor="+data[i][3], function(data) {
+					var overview = $("#node-overview");
+						if($("#node"+data[0]).length == 0) {
+							var panel = document.createElement('div');
+							panel.setAttribute("id", "node"+data[0]);
+							panel.setAttribute("class", "panel panel-default");
+							var heading = document.createElement('div');
+							heading.setAttribute("class", "panel-heading");
+							heading.innerHTML = data[1];
+							var body = document.createElement('div');
+							body.setAttribute("class", "panel-body");
+							var bodyText = document.createElement("p");
+							bodyText.innerHTML = data[2];
+							var table = document.createElement("table");
+							table.setAttribute("class", "table");
+							table.setAttribute("id", "snesorsby"+data[0]);
+							table.innerHTML = "<tr><th>Sensor #</th><th>Battery</th><th>Last seen</th></tr>";
+							$(body).append(bodyText);
+							var pan = $(panel);
+							pan.append(heading);
+							pan.append(body);
+							pan.append(table);
+							overview.append(panel);
+					}
+						var pan = $("#snesorsby"+data[0]);
+						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=2", function(data){
+							for(var j = 0; j< data.length;j++) {	
+								if($("#sensor_"+data[j][0]).length == 0) {	
+								var row = document.createElement("tr");
+									row.setAttribute("id", "sensor_"+data[j][0]);
+							var id = document.createElement("td");
+							id.innerHTML = data[j][0];
+							$(row).append(id);
+							var battery = document.createElement("td");
+							battery.innerHTML = data[j][2];
+							$(row).append(battery);
+							var lastseen = document.createElement("td");
+							lastseen.innerHTML = new Date(data[j][1] * 1000).format('Y-m-d h:i:s e');
+							$(row).append(lastseen);
+							pan.append(row);
+								} else {
+									var row = $("#sensor_"+data[j][0]);
+									row.empty();
+							var id = document.createElement("td");
+							id.innerHTML = data[j][0];
+							$(row).append(id);
+							var battery = document.createElement("td");
+							battery.innerHTML = data[j][2];
+							$(row).append(battery);
+							var lastseen = document.createElement("td");
+							lastseen.innerHTML = new Date(data[j][1] * 1000).format('Y-m-d h:i:s e');
+							$(row).append(lastseen);
+								}
+						}
+						});
+						
+				});	
+		}
+		map.removeLayer(old);
+		});
+	
+	map.addLayer(markers);
+	};
+refresh();
+setInterval(function() {refresh();} , 10000);
+}
+function makeCoordinate(coord) {
+	var tmp = coord +"";
+	while(tmp.length < 6) {
+		tmp = tmp + "0";
+	}
+	tmp = tmp.substring(0, tmp.length - 5) + "."
+			+ tmp.substring(tmp.length - 5, tmp.length);
+	return tmp;
+}
+</script>

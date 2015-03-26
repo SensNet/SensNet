@@ -8,3 +8,4 @@ net.sensnet.plugins.hardwareinputs.SensNetSensorReceiver
 
 ## === VISUALIZER ===
 net.sensnet.plugins.visualizer.RadioDoseVisualizer
+net.sensnet.plugins.visualizer.GasVisualizer
