@@ -21,6 +21,11 @@ import net.sensnet.node.plugins.HardwareInputPlugin;
 public class SensNetSensorReceiver extends HardwareInputPlugin {
 	public static final byte MAJOR_VERSION = 3;
 	public static final byte MINOR_VERSION = 0x00;
+	private static final SimpleDateFormat PRIMITIVE = new SimpleDateFormat(
+			"HHmmssddMMyy");
+	static {
+		PRIMITIVE.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
 
 	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
 		super(configuration);
@@ -64,13 +69,17 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						battery = (int) ((battery / 255f) * 100);
 						long timestamp = buffer.getInt(17) & 0xFFFFFFFFl;
 						long timestamp2 = buffer.getInt(21) & 0xFFFFFFFFl;
-						System.out.println(timestamp + "" + timestamp2);
-						// 10:59:34 24.02.15
-						SimpleDateFormat format = new SimpleDateFormat(
-								"HHmmssddMMyy");
-						format.setTimeZone(TimeZone.getTimeZone("GMT"));
-						Date date = format.parse(ammenddateZero(timestamp + "",
-								6) + ammenddateZero(timestamp2 + "", 6));
+						Date date;
+						if (timestamp == 250000 || timestamp == 260000) {
+							date = new Date();
+						} else {
+							System.out.println(timestamp + "" + timestamp2);
+							// 10:59:34 24.02.15
+
+							date = PRIMITIVE.parse(ammenddateZero(timestamp
+									+ "", 6)
+									+ ammenddateZero(timestamp2 + "", 6));
+						}
 						System.out.println(date);
 						byte ttl = buf[25];
 						byte rssi = buf[26];
@@ -91,10 +100,11 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						}
 						byte[] tmp = new byte[256];
 						try {
-							if (date.getTime() > System.currentTimeMillis() + 1000 * 60 * 6) {
-								Logger.getAnonymousLogger()
-										.log(Level.WARNING,
-												"Received timestamp from the future! Droped...");
+							if (date.getTime() > System.currentTimeMillis() + 1000 * 60 * 6
+									|| date.getTime() < System
+											.currentTimeMillis() - 1000 * 60 * 6) {
+								getLoger()
+										.warn("Received timestamp from outer time! Droped...");
 							} else {
 								DataPoint datapoint = new DataPoint(sensortype,
 										Sensor.getBySensorUid(sensorid), datas,
