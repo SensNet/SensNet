@@ -1,0 +1,135 @@
+<div id="half-map"></div>
+<div id="node-overview">
+<h4>Sensors providing particle measurement</h4>
+</div>
+<script src="/static/js/leaflet.js"></script>
+<script src="/static/js/heatmap.min.js"></script>
+<script src="/static/js/leaflet-heatmap.js"></script>
+<script src="/static/js/date.format.js"></script>
+<script>
+window.onload = function() {
+var baseLayer = L.tileLayer(
+'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+maxZoom: 18
+}
+);
+var cfg = {
+// radius should be small ONLY if scaleRadius is true (or small radius is intended)
+"radius": 20,
+"maxOpacity": .8,
+// scales the radius based on map zoom
+"scaleRadius": false,
+// if set to false the heatmap uses the global maximum for colorization
+// if activated: uses the data maximum within the current map boundaries
+// (there will always be a red spot with useLocalExtremas true)
+"useLocalExtrema": false,
+// which field name in your data represents the latitude - default "lat"
+latField: 'lat',
+// which field name in your data represents the longitude - default "lng"
+lngField: 'lng',
+// which field name in your data represents the data value - default "value"
+valueField: 'count'
+};
+var heatmapLayer = new HeatmapOverlay(cfg);
+var map = new L.Map('half-map', {
+center: new L.LatLng(51.00, 10),
+zoom: 4,
+layers: [baseLayer, heatmapLayer]
+});
+var markers = new L.FeatureGroup();
+map.addLayer(markers);
+var refresh = function() {
+	var old = markers;
+	markers = new L.FeatureGroup();
+	$.getJSON("/api/json/sensors/particle?near=now", function( data ) {
+		var dat = [];
+		for(var i = 0; i < data.length; i++) {
+			var lat = makeCoordinate(data[i][0]);
+			var lng = makeCoordinate(data[i][1]);
+			var m = L.marker([lat, lng]);
+			var popup = L.popup().setLatLng([lat, lng])
+		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][5]+"</b><br/>"+data[i][2] +" rough parts/l<br/>~"+data[i][3]+" fine parts/l</p>");
+			m.bindPopup(popup);
+				markers.addLayer(m);
+				dat.push({lat: lat, lng: lng, count: data[i][3]});
+				$.getJSON("/api/json/nodes?forsensor="+data[i][5], function(data) {
+					var overview = $("#node-overview");
+						if($("#node"+data[0]).length == 0) {
+							var panel = document.createElement('div');
+							panel.setAttribute("id", "node"+data[0]);
+							panel.setAttribute("class", "panel panel-default");
+							var heading = document.createElement('div');
+							heading.setAttribute("class", "panel-heading");
+							heading.innerHTML = data[1];
+							var body = document.createElement('div');
+							body.setAttribute("class", "panel-body");
+							var bodyText = document.createElement("p");
+							bodyText.innerHTML = data[2];
+							var table = document.createElement("table");
+							table.setAttribute("class", "table");
+							table.setAttribute("id", "snesorsby"+data[0]);
+							table.innerHTML = "<tr><th>Sensor #</th><th>Battery</th><th>Last seen</th></tr>";
+							$(body).append(bodyText);
+							var pan = $(panel);
+							pan.append(heading);
+							pan.append(body);
+							pan.append(table);
+							overview.append(panel);
+					}
+						var pan = $("#snesorsby"+data[0]);
+						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=4", function(data){
+							for(var j = 0; j< data.length;j++) {	
+								if($("#sensor_"+data[j][0]).length == 0) {	
+								var row = document.createElement("tr");
+									row.setAttribute("id", "sensor_"+data[j][0]);
+							var id = document.createElement("td");
+							id.innerHTML = data[j][0];
+							$(row).append(id);
+							var battery = document.createElement("td");
+							battery.innerHTML = data[j][2];
+							$(row).append(battery);
+							var lastseen = document.createElement("td");
+							lastseen.innerHTML = new Date(data[j][1] * 1000).format('Y-m-d h:i:s e');
+							$(row).append(lastseen);
+							pan.append(row);
+								} else {http://localhost:8081/ahttp://localhost:8081/api/json/sensors/particle?near=nowpi/json/sensors/particle?near=now
+									var row = $("#sensor_"+data[j][0]);
+									row.empty();
+							var id = document.createElement("td");
+							id.innerHTML = data[j][0];
+							$(row).append(id);
+							var battery = document.createElement("td");
+							battery.innerHTML = data[j][2];
+							$(row).append(battery);
+							var lastseen = document.createElement("td");
+							lastseen.innerHTML = new Date(data[j][1] * 1000).format('Y-m-d h:i:s e');
+							$(row).append(lastseen);
+								}
+						}
+						});
+						
+				});	
+		}
+		heatmapLayer.setData({
+			max: 100,
+			data: dat
+			});
+		map.removeLayer(old);
+		});
+	
+	map.addLayer(markers);
+	};
+refresh();
+setInterval(function() {refresh();} , 10000);
+}
+function makeCoordinate(coord) {
+	var tmp = coord +"";
+	while(tmp.length < 6) {
+		tmp = tmp + "0";
+	}
+	tmp = tmp.substring(0, tmp.length - 5) + "."
+			+ tmp.substring(tmp.length - 5, tmp.length);
+	return tmp;
+}
+</script>

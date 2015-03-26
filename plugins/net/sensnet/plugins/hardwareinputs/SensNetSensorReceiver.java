@@ -67,6 +67,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 							battery = 127 + (127 - (battery * -1));
 						}
 						battery = (int) ((battery / 255f) * 100);
+						System.out.println("Battery: " + battery);
 						long timestamp = buffer.getInt(17) & 0xFFFFFFFFl;
 						long timestamp2 = buffer.getInt(21) & 0xFFFFFFFFl;
 						Date date;
