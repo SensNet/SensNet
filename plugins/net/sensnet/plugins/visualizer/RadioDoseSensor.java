@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import net.sensnet.node.DatabaseConnection;
-import net.sensnet.node.IndexizerHolder;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.plugins.SensorIndexizer;
@@ -15,7 +14,6 @@ public class RadioDoseSensor extends SensorIndexizer {
 
 	public RadioDoseSensor() throws SQLException {
 		super();
-		IndexizerHolder.getInstance().put(new RadioDoseSensor());
 	}
 
 	@Override
@@ -25,9 +23,9 @@ public class RadioDoseSensor extends SensorIndexizer {
 
 	@Override
 	public String createIndexTableArguments() {
-		return "`id` int(11) unsigned NOT NULL, `datapoint` "
+		return "`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `datapoint` "
 				+ "int(11) unsigned NOT NULL, `dose` int(5) "
-				+ "unsigned NOT NULL";
+				+ "unsigned NOT NULL, PRIMARY KEY (`id`)";
 	}
 
 	@Override

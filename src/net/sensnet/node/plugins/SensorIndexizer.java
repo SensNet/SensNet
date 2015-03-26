@@ -14,7 +14,8 @@ public abstract class SensorIndexizer {
 		if (!insertString.toLowerCase().startsWith(
 				"insert into sensor_" + getSensorName())
 				|| insertString.contains(";")) {
-			throw new IllegalArgumentException("Invalid insertion query!");
+			throw new IllegalArgumentException("Invalid insertion query: "
+					+ insertString);
 		}
 		insertQuery = DatabaseConnection.getInstance().prepare(insertString);
 		DatabaseConnection
