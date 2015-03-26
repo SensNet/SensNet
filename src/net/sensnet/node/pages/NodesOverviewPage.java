@@ -80,7 +80,8 @@ public class NodesOverviewPage extends Page {
 										vars.put(
 												"lastseen",
 												DATE_FORMAT.format(new Date(
-														res.getInt("received") * 1000)));
+														(long) res
+																.getInt("received") * 1000)));
 										vars.put("sensorid", res.getInt("from"));
 										vars.put("sensorbattery",
 												res.getInt("battery") + " %");
