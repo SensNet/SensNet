@@ -49,7 +49,7 @@ var refresh = function() {
 			var lng = makeCoordinate(data[i][1]);
 			var m = L.marker([lat, lng]);
 			var popup = L.popup().setLatLng([lat, lng])
-		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][3]+"</b><br/>"+data[i][2] +"CPM<br/>~"+data[i][2]/100+"µSv</p>");
+		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][3]+"</b><br/>"+data[i][2] +"CPM<br/>~"+data[i][2]/100+"µSv/h</p>");
 			m.bindPopup(popup);
 				markers.addLayer(m);
 				dat.push({lat: lat, lng: lng, count: data[i][2]});
