@@ -1,6 +1,7 @@
 package net.sensnet.node.dbobjects;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -90,17 +91,20 @@ public class DataPoint implements Syncable {
 						@Override
 						public void run() throws Exception {
 							ConnUtils.postNodeAuthenticatedData(
-									DataPointSubmitPage.PATH, "&type="
+									DataPointSubmitPage.PATH,
+									"&type="
 											+ type
 											+ "&sensor="
 											+ from.getId()
 											+ "&data="
-											+ Base64.getEncoder()
-													.encodeToString(values)
-											+ "&lat=" + location.getLat()
-											+ "&long=" + location.getLng()
-											+ "&battery=" + battery + "&time="
-											+ time + "&receiver="
+											+ URLEncoder.encode(Base64
+													.getEncoder()
+													.encodeToString(values),
+													"UTF-8") + "&lat="
+											+ location.getLat() + "&long="
+											+ location.getLng() + "&battery="
+											+ battery + "&time=" + time
+											+ "&receiver="
 											+ receiverNode.getUid()
 											+ "&temperature=" + temperature);
 						}
