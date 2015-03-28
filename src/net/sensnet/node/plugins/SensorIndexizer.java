@@ -18,13 +18,12 @@ public abstract class SensorIndexizer {
 					+ insertString);
 		}
 		insertQuery = DatabaseConnection.getInstance().prepare(insertString);
-		DatabaseConnection
-				.getInstance()
-				.prepare(
-						"CREATE TABLE IF NOT EXISTS " + getTableName() + " ("
-								+ createIndexTableArguments()
-								+ ")  ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-				.execute();
+		PreparedStatement prepare = DatabaseConnection.getInstance().prepare(
+				"CREATE TABLE IF NOT EXISTS " + getTableName() + " ("
+						+ createIndexTableArguments()
+						+ ")  ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+		prepare.execute();
+		prepare.close();
 	}
 
 	public abstract String getSensorName();
@@ -34,7 +33,9 @@ public abstract class SensorIndexizer {
 	public abstract String getInsertionPreparedQuery();
 
 	public boolean indexize(DataPoint target, int id) throws SQLException {
-		return indexize(insertQuery, target, id);
+		synchronized (insertQuery) {
+			return indexize(insertQuery, target, id);
+		}
 	}
 
 	public abstract boolean indexize(PreparedStatement insertQuery,
