@@ -100,8 +100,10 @@ public class RadioDoseSensor extends SensorIndexizer {
 			avg = avg /= count;
 			res[2] = avg;
 			res[3] = resSet.getInt("from");
+			resSet.close();
 			return res;
 		}
+		resSet.close();
 		return null;
 	}
 
@@ -121,8 +123,10 @@ public class RadioDoseSensor extends SensorIndexizer {
 				res[i++] = getLatestAvgDosesFromSensor(resSet.getInt("from"),
 						upperLimit);
 			}
+			resSet.close();
 			return res;
 		}
+		resSet.close();
 		return null;
 	}
 
@@ -154,8 +158,10 @@ public class RadioDoseSensor extends SensorIndexizer {
 				in[5] = resSet.getInt("receivernode");
 				res[i++] = in;
 			}
+			resSet.close();
 			return res;
 		}
+		resSet.close();
 		return new int[0][];
 	}
 

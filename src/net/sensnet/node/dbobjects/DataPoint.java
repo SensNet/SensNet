@@ -133,6 +133,7 @@ public class DataPoint implements Syncable {
 		if (indexer != null) {
 			indexer.indexize(this, id.getInt(1));
 		}
+		id.close();
 		Logger.getAnonymousLogger().log(Level.INFO, "Datapoint commited.");
 	}
 

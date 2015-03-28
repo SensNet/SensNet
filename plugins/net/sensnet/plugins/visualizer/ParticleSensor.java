@@ -67,8 +67,10 @@ public class ParticleSensor extends SensorIndexizer {
 				in[6] = resSet.getInt("receivernode") + "";
 				res[i++] = in;
 			}
+			resSet.close();
 			return res;
 		}
+		resSet.close();
 		return new String[0][];
 	}
 

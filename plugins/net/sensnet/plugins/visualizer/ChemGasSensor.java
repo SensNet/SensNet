@@ -73,8 +73,10 @@ public class ChemGasSensor extends SensorIndexizer {
 				in[5] = resSet.getInt("receivernode") + "";
 				res[i++] = in;
 			}
+			resSet.close();
 			return res;
 		}
+		resSet.close();
 		return new String[0][];
 	}
 
