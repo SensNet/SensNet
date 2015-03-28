@@ -29,6 +29,7 @@ import org.cacert.gigi.output.template.Outputable;
 import org.cacert.gigi.output.template.Template;
 
 public class SensNetNode extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	private Page mainPage = new MainPage("Login");
 	private Template mainTemplate;
 	private PageMapping mapping = PageMapping.getInstance();
