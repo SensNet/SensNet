@@ -71,7 +71,8 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						long timestamp = buffer.getInt(17) & 0xFFFFFFFFl;
 						long timestamp2 = buffer.getInt(21) & 0xFFFFFFFFl;
 						Date date;
-						if (timestamp == 250000 || timestamp == 260000) {
+						if (timestamp == 250000 || timestamp == 260000
+								|| timestamp2 == 0) {
 							date = new Date();
 						} else {
 							System.out.println(timestamp + "" + timestamp2);
@@ -88,6 +89,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						if (length < 0) {
 							length = 127 + (127 - (length * -1));
 						}
+						System.out.println("Length: " + length);
 						byte[] datas = new byte[length + 4];
 						ByteBuffer lengbuf = ByteBuffer.allocate(4);
 						lengbuf.putInt(length);
