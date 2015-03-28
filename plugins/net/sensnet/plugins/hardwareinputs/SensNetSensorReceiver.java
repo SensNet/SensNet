@@ -101,7 +101,6 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 						for (int i = 0; i < (length); i++) {
 							datas[i + 4] = buf[28 + i];
 						}
-						byte[] tmp = new byte[256];
 						try {
 							if (date.getTime() > System.currentTimeMillis() + 1000 * 60 * 6
 									|| date.getTime() < System
