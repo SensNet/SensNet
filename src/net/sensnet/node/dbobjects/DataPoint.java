@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.ExceptionRunnable;
-import net.sensnet.node.IndexizerHolder;
+import net.sensnet.node.IndexerHolder;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.SuperCommunicationsManager;
 import net.sensnet.node.pages.DataPointSubmitPage;
-import net.sensnet.node.plugins.SensorIndexizer;
+import net.sensnet.node.plugins.SensorIndexer;
 import net.sensnet.node.util.ConnUtils;
 
 public class DataPoint implements Syncable {
@@ -128,7 +128,7 @@ public class DataPoint implements Syncable {
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();
-		SensorIndexizer indexer = IndexizerHolder.getInstance().getIndexizer(
+		SensorIndexer indexer = IndexerHolder.getInstance().getIndexizer(
 				type);
 		if (indexer != null) {
 			indexer.indexize(this, id.getInt(1));

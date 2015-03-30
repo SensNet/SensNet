@@ -8,9 +8,9 @@ import java.util.Date;
 
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.dbobjects.DataPoint;
-import net.sensnet.node.plugins.SensorIndexizer;
+import net.sensnet.node.plugins.SensorIndexer;
 
-public class ChemGasSensor extends SensorIndexizer {
+public class ChemGasSensor extends SensorIndexer {
 
 	public ChemGasSensor() throws SQLException {
 		super();

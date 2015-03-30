@@ -3,7 +3,7 @@ package net.sensnet.plugins.visualizer;
 import java.sql.SQLException;
 import java.util.Date;
 
-import net.sensnet.node.IndexizerHolder;
+import net.sensnet.node.IndexerHolder;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.pages.api.json.DatapointJSONApiPage;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
@@ -17,7 +17,7 @@ public class RadioDoseVisualizer extends DataVisualizerPlugin {
 	public RadioDoseVisualizer(SensNetNodeConfiguration configuration)
 			throws SQLException {
 		super(configuration);
-		IndexizerHolder.getInstance().put(new RadioDoseSensor());
+		IndexerHolder.getInstance().put(new RadioDoseSensor());
 		apiPage = new DatapointJSONApiPage() {
 
 			@Override

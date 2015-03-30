@@ -3,7 +3,7 @@ package net.sensnet.plugins.visualizer;
 import java.sql.SQLException;
 import java.util.Date;
 
-import net.sensnet.node.IndexizerHolder;
+import net.sensnet.node.IndexerHolder;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.pages.api.json.DatapointJSONApiPage;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
@@ -16,7 +16,7 @@ public class GasVisualizer extends DataVisualizerPlugin {
 	public GasVisualizer(SensNetNodeConfiguration configuration)
 			throws SQLException {
 		super(configuration);
-		IndexizerHolder.getInstance().put(new ChemGasSensor());
+		IndexerHolder.getInstance().put(new ChemGasSensor());
 	}
 
 	@Override

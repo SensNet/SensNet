@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.dbobjects.DataPoint;
 
-public abstract class SensorIndexizer {
+public abstract class SensorIndexer {
 	private PreparedStatement insertQuery;
 
-	public SensorIndexizer() throws SQLException {
+	public SensorIndexer() throws SQLException {
 		String insertString = getInsertionPreparedQuery();
 		if (!insertString.toLowerCase().startsWith(
 				"insert into sensor_" + getSensorName())
