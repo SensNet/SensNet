@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sensnet.node.DatabaseConnection;
-import net.sensnet.node.Form;
 import net.sensnet.node.RandomToken;
 import net.sensnet.node.dbobjects.Node;
 
+import org.cacert.gigi.output.template.Form;
 import org.cacert.gigi.output.template.Template;
 
 public class RegisterDirectSubNodeForm extends Form {

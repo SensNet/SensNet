@@ -7,9 +7,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sensnet.node.Form;
 import net.sensnet.node.Page;
 import net.sensnet.node.SensNetNodeConfiguration;
+
+import org.cacert.gigi.output.template.Form;
 
 public class SettingsPage extends Page {
 	public static final String PATH = "/settings";

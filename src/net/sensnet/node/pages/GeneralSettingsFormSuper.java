@@ -5,9 +5,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sensnet.node.Form;
 import net.sensnet.node.SensNetNodeConfiguration;
 
+import org.cacert.gigi.output.template.Form;
 import org.cacert.gigi.output.template.Template;
 
 public class GeneralSettingsFormSuper extends Form {

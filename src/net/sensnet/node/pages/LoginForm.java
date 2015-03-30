@@ -10,12 +10,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sensnet.node.Form;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.User;
 import net.sensnet.node.util.AuthUtils;
 
+import org.cacert.gigi.output.template.Form;
 import org.cacert.gigi.output.template.Template;
 
 public class LoginForm extends Form {
