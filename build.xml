@@ -8,11 +8,9 @@
 	</path>
 	<path id="jufogasradio_plugins.classpath">
 		<pathelement location="bin-plugins" />
+		<pathelement location="bin" />
 		<fileset dir="lib">
 			<include name="**/*.jar" />
-		</fileset>
-		<fileset dir="bin">
-			<include name="**/*.class" />
 		</fileset>
 	</path>
 	<target name="init">
@@ -40,7 +38,6 @@
 		<javac debug="true" destdir="bin-plugins" includeantruntime="false"
 			source="1.7" target="1.7">
 			<src path="plugins" />
-			<src path="src" />
 			<classpath refid="jufogasradio_plugins.classpath" />
 		</javac>
 	</target>
@@ -69,7 +66,7 @@
 		<echo level="warning"
 			message="WARNING: add proper copyright notice before distributing JufoGasRadio-full.jar." />
 	</target>
-	<target name="pack-heavy" depends="build">
+	<target name="pack-heavy" depends="pack">
 		<jar destfile="SensNetNode-heavy.jar" basedir="bin" manifest="SensNetNode.MF">
 			<restrict>
 				<not>
