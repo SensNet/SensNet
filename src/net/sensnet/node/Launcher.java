@@ -24,6 +24,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 public class Launcher {
 	public static void main(String[] args) throws Exception {
@@ -44,6 +45,7 @@ public class Launcher {
 		DatabaseConnection.init(conf);
 		Server s = new Server(new InetSocketAddress(conf.getHostName(),
 				conf.getPort()));
+		((QueuedThreadPool) s.getThreadPool()).setMaxThreads(20);
 		ServletContextHandler h = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);
 		h.setInitParameter(SessionManager.__SessionCookieProperty,
