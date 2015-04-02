@@ -10,7 +10,7 @@ public class SensNetWiki extends PagePlugin {
 
 	public SensNetWiki(SensNetNodeConfiguration configuration) {
 		super(configuration);
-		page = new LinkPage("Wiki", "https://wiki.sensnet.net") {
+		page = new LinkPage("Wiki", "//wiki.sensnet.net") {
 		};
 	}
 

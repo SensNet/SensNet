@@ -19,7 +19,18 @@ public abstract class LinkPage extends Page {
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
-		resp.sendRedirect(link);
+		if (link.startsWith("//")) {
+			String prefix = null;
+			String reqe = req.getRequestURL().toString();
+			if (reqe.startsWith("http://")) {
+				prefix = "http:";
+			} else if (reqe.startsWith("https://")) {
+				prefix = "https:";
+			}
+			resp.sendRedirect(prefix + link);
+		} else {
+			resp.sendRedirect(link);
+		}
 	}
 
 	@Override
