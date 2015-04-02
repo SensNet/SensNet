@@ -1,3 +1,4 @@
+<input type="range" id="timeselect" value="1000" max="1000"/>
 <div id="half-map"></div>
 <div id="node-overview">
 <h4>Sensors providing radio dose measurement</h4>
@@ -7,7 +8,12 @@
 <script src="/static/js/leaflet-heatmap.js"></script>
 <script src="/static/js/date.format.js"></script>
 <script>
+var minDate;
+var currentDate = "now";
 window.onload = function() {
+$.getJSON("/api/smallestdate?type=3", function( data ) {
+	minDate = data;
+});
 var baseLayer = L.tileLayer(
 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
@@ -42,7 +48,7 @@ map.addLayer(markers);
 var refresh = function() {
 	var old = markers;
 	markers = new L.FeatureGroup();
-	$.getJSON("/api/json/sensors/radiodose?near=now", function( data ) {
+	$.getJSON("/api/json/sensors/radiodose?near="+currentDate, function( data ) {
 		var dat = [];
 		for(var i = 0; i < data.length; i++) {
 			var lat = makeCoordinate(data[i][0]);
@@ -122,6 +128,20 @@ var refresh = function() {
 	};
 refresh();
 setInterval(function() {refresh();} , 10000);
+function update() {
+	if(document.getElementById("timeselect").value == 1000) {
+		currentDate="now";
+		refresh();
+		return;
+	}
+	$.getJSON("/api/json/serverstatus", function( data ) {
+			var serverTimeCurrent = data[0];
+			var newDate = Math.round(minDate + (((serverTimeCurrent - minDate) / 1000)*document.getElementById("timeselect").value));
+			currentDate = newDate;
+			refresh();
+	});
+	}
+$("#timeselect").on("change", function() { update(); });
 }
 function makeCoordinate(coord) {
 	var tmp = coord +"";

@@ -99,6 +99,7 @@ public class RadioDoseSensor extends SensorIndexer {
 			}
 			avg = avg /= count;
 			res[2] = avg;
+			resSet.previous();
 			res[3] = resSet.getInt("from");
 			resSet.close();
 			return res;
