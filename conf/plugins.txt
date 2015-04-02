@@ -10,3 +10,5 @@ net.sensnet.plugins.hardwareinputs.SensNetSensorReceiver
 net.sensnet.plugins.visualizer.RadioDoseVisualizer
 net.sensnet.plugins.visualizer.GasVisualizer
 net.sensnet.plugins.visualizer.ParticleVisualizer
+
+net.sensnet.plugins.pages.foundation.SensNetWiki
