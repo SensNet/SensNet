@@ -153,9 +153,10 @@ function play() {
 	document.getElementById("playglyph").setAttribute("class", 'glyphicon glyphicon-pause');
 	playinterval = setInterval(function() {
 		document.getElementById("timeselect").value =  parseInt(document.getElementById("timeselect").value)+1;
-		if(document.getElementById("timeselect").value > 1000)
+		update();
+		if(parseInt(document.getElementById("timeselect").value) == 1000) {
 			document.getElementById("timeselect").value = 0;
-		update();	
+		}
 	} , 400);
 	} else {
 		clearInterval(playinterval);
