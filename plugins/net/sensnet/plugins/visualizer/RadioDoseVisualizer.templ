@@ -1,4 +1,8 @@
-<input type="range" id="timeselect" value="1000" max="1000"/>
+<div class="timecontrol">
+<a class="btn btn-default btn-xs" id="playbutton">
+  <span id="playglyph" class="glyphicon glyphicon-play" aria-hidden="true"></span>
+</a><input style="float: right; display: inline" type="range" id="timeselect" value="1000" max="1000"/>
+</div>
 <div id="half-map"></div>
 <div id="node-overview">
 <h4>Sensors providing radio dose measurement</h4>
@@ -141,7 +145,26 @@ function update() {
 			refresh();
 	});
 	}
+var playing = false;
+var playinterval;
+function play() {
+	if(!playing) {
+		playing=true;
+	document.getElementById("playglyph").setAttribute("class", 'glyphicon glyphicon-pause');
+	playinterval = setInterval(function() {
+		document.getElementById("timeselect").value =  parseInt(document.getElementById("timeselect").value)+1;
+		if(document.getElementById("timeselect").value > 1000)
+			document.getElementById("timeselect").value = 0;
+		update();	
+	} , 400);
+	} else {
+		clearInterval(playinterval);
+		playing = false;
+		document.getElementById("playglyph").setAttribute("class", 'glyphicon glyphicon-play');
+	}
+}
 $("#timeselect").on("change", function() { update(); });
+$("#playbutton").on("click", function() { play(); });
 }
 function makeCoordinate(coord) {
 	var tmp = coord +"";

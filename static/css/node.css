@@ -31,3 +31,15 @@
 	padding: 0 25px;
 }
 body { padding-top: 51px; }
+.timecontrol {
+height: 25px;
+}
+#playbutton {
+	display: inline;
+}
+#timeselect {
+margin-top: 4px;
+	display: inline;
+	width: calc(100% - 25px);
+	float: right;
+}
