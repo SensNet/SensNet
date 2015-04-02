@@ -147,7 +147,7 @@ public class SensNetNode extends HttpServlet {
 					public boolean next(Map<String, Object> vars) {
 						if (iter.hasNext()) {
 							PagePlugin plugin = iter.next();
-							String url = plugin.getPathName();
+							String url = "/" + plugin.getPathName();
 							vars.put("url", url);
 							vars.put("menuitemname", plugin.getPage().getName());
 							if (pathInfo.equals(url)) {
