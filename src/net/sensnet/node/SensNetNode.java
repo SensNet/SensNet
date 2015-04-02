@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -23,6 +24,7 @@ import net.sensnet.node.pages.SettingsPage;
 import net.sensnet.node.pages.api.json.BLEGasPhaseShiftApiPage;
 import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
+import net.sensnet.node.plugins.PagePlugin;
 
 import org.cacert.gigi.output.template.IterableDataset;
 import org.cacert.gigi.output.template.Outputable;
@@ -112,7 +114,7 @@ public class SensNetNode extends HttpServlet {
 					.isRootNode());
 			vars.put("menuitems", new IterableDataset() {
 				private Iterator<DataVisualizerPlugin> iter = Menu
-						.getInstance().getMenu().iterator();
+						.getInstance().getSensorsMenu().iterator();
 
 				@Override
 				public boolean next(Map<String, Object> vars) {
@@ -131,6 +133,30 @@ public class SensNetNode extends HttpServlet {
 					return false;
 				}
 			});
+			final LinkedList<PagePlugin> pagePlugins = Menu.getInstance()
+					.getPageMenu();
+			if (pagePlugins.size() != 0) {
+				vars.put("pagemenuitems", new IterableDataset() {
+					private Iterator<PagePlugin> iter = pagePlugins.iterator();
+
+					@Override
+					public boolean next(Map<String, Object> vars) {
+						if (iter.hasNext()) {
+							PagePlugin plugin = iter.next();
+							String url = plugin.getPathName();
+							vars.put("url", url);
+							vars.put("menuitemname", plugin.getPage().getName());
+							if (pathInfo.equals(url)) {
+								vars.put("active", true);
+							} else {
+								vars.put("active", null);
+							}
+							return true;
+						}
+						return false;
+					}
+				});
+			}
 			vars.put("mynodename", "#"
 					+ SensNetNodeConfiguration.getInstance().getNodeID() + ": "
 					+ SensNetNodeConfiguration.getInstance().getNodeName());

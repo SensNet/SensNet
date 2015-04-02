@@ -13,6 +13,7 @@ import java.net.InetSocketAddress;
 import net.sensnet.node.pages.PluginPage;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
 import net.sensnet.node.plugins.HardwareInputPlugin;
+import net.sensnet.node.plugins.PagePlugin;
 import net.sensnet.node.plugins.Plugin;
 
 import org.eclipse.jetty.server.Handler;
@@ -83,7 +84,12 @@ public class Launcher {
 						PageMapping.getInstance().put(
 								"/api/json/sensors/" + dvp.getSensorTypeName(),
 								dvp.getDatapointJSONApiPage());
-						Menu.getInstance().addItem(dvp);
+						Menu.getInstance().addSensorsItem(dvp);
+					} else if (plugin instanceof PagePlugin) {
+						PagePlugin pp = (PagePlugin) plugin;
+						PageMapping.getInstance().put("/" + pp.getPathName(),
+								pp.getPage());
+						Menu.getInstance().addPageItem(pp);
 					}
 					logger.info("Loaded plugin '" + forName.getName() + "'.");
 				} catch (ClassNotFoundException | InstantiationException
