@@ -13,6 +13,9 @@
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
+	<target name="native" depends="build">
+		<exec executable="make" dir="native" />
+	</target>
 	<target name="init">
 		<mkdir dir="bin" />
 		<mkdir dir="bin-plugins" />
@@ -41,12 +44,13 @@
 			<classpath refid="jufogasradio_plugins.classpath" />
 		</javac>
 	</target>
-	<target depends="build" name="pack">
+	<target depends="build, native" name="pack">
 		<jar destfile="SensNetNode.jar" basedir="bin" manifest="SensNetNode.MF" />
-		<jar destfile="SensNetNode-Plugins.jar" basedir="bin-plugins" manifest="SensNetNode-Plugins.MF" />
+		<jar destfile="SensNetNode-Plugins.jar" basedir="bin-plugins"
+			manifest="SensNetNode-Plugins.MF" />
 		<zip destfile="static.zip" basedir="static" />
 	</target>
-	<target depends="build" name="pack-full">
+	<target depends="build, native" name="pack-full">
 		<jar destfile="SensNetNode-full.jar" basedir="bin" manifest="SensNetNode.MF">
 			<restrict>
 				<not>
@@ -82,7 +86,7 @@
 							<include name="**/*.jar" />
 						</fileset>
 						<fileset dir=".">
-						    <include name="SensNetNode-Plugins.jar"></include>
+							<include name="SensNetNode-Plugins.jar"></include>
 						</fileset>
 					</zips>
 				</archives>
