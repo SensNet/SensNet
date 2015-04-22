@@ -16,6 +16,7 @@ import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.dbobjects.LocationLatLong;
 import net.sensnet.node.dbobjects.Sensor;
+import net.sensnet.node.natives.SerialPort;
 import net.sensnet.node.plugins.HardwareInputPlugin;
 
 public class SensNetSensorReceiver extends HardwareInputPlugin {
@@ -29,6 +30,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 
 	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
 		super(configuration);
+		SerialPort.setBoudRate(getProperty("serial"), 57600);
 	}
 
 	@Override
