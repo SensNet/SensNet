@@ -5,7 +5,8 @@ import java.io.File;
 public class SerialPort {
 	static {
 		if (System.getProperty("os.name").toLowerCase().contains("linux")) {
-			System.load(new File("native/libserialport.so").getAbsolutePath());
+			System.load(new File("native/linux/libserialport.so")
+					.getAbsolutePath());
 		}
 	}
 

@@ -10,7 +10,7 @@ LDFLAGS=-shared
 all: libserialport.so
 
 libserialport.so: net_sensnet_node_natives_SerialPort.c
-	$(JAVAH) -classpath ../bin/ -jni net.sensnet.node.natives.SerialPort && \
+	$(JAVAH) -classpath ../../bin/ -jni net.sensnet.node.natives.SerialPort && \
 	$(CC) $(CFLAGS) $(LDFLAGS) -o libserialport.so net_sensnet_node_natives_SerialPort.c
 
 clean:

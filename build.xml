@@ -14,7 +14,7 @@
 		</fileset>
 	</path>
 	<target name="native" depends="build">
-		<exec executable="make" dir="native" />
+		<exec executable="make" dir="native/linux" />
 	</target>
 	<target name="init">
 		<mkdir dir="bin" />
