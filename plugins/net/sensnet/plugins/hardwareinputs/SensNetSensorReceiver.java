@@ -2,6 +2,7 @@ package net.sensnet.plugins.hardwareinputs;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
@@ -132,6 +133,13 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 				getLoger()
 						.warn("Receiver shutdown: Received EOF on interface. Retrying in 5 secounds.");
 				Thread.sleep(5000);
+			} catch (IOException e) {
+				getLoger().warn("Interface I/O error! Retying in 15 secounds.",
+						e);
+				try {
+					Thread.sleep(15000);
+				} catch (InterruptedException e1) {
+				}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
