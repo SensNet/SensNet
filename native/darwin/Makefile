@@ -1,7 +1,6 @@
 JAVA_HOME=`/usr/libexec/java_home`
 SYSTEM= $(shell uname | awk '{print tolower($$0)}')
 JAVAH=javah
-CC=gcc
 CFLAGS=-fPIC
 CFLAGS+=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(SYSTEM)
 LDFLAGS=-shared
