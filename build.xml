@@ -113,6 +113,8 @@
 				<include name="SensNetNode.jar" />
 				<include name="SensNetNode-Plugins.jar" />
 				<include name="SensNetNode-full.jar" />
+				<include name="native/**/*.so" />
+				<include name="native/**/*.h" />
 			</fileset>
 		</delete>
 	</target>
