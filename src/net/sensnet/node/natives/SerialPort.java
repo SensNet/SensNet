@@ -19,6 +19,7 @@ public class SerialPort {
 
 	public static void setBoudRate(String port, int boud) {
 		if (loaded) {
+			System.out.println("Set boudrate of '" + port + "' to " + boud);
 			setBoudRate0(port, boud);
 		}
 	}
