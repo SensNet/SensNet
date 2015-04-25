@@ -1,13 +1,13 @@
 #include <jni.h>
 #include <fcntl.h>
 #include <termios.h>
-
+#include "net_sensnet_node_natives_SerialPort.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBoudRate0 (JNIEnv *env, jstring port, jint boud) {
+JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBoudRate0 (JNIEnv *env, jclass clazz, jstring port, jint boud) {
     int fd;
     const char *p = (*env)->GetStringUTFChars(env, port, 0);
     speed_t bd = B9600;
