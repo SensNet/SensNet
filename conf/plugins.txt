@@ -1,6 +1,6 @@
 ## === HARDWARE ===
 
-net.sensnet.plugins.hardwareinputs.SensNetSensorReceiver
+#net.sensnet.plugins.hardwareinputs.SensNetSensorReceiver
 ## Uncomment the following line, if you wan to use the Gas detector by
 ## Niklas Fauth as presented at JuFo 14.
 
@@ -12,3 +12,4 @@ net.sensnet.plugins.visualizer.GasVisualizer
 net.sensnet.plugins.visualizer.ParticleVisualizer
 
 net.sensnet.plugins.pages.foundation.SensNetWiki
+net.sensnet.plugins.pages.foundation.AboutPagePlugin
