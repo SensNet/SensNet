@@ -1,44 +1,74 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+* {
+	font-family: 'Open Sans';
+}
+.overlay {
+	position: absolute;
+	height: 50vh;
+	max-height: 100vh; 
+	z-index : 10000;
+	background: rgba(0, 0, 0, .5);
+	width: 100%;
+	color: #fff;
+	text-align: center;
+	-webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.75);
+	box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.75);
+	z-index: 1000;
+	padding: 30px;
+}
 .container:first-of-type {
 	margin-top: 15px;
 }
 
 #map {
+	position: relative; width : 100vw;
+	height: calc(100vh - 51px);
 	width: 100vw;
-	height:calc(100vh - 51px);
 }
+
 #half-map {
 	width: 58vw;
 	height: calc(100vh - 51px);
 	display: inline-block;
 	float: left;
-	
 }
+
 #half-map < body {
 	overflow-y: hidden;
 }
+
 #node-overview {
 	width: 40vw;
 	float: right;
 	display: inline;
 	padding: 15px;
-	overflow-y:scroll;
+	overflow-y: scroll;
 	height: calc(100vh - 51px);
 }
+
 .mouse-click {
 	cursor: pointer;
 }
+
 .navbar-brand {
 	padding: 0 25px;
 }
-body { padding-top: 51px; }
-.timecontrol {
-height: 25px;
+
+body {
+	padding-top: 51px;
 }
+
+.timecontrol {
+	height: 25px;
+}
+
 #playbutton {
 	display: inline;
 }
+
 #timeselect {
-margin-top: 4px;
+	margin-top: 4px;
 	display: inline;
 	width: calc(100% - 25px);
 	float: right;
