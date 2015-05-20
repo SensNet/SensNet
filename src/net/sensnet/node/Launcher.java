@@ -14,6 +14,7 @@ import net.sensnet.node.pages.PluginPage;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
 import net.sensnet.node.plugins.HardwareInputPlugin;
 import net.sensnet.node.plugins.PagePlugin;
+import net.sensnet.node.plugins.PlainPagePlugin;
 import net.sensnet.node.plugins.Plugin;
 
 import org.eclipse.jetty.server.Handler;
@@ -90,6 +91,11 @@ public class Launcher {
 						PageMapping.getInstance().put("/" + pp.getPathName(),
 								pp.getPage());
 						Menu.getInstance().addPageItem(pp);
+					} else if (plugin instanceof PlainPagePlugin) {
+						PlainPagePlugin pp = (PlainPagePlugin) plugin;
+						PageMapping.getInstance().put("/" + pp.getPath(),
+								pp.getPage());
+						Menu.getInstance().addRawPageItem(pp);
 					}
 					logger.info("Loaded plugin '" + forName.getName() + "'.");
 				} catch (ClassNotFoundException | InstantiationException

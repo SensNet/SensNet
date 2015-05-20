@@ -27,6 +27,7 @@ import net.sensnet.node.pages.api.json.ServerStatus;
 import net.sensnet.node.pages.api.json.SmallestDateSelector;
 import net.sensnet.node.plugins.DataVisualizerPlugin;
 import net.sensnet.node.plugins.PagePlugin;
+import net.sensnet.node.plugins.PlainPagePlugin;
 
 import org.cacert.gigi.output.template.IterableDataset;
 import org.cacert.gigi.output.template.Outputable;
@@ -139,6 +140,12 @@ public class SensNetNode extends HttpServlet {
 			});
 			final LinkedList<PagePlugin> pagePlugins = Menu.getInstance()
 					.getPageMenu();
+			LinkedList<PlainPagePlugin> plainPagePlugins = Menu.getInstance()
+					.getPlainItems();
+			for (PlainPagePlugin plainPagePlugin : plainPagePlugins) {
+				mapping.put(plainPagePlugin.getPath(),
+						plainPagePlugin.getPage());
+			}
 			if (pagePlugins.size() != 0) {
 				vars.put("pagemenuitems", new IterableDataset() {
 					private Iterator<PagePlugin> iter = pagePlugins.iterator();
