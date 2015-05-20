@@ -35,7 +35,7 @@ public abstract class PlainPagePlugin extends Plugin {
 			@Override
 			public void doGet(HttpServletRequest req, HttpServletResponse resp,
 					Map<String, Object> vars) throws IOException {
-				doGet(req, resp, vars);
+				PlainPagePlugin.this.doGet(req, resp, vars);
 			}
 		};
 
