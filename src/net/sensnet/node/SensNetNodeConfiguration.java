@@ -146,4 +146,7 @@ public class SensNetNodeConfiguration {
 		return p.getProperty("plugin." + property);
 	}
 
+	public String getMapSource() {
+		return p.getProperty("node.mapsource");
+	}
 }

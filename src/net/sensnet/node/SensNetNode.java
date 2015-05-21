@@ -122,6 +122,8 @@ public class SensNetNode extends HttpServlet {
 			vars.put("title", p.getName());
 			vars.put("isRootNode", SensNetNodeConfiguration.getInstance()
 					.isRootNode());
+			vars.put("mapsource", SensNetNodeConfiguration.getInstance()
+					.getMapSource());
 			vars.put("menuitems", new IterableDataset() {
 				private Iterator<DataVisualizerPlugin> iter = Menu
 						.getInstance().getSensorsMenu().iterator();
