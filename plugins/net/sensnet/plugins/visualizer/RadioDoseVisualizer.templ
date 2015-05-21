@@ -19,7 +19,7 @@ $.getJSON("/api/smallestdate?type=3", function( data ) {
 	minDate = data;
 });
 var baseLayer = L.tileLayer(
-'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
 maxZoom: 18
 }
