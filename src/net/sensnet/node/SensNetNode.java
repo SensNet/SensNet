@@ -112,6 +112,9 @@ public class SensNetNode extends HttpServlet {
 				}
 			};
 			vars.put(p.getName(), "");
+			if (req.getParameter("cast") != null) {
+				vars.put("cast", "");
+			}
 			vars.put("content", content);
 			vars.put("year", Calendar.getInstance().get(Calendar.YEAR));
 			vars.put("title", p.getName());
