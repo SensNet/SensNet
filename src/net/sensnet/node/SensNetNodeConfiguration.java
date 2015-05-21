@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import net.sensnet.node.dbobjects.Node;
+import net.sensnet.node.pages.NodeAckPage;
+import net.sensnet.node.util.ConnUtils;
 
 public class SensNetNodeConfiguration {
 	private Properties p;
@@ -98,9 +100,14 @@ public class SensNetNodeConfiguration {
 		store();
 	}
 
-	public void setSuperNodeAuth(String token) {
+	public void setSuperNodeAuth(String token) throws IOException,
+			SQLException, InvalidNodeAuthException {
 		p.setProperty("node.supernode.auth", token);
 		store();
+		Properties p = new Properties();
+		p.load(ConnUtils.postNodeAuthenticatedData(NodeAckPage.PATH, ""));
+		setNodeDescription(p.getProperty("description"));
+		setNodeName(p.getProperty("name"));
 	}
 
 	public void setSuperNode(String superNode) {

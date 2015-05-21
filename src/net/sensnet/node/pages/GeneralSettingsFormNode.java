@@ -1,10 +1,13 @@
 package net.sensnet.node.pages;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 
 import org.cacert.gigi.output.template.Form;
@@ -29,7 +32,12 @@ public class GeneralSettingsFormNode extends Form {
 		if (token != null && !token.trim().isEmpty() && superNode != null
 				&& !token.trim().isEmpty()) {
 			SensNetNodeConfiguration.getInstance().setSuperNode(superNode);
-			SensNetNodeConfiguration.getInstance().setSuperNodeAuth(token);
+			try {
+				SensNetNodeConfiguration.getInstance().setSuperNodeAuth(token);
+			} catch (IOException | SQLException | InvalidNodeAuthException e) {
+				e.printStackTrace();
+				return false;
+			}
 			return true;
 		}
 		return false;
