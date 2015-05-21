@@ -34,6 +34,8 @@ public class NodeAckPage extends Page {
 				resp.getWriter().println(n.getName());
 				resp.getWriter().print("description=");
 				resp.getWriter().println(n.getDescription());
+			} else {
+				resp.sendError(403);
 			}
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
