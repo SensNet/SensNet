@@ -43,11 +43,11 @@ public class SuperCommunicationsManager implements Runnable {
 						break;
 					}
 				}
-				try {
-					Thread.sleep(15000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			}
+			try {
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
