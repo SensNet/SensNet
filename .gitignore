@@ -3,3 +3,4 @@
 *.DS_Store
 /conf/node.properties
 /bin-plugins/
+/job_cache/

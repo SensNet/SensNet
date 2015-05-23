@@ -1,6 +1,7 @@
 package net.sensnet.node.dbobjects;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,12 +10,11 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sensnet.node.DatabaseConnection;
-import net.sensnet.node.ExceptionRunnable;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
-import net.sensnet.node.SuperCommunicationsManager;
 import net.sensnet.node.pages.RegisterNodePage;
-import net.sensnet.node.util.ConnUtils;
+import net.sensnet.node.supercommunicatoins.HttpSyncAction;
+import net.sensnet.node.supercommunicatoins.SuperCommunicationsManager;
 
 import org.json.JSONArray;
 
@@ -78,14 +78,18 @@ public class Node implements Syncable {
 			InvalidNodeAuthException {
 		if (!SensNetNodeConfiguration.getInstance().isRootNode()) {
 			SuperCommunicationsManager.getInstance().putJob(
-					new ExceptionRunnable() {
+					new HttpSyncAction() {
 
 						@Override
-						public void run() throws Exception {
-							ConnUtils.postNodeAuthenticatedData(
-									RegisterNodePage.PATH, "&desciption="
-											+ description + "&name=" + name
-											+ "&uid=" + uid);
+						public String getPostData()
+								throws UnsupportedEncodingException {
+							return "&desciption=" + description + "&name="
+									+ name + "&uid=" + uid;
+						}
+
+						@Override
+						public String getPath() {
+							return RegisterNodePage.PATH;
 						}
 					});
 		}

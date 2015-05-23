@@ -1,6 +1,7 @@
 package net.sensnet.node.dbobjects;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,14 +13,13 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sensnet.node.DatabaseConnection;
-import net.sensnet.node.ExceptionRunnable;
 import net.sensnet.node.IndexerHolder;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
-import net.sensnet.node.SuperCommunicationsManager;
 import net.sensnet.node.pages.DataPointSubmitPage;
 import net.sensnet.node.plugins.SensorIndexer;
-import net.sensnet.node.util.ConnUtils;
+import net.sensnet.node.supercommunicatoins.HttpSyncAction;
+import net.sensnet.node.supercommunicatoins.SuperCommunicationsManager;
 
 public class DataPoint implements Syncable {
 	private int type;
@@ -86,30 +86,30 @@ public class DataPoint implements Syncable {
 			InvalidNodeAuthException {
 		if (!SensNetNodeConfiguration.getInstance().isRootNode()) {
 			SuperCommunicationsManager.getInstance().putJob(
-					new ExceptionRunnable() {
+					new HttpSyncAction() {
 
 						@Override
-						public void run() throws Exception {
-							ConnUtils.postNodeAuthenticatedData(
-									DataPointSubmitPage.PATH,
-									"&type="
-											+ type
-											+ "&sensor="
-											+ from.getId()
-											+ "&data="
-											+ URLEncoder.encode(Base64
-													.getEncoder()
-													.encodeToString(values),
-													"UTF-8") + "&lat="
-											+ location.getLat() + "&long="
-											+ location.getLng() + "&battery="
-											+ battery + "&time=" + time
-											+ "&receiver="
-											+ receiverNode.getUid()
-											+ "&temperature=" + temperature);
+						public String getPostData()
+								throws UnsupportedEncodingException {
+							return "&type="
+									+ type
+									+ "&sensor="
+									+ from.getId()
+									+ "&data="
+									+ URLEncoder.encode(Base64.getEncoder()
+											.encodeToString(values), "UTF-8")
+									+ "&lat=" + location.getLat() + "&long="
+									+ location.getLng() + "&battery=" + battery
+									+ "&time=" + time + "&receiver="
+									+ receiverNode.getUid() + "&temperature="
+									+ temperature;
+						}
+
+						@Override
+						public String getPath() {
+							return DataPointSubmitPage.PATH;
 						}
 					});
-
 		}
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
@@ -128,8 +128,7 @@ public class DataPoint implements Syncable {
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();
-		SensorIndexer indexer = IndexerHolder.getInstance().getIndexizer(
-				type);
+		SensorIndexer indexer = IndexerHolder.getInstance().getIndexizer(type);
 		if (indexer != null) {
 			indexer.indexize(this, id.getInt(1));
 		}
