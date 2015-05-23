@@ -16,7 +16,7 @@ import net.sensnet.node.util.ConnUtils;
 public class SuperCommunicationsManager implements Runnable {
 	private static final File TARGET_FOLDER = new File("job_cache");
 	private static final SimpleDateFormat FILE_FORM = new SimpleDateFormat(
-			"yyyy-mm-dd'.synccache'");
+			"yyyy-MM-dd'.synccache'");
 	private static final SuperCommunicationsManager instance = new SuperCommunicationsManager();
 
 	private SuperCommunicationsManager() {
