@@ -6,8 +6,6 @@
 	<h1>Sensor -> Node protocol version 3.0</h1>
 	<h2>Definitions</h2>
 	<ul>
-		<li>&lt;int&gt;: 32bit signed integer</li>
-		<li>&lt;uint&gt;: 32bit unsigned integer</li>
 		<li>major version: breaking change</li>
 		<li>minor version: non-breaking change</li>
 	</ul>
@@ -25,15 +23,13 @@
 			<td>0</td>
 			<td>1</td>
 			<td>uint_8</td>
-			<td>Major version (here: 0x03)
-			</td>
+			<td>Major version (here: 0x03)</td>
 		</tr>
 		<tr>
 			<td>1</td>
 			<td>1</td>
 			<td>uint_8</td>
-			<td>Minor version (here: 0x00)
-			</td>
+			<td>Minor version (here: 0x00)</td>
 		</tr>
 		<tr>
 			<td>2</td>
@@ -61,36 +57,48 @@
 		</tr>
 		<tr>
 			<td>13</td>
+			<td>2</td>
+			<td>int_16</td>
+			<td>Temperature</td>
+		</tr>
+		<tr>
+			<td>15</td>
 			<td>1</td>
 			<td>uint_8</td>
 			<td>Battery</td>
 		</tr>
 		<tr>
-			<td>14</td>
+			<td>16</td>
 			<td>4</td>
 			<td>uint_32</td>
-			<td>Timestamp</td>
+			<td>Time (hhmmss)</td>
 		</tr>
 		<tr>
-			<td>18</td>
+			<td>20</td>
+			<td>4</td>
+			<td>uint_32</td>
+			<td>Date (ddMMyy)</td>
+		</tr>
+		<tr>
+			<td>24</td>
 			<td>1</td>
 			<td>uint_8</td>
 			<td>TTL</td>
 		</tr>
 		<tr>
-			<td>19</td>
+			<td>25</td>
 			<td>1</td>
 			<td>uint_8</td>
 			<td>RSSI (assumed >= 0)</td>
 		</tr>
 		<tr>
-			<td>20</td>
+			<td>26</td>
 			<td>1</td>
 			<td>uint_8</td>
 			<td>Length</td>
 		</tr>
 		<tr>
-			<td>21</td>
+			<td>27</td>
 			<td>length</td>
 			<td>uint_8</td>
 			<td>Data</td>
