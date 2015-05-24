@@ -1,13 +1,33 @@
-== Sensor -> Node protocol version 2==
+<html>
+<head>
+<title>Sensor -> Node Protocol</title>
+</head>
+<body>
+<h1>Sensor -> Node protocol version 3.0</h1>
+<h2>Definitions</h2>
+<ul>
+<li>&lt;int&gt;: 32bit signed integer</li>
+<li>&lt;uint&gt;: 32bit unsigned integer</li>
+<li>major version: breaking change</li>
+<li>minor version: non-breaking change</li>
+</ul>
+<p>Punctuation is only for clarity.</p>
 
-Definitions:
-<int>: 32bit signed integer
-<uint>: 32bit unsigned integer
-major version: breaking change
-minor version: non-breaking change
-punctuation is only for clarity.
-
-Proto:
-<2 byte> version[first byte: major, second byte: minor]{0x02 0x00}, <2 byte> SensorId,<byte> sensortype, <int> lat, <int> long, <byte> battery, <uint> timestamp, <byte> ttl, <byte> rssi (assumed positive), <byte> length, <byte[length]> data
-
-The TTL is to be increased with each hop form sensor to sensor and limited to 8bit. If ttl == 255 is reached, the packet must be droped to avoid endless circles.
+<h2>Proto</h2>
+<table>
+<tr><th>Offset</th><th>Length in bytes</th><th>Type</th><th>Description</th></tr>
+<tr><td>0</td><td>1</td><td>uint_8</td><td>Major version (here: <pre>0x03</pre>)</td></tr>
+<tr><td>1</td><td>1</td><td>uint_8</td><td>Minor version (here: <pre>0x00</pre>)</td></tr>
+<tr><td>2</td><td>2</td><td>uint_16</td><td>Sensor identifier</td></tr>
+<tr><td>4</td><td>1</td><td>uint_8</td><td>Sensor type</td></tr>
+<tr><td>5</td><td>4</td><td>int_32</td><td>Latitude</td></tr>
+<tr><td>9</td><td>4</td><td>int_32</td><td>Longitude</td></tr>
+<tr><td>13</td><td>1</td><td>uint_8</td><td>Battery</td></tr>
+<tr><td>14</td><td>4</td><td>uint_32</td><td>Timestamp/td></tr>
+<tr><td>18</td><td>1</td><td>uint_8</td><td>TTL</td></tr>
+<tr><td>19</td><td>1</td><td>uint_8</td><td>RSSI (assumed >= 0)</td></tr>
+<tr><td>20</td><td>1</td><td>uint_8</td><td>Length</td></tr>
+<tr><td>21</td><td>length</td><td>uint_8</td><td>Data</td></tr>
+</table>
+<p>The TTL is to be increased with each hop form sensor to sensor and limited to 8bit. If ttl == 255 is reached,
+the packet must be dropped to avoid endless circles.</p>
