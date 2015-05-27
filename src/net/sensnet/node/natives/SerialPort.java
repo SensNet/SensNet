@@ -17,12 +17,12 @@ public class SerialPort {
 		}
 	}
 
-	public static void setBoudRate(String port, int boud) {
+	public static void setBaudRate(String port, int baud) {
 		if (loaded) {
-			System.out.println("Set boudrate of '" + port + "' to " + boud);
-			setBoudRate0(port, boud);
+			System.out.println("Set baudrate of '" + port + "' to " + baud);
+			setBaudRate0(port, baud);
 		}
 	}
 
-	private native static void setBoudRate0(String port, int boud);
+	private native static void setBaudRate0(String port, int baud);
 }

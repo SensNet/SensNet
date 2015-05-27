@@ -13,8 +13,8 @@ import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.pages.RegisterSensorPage;
-import net.sensnet.node.supercommunicatoins.HttpSyncAction;
-import net.sensnet.node.supercommunicatoins.SuperCommunicationsManager;
+import net.sensnet.node.supercommunications.HttpSyncAction;
+import net.sensnet.node.supercommunications.SuperCommunicationsManager;
 
 public class Sensor implements Syncable {
 	private static HashMap<Integer, Sensor> cache = new HashMap<Integer, Sensor>();

@@ -7,47 +7,47 @@ extern "C" {
 #endif
 
 
-JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBoudRate0 (JNIEnv *env, jclass clazz, jstring port, jint boud) {
+JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBaudRate0 (JNIEnv *env, jclass clazz, jstring port, jint baud) {
     int fd;
     const char *p = (*env)->GetStringUTFChars(env, port, 0);
     speed_t bd = B9600;
-    if(boud <= 0)
+    if(baud <= 0)
         bd = B0;
-    else if(boud <= 50)
+    else if(baud <= 50)
         bd  = B50;
-    else if(boud <= 75)
+    else if(baud <= 75)
         bd = B75;
-    else if(boud <= 110)
+    else if(baud <= 110)
         bd = B110;
-    else if(boud <= 134)
+    else if(baud <= 134)
         bd = B134;
-    else if(boud <= 150)
+    else if(baud <= 150)
         bd = B150;
-    else if(boud <= 200)
+    else if(baud <= 200)
         bd = B200;
-    else if(boud <= 300)
+    else if(baud <= 300)
         bd = B300;
-    else if(boud <= 600)
+    else if(baud <= 600)
         bd = B600;
-    else if(boud <= 1200)
+    else if(baud <= 1200)
         bd = B1200;
-    else if(boud <= 1800)
+    else if(baud <= 1800)
         bd = B1800;
-    else if(boud <= 2400)
+    else if(baud <= 2400)
         bd = B2400;
-    else if(boud <= 4800)
+    else if(baud <= 4800)
         bd = B4800;
-    else if(boud <= 9600)
+    else if(baud <= 9600)
         bd = B9600;
-    else if(boud <= 19200)
+    else if(baud <= 19200)
         bd = B19200;
-    else if(boud <= 38400)
+    else if(baud <= 38400)
         bd = B38400;
-    else if(boud <= 57600)
+    else if(baud <= 57600)
         bd = B57600;
-    else if(boud <= 115200)
+    else if(baud <= 115200)
         bd = B115200;
-    else if(boud <= 230400 || boud > 230400)
+    else if(baud <= 230400 || baud > 230400)
         bd = B230400;
     
     fd = open(p, O_RDWR);

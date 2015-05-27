@@ -31,7 +31,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 
 	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
 		super(configuration);
-		SerialPort.setBoudRate(getProperty("serial"), 57600);
+		SerialPort.setBaudRate(getProperty("serial"), 57600);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package net.sensnet.node.supercommunicatoins;
+package net.sensnet.node.supercommunications;
 
 import java.io.UnsupportedEncodingException;
 
