@@ -7,10 +7,18 @@ public class SystemTime {
 	private static boolean loaded = false;
 
 	static {
-		if (System.getProperty("os.name").toLowerCase().contains("linux")) {
-			System.load(new File("native/linux/libsystemtime.so")
-					.getAbsolutePath());
-			loaded = true;
+		try {
+			if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+				System.load(new File("native/linux/libsystemtime.so")
+						.getAbsolutePath());
+				loaded = true;
+			}
+		} catch (UnsatisfiedLinkError e) {
+			System.err.println(e.getMessage());
+			System.err
+					.println("Couldn't load libsystemtime.so ("
+							+ e.getMessage()
+							+ "). Will not be able to set the systemtime (e.g. with GPS).");
 		}
 	}
 
