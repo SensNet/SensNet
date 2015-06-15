@@ -4,13 +4,17 @@
 </head>
 <body>
 	<h1>Sensor -> Node protocol version 4.0</h1>
+	<h2>Important notes</h2>
+	<ul>
+		<li>Since version 4.0, the RSSI value must not change the position (offset) anymore.</li>
+	</ul>
 	<h2>Definitions</h2>
 	<ul>
 		<li>major version: breaking change</li>
 		<li>minor version: non-breaking change</li>
-		<li>The TTL is to be decreased with each hop form sensor to sensor
-		and limited to 8bit. If ttl == 0 is reached, the packet must be
-		dropped to avoid endless circles.</li>
+		<li>The TTL is to be decreased with each hop form sensor to
+			sensor and limited to 8bit. If ttl == 0 is reached, the packet must
+			be dropped to avoid endless circles.</li>
 	</ul>
 	<p>Punctuation is only for clarity.</p>
 
