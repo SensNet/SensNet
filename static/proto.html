@@ -3,7 +3,7 @@
 <title>Sensor -> Node Protocol</title>
 </head>
 <body>
-	<h1>Sensor -> Node protocol version 3.0</h1>
+	<h1>Sensor -> Node protocol version 4.0</h1>
 	<h2>Definitions</h2>
 	<ul>
 		<li>major version: breaking change</li>
@@ -26,7 +26,7 @@
 			<td>0</td>
 			<td>1</td>
 			<td>uint_8</td>
-			<td>Major version (here: 0x03)</td>
+			<td>Major version (here: 0x04)</td>
 		</tr>
 		<tr>
 			<td>1</td>
@@ -44,24 +44,30 @@
 			<td>4</td>
 			<td>1</td>
 			<td>uint_8</td>
-			<td>Sensor type</td>
+			<td>Sensor class</td>
 		</tr>
 		<tr>
 			<td>5</td>
+			<td>1</td>
+			<td>uint_8</td>
+			<td>Sensor type</td>
+		</tr>
+		<tr>
+			<td>6</td>
 			<td>4</td>
 			<td>int_32</td>
 			<td>Latitude</td>
 		</tr>
 		<tr>
-			<td>9</td>
+			<td>10</td>
 			<td>4</td>
 			<td>int_32</td>
 			<td>Longitude</td>
 		</tr>
 		<tr>
-			<td>13</td>
-			<td>2</td>
-			<td>int_16</td>
+			<td>14</td>
+			<td>1</td>
+			<td>int_8</td>
 			<td>Temperature</td>
 		</tr>
 		<tr>
