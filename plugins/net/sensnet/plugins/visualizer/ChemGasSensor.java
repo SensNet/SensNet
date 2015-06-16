@@ -18,7 +18,7 @@ public class ChemGasSensor extends SensorIndexer {
 
 	@Override
 	public String getSensorName() {
-		return "chemgas";
+		return "chemgas5v";
 	}
 
 	@Override
@@ -78,6 +78,11 @@ public class ChemGasSensor extends SensorIndexer {
 		}
 		resSet.close();
 		return new String[0][];
+	}
+
+	@Override
+	public int getSensorClass() {
+		return 2;
 	}
 
 }

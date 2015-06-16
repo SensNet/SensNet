@@ -49,7 +49,7 @@ public class RadioDoseSensor extends SensorIndexer {
 
 	@Override
 	public int getSensorType() {
-		return 3;
+		return 1;
 	}
 
 	public static int[][] getDoses(Date from, Date to) throws SQLException {
@@ -171,5 +171,10 @@ public class RadioDoseSensor extends SensorIndexer {
 		lng = lng.substring(0, lng.length() - 5) + "."
 				+ lng.substring(lng.length() - 5, lng.length());
 		return lng;
+	}
+
+	@Override
+	public int getSensorClass() {
+		return 3;
 	}
 }

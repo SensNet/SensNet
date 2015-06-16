@@ -149,7 +149,8 @@ public class DataPoint implements Syncable {
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();
-		SensorIndexer indexer = IndexerHolder.getInstance().getIndexizer(type);
+		SensorIndexer indexer = IndexerHolder.getInstance().getIndexizer(
+				sensorClass, type);
 		if (indexer != null) {
 			indexer.indexize(this, id.getInt(1));
 		}

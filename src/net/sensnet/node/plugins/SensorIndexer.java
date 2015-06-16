@@ -46,4 +46,6 @@ public abstract class SensorIndexer {
 	}
 
 	public abstract int getSensorType();
+
+	public abstract int getSensorClass();
 }

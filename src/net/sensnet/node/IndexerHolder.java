@@ -6,7 +6,7 @@ import net.sensnet.node.plugins.SensorIndexer;
 
 public class IndexerHolder {
 	private static final IndexerHolder instance = new IndexerHolder();
-	private HashMap<Integer, SensorIndexer> indexizer = new HashMap<Integer, SensorIndexer>();
+	private HashMap<Integer, HashMap<Integer, SensorIndexer>> indexizer = new HashMap<Integer, HashMap<Integer, SensorIndexer>>();
 
 	private IndexerHolder() {
 	}
@@ -15,11 +15,16 @@ public class IndexerHolder {
 		return instance;
 	}
 
-	public SensorIndexer getIndexizer(int sensortype) {
-		return indexizer.get(sensortype);
+	public SensorIndexer getIndexizer(int sensorclass, int sensortype) {
+		return indexizer.get(sensorclass).get(sensortype);
 	}
 
 	public void put(SensorIndexer indexizer) {
-		this.indexizer.put(indexizer.getSensorType(), indexizer);
+		if (!this.indexizer.containsKey(indexizer.getSensorClass())) {
+			this.indexizer.put(indexizer.getSensorClass(),
+					new HashMap<Integer, SensorIndexer>());
+		}
+		this.indexizer.get(indexizer.getSensorClass()).put(
+				indexizer.getSensorType(), indexizer);
 	}
 }
