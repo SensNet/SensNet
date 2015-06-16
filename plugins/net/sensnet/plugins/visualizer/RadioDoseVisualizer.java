@@ -49,7 +49,7 @@ public class RadioDoseVisualizer extends DataVisualizerPlugin {
 
 	@Override
 	public int getSensorType() {
-		return 3;
+		return 1;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class RadioDoseVisualizer extends DataVisualizerPlugin {
 
 	@Override
 	public int getSensorClass() {
-		return 1;
+		return 3;
 	}
 
 }

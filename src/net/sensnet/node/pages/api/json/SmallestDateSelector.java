@@ -32,8 +32,9 @@ public class SmallestDateSelector extends APIPage {
 							"SELECT received FROM datapoints WHERE type=? ORDER BY received ASC LIMIT 1");
 			prep.setInt(1, type);
 			ResultSet res = prep.executeQuery();
-			res.first();
-			resp.getWriter().println(res.getLong(1));
+			if (res.first()) {
+				resp.getWriter().println(res.getLong(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
