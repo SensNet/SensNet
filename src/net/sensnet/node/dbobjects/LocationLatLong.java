@@ -9,15 +9,16 @@ public class LocationLatLong {
 	}
 
 	public int getLat() {
-		if (lat == 0) {
-			return 4927519;
-		}
-		return lat;
+		// Frankfurt(Main) Fair
+		// if (lat == 0) {
+		return 5011350;
+		// }
+		// return lat;
 	}
 
 	public int getLng() {
 		if (lng == 0) {
-			return 971268;
+			return 863810;
 		}
 		return lng;
 	}

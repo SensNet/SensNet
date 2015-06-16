@@ -31,7 +31,7 @@ var refresh = function() {
 			var lng = makeCoordinate(data[i][1]);
 			var m = L.marker([lat, lng]);
 			var popup = L.popup().setLatLng([lat, lng])
-		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][4]+"</b><br/>"+data[i][2] +" Volts<br/>...whatever that means. We don't know.</p>");
+		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][4]+"</b><br/>"+data[i][2] +" ppm</p>");
 			m.bindPopup(popup);
 				markers.addLayer(m);
 				$.getJSON("/api/json/nodes?forsensor="+data[i][3], function(data) {
@@ -59,7 +59,7 @@ var refresh = function() {
 							overview.append(panel);
 					}
 						var pan = $("#snesorsby"+data[0]);
-						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=2", function(data){
+						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=2&class=2", function(data){
 							for(var j = 0; j< data.length;j++) {	
 								if($("#sensor_"+data[j][0]).length == 0) {	
 								var row = document.createElement("tr");

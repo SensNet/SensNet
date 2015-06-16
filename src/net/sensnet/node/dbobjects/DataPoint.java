@@ -33,7 +33,7 @@ public class DataPoint implements Syncable {
 	private short temperature;
 	private byte[] values;
 
-	public DataPoint(int type, int sensorsClass, Sensor from, short[] values,
+	public DataPoint(int type, int sensorClass, Sensor from, short[] values,
 			Date time, int battery, LocationLatLong location,
 			short temperature, Node receiverNode) {
 		this.type = type;
@@ -49,9 +49,10 @@ public class DataPoint implements Syncable {
 		this.battery = battery;
 		this.location = location;
 		this.receiverNode = receiverNode;
+		this.sensorClass = sensorClass;
 	}
 
-	public DataPoint(int type, int sensorsClass, Sensor from, byte[] values,
+	public DataPoint(int type, int sensorClass, Sensor from, byte[] values,
 			Date time, int battery, LocationLatLong location,
 			short temperature, Node receiverNode) {
 		this.type = type;
@@ -62,6 +63,7 @@ public class DataPoint implements Syncable {
 		this.battery = battery;
 		this.location = location;
 		this.receiverNode = receiverNode;
+		this.sensorClass = sensorClass;
 	}
 
 	public DataPoint(HttpServletRequest req) throws NumberFormatException,

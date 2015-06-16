@@ -36,15 +36,19 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 			}
 		}
 		if (req.getParameter("sensorsbynode") != null
-				&& req.getParameter("type") == null) {
+				&& req.getParameter("type") == null
+				&& req.getParameter("class") == null) {
 			Node n = Node.getByUid(Integer.parseInt(req
 					.getParameter("sensorsbynode")));
 			return n.getLatestSensors();
 		} else if (req.getParameter("sensorsbynode") != null
-				&& req.getParameter("type") != null) {
+				&& req.getParameter("type") != null
+				&& req.getParameter("class") != null) {
 			Node n = Node.getByUid(Integer.parseInt(req
 					.getParameter("sensorsbynode")));
-			return n.getLatestSensors(Integer.parseInt(req.getParameter("type")));
+			return n.getLatestSensors(
+					Integer.parseInt(req.getParameter("class")),
+					Integer.parseInt(req.getParameter("type")));
 
 		}
 		PreparedStatement nodes = DatabaseConnection.getInstance().prepare(
@@ -61,5 +65,4 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 		}
 		return jsonRes;
 	}
-
 }

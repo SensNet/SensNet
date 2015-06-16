@@ -68,7 +68,7 @@ public class ChemGasSensor extends SensorIndexer {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"SELECT receivernode, `from`, received, voltage, a.locationlat AS lat, a.locationlong AS lng FROM sensor_chemgas LEFT JOIN datapoints a ON (datapoint = a.id) WHERE received <= ? ORDER BY received DESC LIMIT 0,1");
+						"SELECT receivernode, `from`, received, ppm, a.locationlat AS lat, a.locationlong AS lng FROM sensor_chemgas5vbutan LEFT JOIN datapoints a ON (datapoint = a.id) WHERE received <= ? ORDER BY received DESC LIMIT 0,1");
 		prep.setLong(1, upperLimit.getTime() / 1000);
 		ResultSet resSet = prep.executeQuery();
 		return parseQuery(resSet);
@@ -83,7 +83,7 @@ public class ChemGasSensor extends SensorIndexer {
 				String[] in = new String[6];
 				in[0] = resSet.getInt("lat") + "";
 				in[1] = resSet.getInt("lng") + "";
-				in[2] = resSet.getFloat("voltage") + "";
+				in[2] = resSet.getFloat("ppm") + "";
 				in[3] = resSet.getInt("received") + "";
 				in[4] = resSet.getInt("from") + "";
 				in[5] = resSet.getInt("receivernode") + "";
