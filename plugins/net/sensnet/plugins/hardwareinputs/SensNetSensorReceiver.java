@@ -1,18 +1,17 @@
 package net.sensnet.plugins.hardwareinputs;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import net.sensnet.node.InvalidNodeAuthException;
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.dbobjects.LocationLatLong;
@@ -21,8 +20,13 @@ import net.sensnet.node.natives.SerialPort;
 import net.sensnet.node.plugins.HardwareInputPlugin;
 
 public class SensNetSensorReceiver extends HardwareInputPlugin {
-	public static final byte MAJOR_VERSION = 3;
+	public static final byte MAJOR_VERSION = 4;
 	public static final byte MINOR_VERSION = 0x00;
+	public static final char[] PARSE_WORD = "p!hup".toCharArray();
+	public int packageCount = 0;
+	public int damagedPackages = 0;
+	public float avgPackageLoss = 0;
+
 	private static final SimpleDateFormat PRIMITIVE = new SimpleDateFormat(
 			"HHmmssddMMyy");
 	static {
@@ -31,108 +35,130 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 
 	public SensNetSensorReceiver(SensNetNodeConfiguration configuration) {
 		super(configuration);
-		SerialPort.setBaudRate(getProperty("serial"), 57600);
+		SerialPort.setBaudRate(getProperty("serial"), 9600);
+	}
+
+	private File initializeHardware() {
+		File inter = new File(getProperty("serial"));
+		if (!inter.exists()) {
+			getLoger().warn("Serial interface not found!");
+			return null;
+		}
+		try (PrintWriter wr = new PrintWriter(new FileWriter(inter), true)) {
+			try (BufferedReader read = new BufferedReader(new FileReader(inter))) {
+				wr.println("AT+RST");
+				if (read.readLine().equals("OK")) {
+					System.out.println("Basic initialization.");
+					wr.println("AT+PARS=" + new String(PARSE_WORD));
+					if (read.readLine().equals("OK")) {
+						wr.println("AT+INIT");
+						wr.close();
+						if (read.readLine().equals("OK")) {
+							System.out.println("Shield initialzied.");
+							read.close();
+							return inter;
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public void run() {
-		File inter = new File(getProperty("serial"));
-		if (!inter.exists()) {
-			getLoger().warn("Serial interface not found!");
+		File inter = null;
+		if ((inter = initializeHardware()) == null) {
 			return;
 		}
 		while (true) {
 			try {
-				System.out.println("p!");
-				InputStream r = new FileInputStream(inter);
-				byte[] buf = new byte[256];
-				while (r.read(buf, 0, 256) != -1) {
-					ByteBuffer buffer = ByteBuffer.wrap(buf);
-					if (buf[0] == 0) {
-						Logger.getAnonymousLogger().log(Level.WARNING,
-								"Received damaged package.");
-						continue;
-					}
-					byte major = buf[1];
-					byte minor = buf[2];
-					if (major == MAJOR_VERSION) {
-						int lat = buffer.getInt(6);
-						int longitude = buffer.getInt(10);
-						byte sensortype = buf[5];
-						int sensorid = buf[3];
-						sensorid = sensorid & 0xFF;
-						sensorid = sensorid << 8;
-						sensorid = sensorid | (buf[5] & 0xff);
-						short temperature = buffer.getShort(14);
-						byte rawbat = buf[16];
-						int battery = rawbat;
-						if (battery < 0) {
-							battery = 127 + (127 - (battery * -1));
-						}
-						battery = (int) ((battery / 255f) * 100);
-						System.out.println("Battery: " + battery);
-						long timestamp = buffer.getInt(17) & 0xFFFFFFFFl;
-						long timestamp2 = buffer.getInt(21) & 0xFFFFFFFFl;
-						Date date;
-						if (timestamp == 250000 || timestamp == 260000
-								|| timestamp2 == 0) {
-							date = new Date();
-						} else {
-							System.out.println(timestamp + "" + timestamp2);
-							// 10:59:34 24.02.15
-
-							date = PRIMITIVE.parse(ammenddateZero(timestamp
-									+ "", 6)
-									+ ammenddateZero(timestamp2 + "", 6));
-						}
-						System.out.println(date);
-						byte ttl = buf[25];
-						byte rssi = buf[26];
-						int length = buf[27];
-						if (length < 0) {
-							length = 127 + (127 - (length * -1));
-						}
-						System.out.println("Length: " + length);
-						byte[] datas = new byte[length + 4];
-						ByteBuffer lengbuf = ByteBuffer.allocate(4);
-						lengbuf.putInt(length);
-						datas[0] = lengbuf.get(0);
-						datas[1] = lengbuf.get(1);
-						datas[2] = lengbuf.get(2);
-						datas[3] = lengbuf.get(3);
-
-						for (int i = 0; i < (length); i++) {
-							datas[i + 4] = buf[28 + i];
-						}
-						try {
-							if (date.getTime() > System.currentTimeMillis() + 1000 * 60 * 6
-									|| date.getTime() < System
-											.currentTimeMillis() - 1000 * 60 * 6) {
-								getLoger()
-										.warn("Received timestamp from outer time! Droped...");
-							} else {
-								DataPoint datapoint = new DataPoint(sensortype,
-										Sensor.getBySensorUid(sensorid), datas,
-										date.getTime() / 1000, battery,
-										new LocationLatLong(lat, longitude),
-										temperature, SensNetNodeConfiguration
-												.getInstance().getThisNode());
-								datapoint.commit();
+				FileInputStream inStream = new FileInputStream(inter);
+				int readed;
+				ByteBuffer byteBuf = ByteBuffer.allocate(512);
+				int succIndex = 0;
+				while ((readed = inStream.read()) != -1) {
+					if (readed == PARSE_WORD[succIndex]) {
+						succIndex++;
+						if (succIndex == 5) {
+							if (packageCount == Integer.MAX_VALUE) {
+								packageCount = 0;
+								damagedPackages = 0;
 							}
-						} catch (SQLException | InvalidNodeAuthException e) {
-							e.printStackTrace();
+							packageCount++;
+							System.out.println("DATA!");
+							succIndex = 0;
+							short[] header = new short[28];
+							for (int i = 0; i < 28; i++) {
+								header[i] = (short) inStream.read();
+							}
+							short major = header[1];
+							short minor = header[2];
+							if (header[0] == 1 || major != MAJOR_VERSION) {
+								short sensorClass = header[5];
+								short sensorType = header[6];
+								short datalength = header[27];
+								short[] data = new short[datalength];
+								int sensorId = header[3];
+								sensorId = sensorId << 8;
+								sensorId += header[4];
+								for (int i = 0; i < data.length; i++) {
+									data[i] = (short) inStream.read();
+								}
+								long parseTime = readUnsignedInt(17, header);
+								long parseDate = readUnsignedInt(21, header);
+								short battery = header[16];
+								byte temperature = (byte) header[15];
+								int latitude = readSignedInt(7, header);
+								int longitude = readSignedInt(11, header);
+								LocationLatLong location = new LocationLatLong(
+										latitude, longitude);
+								Date measurementTime = PRIMITIVE
+										.parse(ammenddateZero(parseTime + "", 6)
+												+ ammenddateZero(
+														parseDate + "", 6));
+								System.out.println(measurementTime);
+								DataPoint dp = new DataPoint(sensorType,
+										sensorClass,
+										Sensor.getBySensorUid(sensorId), data,
+										measurementTime.getTime(), battery,
+										location, temperature,
+										SensNetNodeConfiguration.getInstance()
+												.getThisNode());
+								dp.commit();
+							} else {
+								if (header[0] == 1) {
+									System.out.println("Damaged package!");
+									damagedPackages++;
+									avgPackageLoss = ((float) damagedPackages / packageCount) * 100f;
+									System.out.println("Avg. Package loss: "
+											+ avgPackageLoss + "%");
+								} else {
+									System.out
+											.println("Received unsupported/unknown package version/format.");
+								}
+								byteBuf.clear();
+							}
 						}
 					} else {
-						Logger.getAnonymousLogger().log(
-								Level.WARNING,
-								"Received breaking packet version: " + major
-										+ "." + minor);
+						succIndex = 0;
+					}
+					if (readed == '\n') {
+						char[] arr = new char[byteBuf.position() / 2];
+						byteBuf.position(0);
+						for (int i = 0; i < arr.length; i++) {
+							arr[i] = byteBuf.getChar();
+						}
+						String line = new String(arr);
+						// TODO GPS
+						byteBuf.clear();
+					} else {
+						byteBuf.putShort((short) readed);
 					}
 				}
-				r.close();
-				getLoger()
-						.warn("Receiver shutdown: Received EOF on interface. Retrying in 5 secounds.");
-				Thread.sleep(5000);
+				inStream.close();
 			} catch (IOException e) {
 				getLoger().warn("Interface I/O error! Retying in 15 secounds.",
 						e);
@@ -152,6 +178,28 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 			res = "0" + res;
 		}
 		return res;
+	}
+
+	private long readUnsignedInt(int offset, short[] values) {
+		long res = values[offset];
+		for (int i = 1; i < 4; i++) {
+			res <<= 8;
+			res += values[offset + i];
+		}
+		return res;
+	}
+
+	private int readSignedInt(int offset, short[] values) {
+		int res = values[offset];
+		for (int i = 1; i < 4; i++) {
+			res <<= 8;
+			res += values[offset + i];
+		}
+		return res;
+	}
+
+	public float getAvgPackageLoss() {
+		return avgPackageLoss;
 	}
 
 }

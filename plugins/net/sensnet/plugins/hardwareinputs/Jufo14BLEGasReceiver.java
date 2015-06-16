@@ -60,8 +60,8 @@ public class Jufo14BLEGasReceiver extends HardwareInputPlugin {
 							continue;
 						}
 						String[] dataParts = data.split(";");
-						DataPoint point = new DataPoint(1, new Sensor(0x20CD,
-								SensNetNodeConfiguration.getInstance()
+						DataPoint point = new DataPoint(4, 2, new Sensor(
+								0x20CD, SensNetNodeConfiguration.getInstance()
 										.getThisNode()), rawdata,
 								System.currentTimeMillis() / 1000,
 								Integer.parseInt(dataParts[2]) / 10,
@@ -83,5 +83,4 @@ public class Jufo14BLEGasReceiver extends HardwareInputPlugin {
 			e.printStackTrace();
 		}
 	}
-
 }

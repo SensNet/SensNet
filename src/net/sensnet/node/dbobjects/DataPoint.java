@@ -3,6 +3,7 @@ package net.sensnet.node.dbobjects;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ import net.sensnet.node.supercommunications.HttpSyncAction;
 import net.sensnet.node.supercommunications.SuperCommunicationsManager;
 
 public class DataPoint implements Syncable {
-	private int type;
+	private int type, sensorClass;
 	private Sensor from;
 	private LocationLatLong location;
 	private long time;
@@ -31,9 +32,27 @@ public class DataPoint implements Syncable {
 	private short temperature;
 	private byte[] values;
 
-	public DataPoint(int type, Sensor from, byte[] values, long time,
-			int battery, LocationLatLong location, short temperature,
-			Node receiverNode) {
+	public DataPoint(int type, int sensorsClass, Sensor from, short[] values,
+			long time, int battery, LocationLatLong location,
+			short temperature, Node receiverNode) {
+		this.type = type;
+		this.from = from;
+		ByteBuffer buf = ByteBuffer.allocate(values.length * 2);
+		for (int i = 0; i < values.length; i++) {
+			buf.putShort(values[i]);
+		}
+		this.values = buf.array();
+		buf.clear();
+		this.time = time;
+		this.temperature = temperature;
+		this.battery = battery;
+		this.location = location;
+		this.receiverNode = receiverNode;
+	}
+
+	public DataPoint(int type, int sensorsClass, Sensor from, byte[] values,
+			long time, int battery, LocationLatLong location,
+			short temperature, Node receiverNode) {
 		this.type = type;
 		this.from = from;
 		this.values = values;
@@ -59,6 +78,7 @@ public class DataPoint implements Syncable {
 		this.receiverNode = Node.getByUid(Integer.parseInt(req
 				.getParameter("receiver")));
 		this.temperature = Short.parseShort(req.getParameter("temperature"));
+		this.sensorClass = Integer.parseInt(req.getParameter("class"));
 	}
 
 	public Sensor getFrom() {
@@ -102,7 +122,7 @@ public class DataPoint implements Syncable {
 									+ location.getLng() + "&battery=" + battery
 									+ "&time=" + time + "&receiver="
 									+ receiverNode.getUid() + "&temperature="
-									+ temperature;
+									+ temperature + "&class=" + sensorClass;
 						}
 
 						@Override
@@ -114,7 +134,7 @@ public class DataPoint implements Syncable {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, receivernode=?, temperature=?");
+						"INSERT INTO datapoints SET `from`=?, `type`=?, locationlat=?, locationlong=?, battery=?, received=?, `value`=?, receivernode=?, temperature=?, class=?");
 		prep.setInt(1, from.getId());
 		prep.setInt(2, type);
 		prep.setInt(3, location.getLat());
@@ -125,6 +145,7 @@ public class DataPoint implements Syncable {
 		prep.setBytes(7, values);
 		prep.setInt(8, receiverNode.getUid());
 		prep.setShort(9, temperature);
+		prep.setInt(10, sensorClass);
 		prep.execute();
 		ResultSet id = prep.getGeneratedKeys();
 		id.next();
