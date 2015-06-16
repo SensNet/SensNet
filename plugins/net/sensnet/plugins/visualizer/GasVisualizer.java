@@ -61,4 +61,9 @@ public class GasVisualizer extends DataVisualizerPlugin {
 		};
 	}
 
+	@Override
+	public int getSensorClass() {
+		return 2;
+	}
+
 }

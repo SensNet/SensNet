@@ -26,7 +26,7 @@ public class ParticleVisualizer extends DataVisualizerPlugin {
 
 	@Override
 	public int getSensorType() {
-		return 4;
+		return 2;
 	}
 
 	@Override
@@ -57,6 +57,11 @@ public class ParticleVisualizer extends DataVisualizerPlugin {
 				return null;
 			}
 		};
+	}
+
+	@Override
+	public int getSensorClass() {
+		return 4;
 	}
 
 }

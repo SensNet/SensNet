@@ -62,4 +62,9 @@ public class RadioDoseVisualizer extends DataVisualizerPlugin {
 		return "radiodose";
 	}
 
+	@Override
+	public int getSensorClass() {
+		return 1;
+	}
+
 }

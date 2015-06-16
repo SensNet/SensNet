@@ -21,6 +21,8 @@ public abstract class DataVisualizerPlugin extends Plugin implements
 
 	public abstract String getSensorName();
 
+	public abstract int getSensorClass();
+
 	public abstract int getSensorType();
 
 	public abstract String getSensorTypeName();
