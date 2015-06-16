@@ -115,18 +115,26 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 								int longitude = readSignedInt(11, header);
 								LocationLatLong location = new LocationLatLong(
 										latitude, longitude);
-								Date measurementTime = PRIMITIVE
-										.parse(ammenddateZero(parseTime + "", 6)
-												+ ammenddateZero(
-														parseDate + "", 6));
+								String time = ammenddateZero(parseTime + "", 6);
+								Date measurementTime;
+								System.out.println(time);
+								if (time.equals("250000")) {
+									measurementTime = new Date();
+									System.out.println("St date myself.");
+								} else {
+									measurementTime = PRIMITIVE
+											.parse(ammenddateZero(parseTime
+													+ "", 6)
+													+ ammenddateZero(parseDate
+															+ "", 6));
+								}
 								System.out.println(measurementTime);
 								DataPoint dp = new DataPoint(sensorType,
 										sensorClass,
 										Sensor.getBySensorUid(sensorId), data,
-										measurementTime.getTime(), battery,
-										location, temperature,
-										SensNetNodeConfiguration.getInstance()
-												.getThisNode());
+										measurementTime, battery, location,
+										temperature, SensNetNodeConfiguration
+												.getInstance().getThisNode());
 								dp.commit();
 							} else {
 								if (header[0] == 1) {

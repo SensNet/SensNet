@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.Date;
 
 import net.sensnet.node.SensNetNodeConfiguration;
 import net.sensnet.node.dbobjects.DataPoint;
@@ -62,8 +63,7 @@ public class Jufo14BLEGasReceiver extends HardwareInputPlugin {
 						String[] dataParts = data.split(";");
 						DataPoint point = new DataPoint(4, 2, new Sensor(
 								0x20CD, SensNetNodeConfiguration.getInstance()
-										.getThisNode()), rawdata,
-								System.currentTimeMillis() / 1000,
+										.getThisNode()), rawdata, new Date(),
 								Integer.parseInt(dataParts[2]) / 10,
 								new LocationLatLong(4902088, 837057),
 								Short.parseShort(dataParts[1]),

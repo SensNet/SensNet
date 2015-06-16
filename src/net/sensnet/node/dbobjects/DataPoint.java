@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +34,7 @@ public class DataPoint implements Syncable {
 	private byte[] values;
 
 	public DataPoint(int type, int sensorsClass, Sensor from, short[] values,
-			long time, int battery, LocationLatLong location,
+			Date time, int battery, LocationLatLong location,
 			short temperature, Node receiverNode) {
 		this.type = type;
 		this.from = from;
@@ -43,7 +44,7 @@ public class DataPoint implements Syncable {
 		}
 		this.values = buf.array();
 		buf.clear();
-		this.time = time;
+		this.time = time.getTime() / 1000;
 		this.temperature = temperature;
 		this.battery = battery;
 		this.location = location;
@@ -51,12 +52,12 @@ public class DataPoint implements Syncable {
 	}
 
 	public DataPoint(int type, int sensorsClass, Sensor from, byte[] values,
-			long time, int battery, LocationLatLong location,
+			Date time, int battery, LocationLatLong location,
 			short temperature, Node receiverNode) {
 		this.type = type;
 		this.from = from;
 		this.values = values;
-		this.time = time;
+		this.time = time.getTime() / 1000;
 		this.temperature = temperature;
 		this.battery = battery;
 		this.location = location;
