@@ -18,19 +18,18 @@ public class ChemGasSensor extends SensorIndexer {
 
 	@Override
 	public String getSensorName() {
-		return "chemgas5v";
+		return "chemgas5vbutan";
 	}
 
 	@Override
 	public String createIndexTableArguments() {
 		return "`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `datapoint` "
-				+ "int(11) unsigned NOT NULL, `voltage` float NOT NULL, PRIMARY KEY (`id`)";
+				+ "int(11) unsigned NOT NULL, `ppm` int(11) NOT NULL, PRIMARY KEY (`id`)";
 	}
 
 	@Override
 	public String getInsertionPreparedQuery() {
-		return "INSERT INTO " + getTableName()
-				+ " (datapoint,voltage) VALUES(?,?)";
+		return "INSERT INTO " + getTableName() + " (datapoint,ppm) VALUES(?,?)";
 	}
 
 	@Override
@@ -38,7 +37,24 @@ public class ChemGasSensor extends SensorIndexer {
 			int id) throws SQLException {
 		insertQuery.setInt(1, id);
 		ByteBuffer buf = ByteBuffer.wrap(target.getValues());
-		insertQuery.setFloat(2, buf.getShort(4) * 2.048f / 32786f);
+		short res = buf.getShort(0);
+
+		res <<= 8;
+		res += buf.getShort(2);
+		System.out.println("RES: " + res);
+		buf.clear();
+		float voltage = (3.5f / (float) Math.pow(2, 11)) * res;
+		System.out.println("Voltage: " + voltage);
+		float ohm = (20000 * voltage) / (7 - 2 * voltage);
+		int ppm = (int) ((186500 / 17) - ((33 * ohm) / 85));
+		if (ohm > 1000000 || ohm < 0) {
+			return true;
+		}
+		if (ppm < 100) {
+			ppm = 0;
+		}
+		System.out.println("ppm: " + ppm + " ohm: " + ohm);
+		insertQuery.setInt(2, ppm);
 		return insertQuery.execute();
 	}
 
