@@ -110,6 +110,8 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 								long parseTime = readUnsignedInt(17, header);
 								long parseDate = readUnsignedInt(21, header);
 								short battery = header[16];
+								battery = (short) ((battery / 255f) * 100);
+								System.out.println(battery);
 								byte temperature = (byte) header[15];
 								int latitude = readSignedInt(7, header);
 								int longitude = readSignedInt(11, header);
@@ -127,6 +129,9 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 													+ "", 6)
 													+ ammenddateZero(parseDate
 															+ "", 6));
+								}
+								if (measurementTime.getTime() < 0) {
+									System.out.println("Invalid time. Droped.");
 								}
 								System.out.println(measurementTime);
 								DataPoint dp = new DataPoint(sensorType,
