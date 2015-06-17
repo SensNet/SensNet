@@ -31,7 +31,7 @@ public class ParticleVisualizer extends DataVisualizerPlugin {
 
 	@Override
 	public String getSensorTypeName() {
-		return "particle";
+		return "particlesensnet";
 	}
 
 	@Override

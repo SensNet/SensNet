@@ -19,21 +19,20 @@ public class ParticleSensor extends SensorIndexer {
 
 	@Override
 	public String getSensorName() {
-		return "particle";
+		return "particlesensnet";
 	}
 
 	@Override
 	public String createIndexTableArguments() {
 		return "`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `datapoint` "
-				+ "int(11) unsigned NOT NULL, `rough_particle` int(11) "
-				+ "unsigned NOT NULL, `fine_particle` int(11) "
+				+ "int(11) unsigned NOT NULL, `particles` int(11) "
 				+ "unsigned NOT NULL, PRIMARY KEY (`id`)";
 	}
 
 	@Override
 	public String getInsertionPreparedQuery() {
 		return "INSERT INTO " + getTableName()
-				+ " (datapoint,particle) VALUES(?,?,?)";
+				+ " (datapoint,particles) VALUES(?,?)";
 	}
 
 	@Override
@@ -41,8 +40,10 @@ public class ParticleSensor extends SensorIndexer {
 			int id) throws SQLException {
 		ByteBuffer buf = ByteBuffer.wrap(target.getValues());
 		insertQuery.setInt(1, id);
-		insertQuery.setLong(2, Short.toUnsignedLong(buf.getShort(4)));
-		insertQuery.setLong(3, Short.toUnsignedLong(buf.getShort(6)));
+		long particles = Short.toUnsignedLong(buf.getShort(0));
+		particles = (long) ((Math.pow(1.1f * (particles * 0.001), 3) - 3.8f
+				* Math.pow(particles * 0.001f, 2) + 0.52f * particles + 0.62f) * 3533);
+		insertQuery.setLong(2, particles);
 		return insertQuery.execute();
 	}
 
@@ -60,8 +61,7 @@ public class ParticleSensor extends SensorIndexer {
 				String[] in = new String[7];
 				in[0] = resSet.getInt("lat") + "";
 				in[1] = resSet.getInt("lng") + "";
-				in[2] = resSet.getInt("rough_particle") + "";
-				in[3] = resSet.getInt("fine_particle") + "";
+				in[2] = resSet.getInt("particles") + "";
 				in[5] = resSet.getInt("received") + "";
 				in[5] = resSet.getInt("from") + "";
 				in[6] = resSet.getInt("receivernode") + "";
@@ -79,7 +79,7 @@ public class ParticleSensor extends SensorIndexer {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"SELECT receivernode, `from`, received, rough_particle, fine_particle, a.locationlat AS lat, a.locationlong AS lng FROM sensor_particle LEFT JOIN datapoints a ON (datapoint = a.id) WHERE received <= ? ORDER BY received DESC LIMIT 0,1");
+						"SELECT receivernode, `from`, received, particles, a.locationlat AS lat, a.locationlong AS lng FROM sensor_particlesensnet LEFT JOIN datapoints a ON (datapoint = a.id) WHERE received <= ? ORDER BY received DESC LIMIT 0,1");
 		prep.setLong(1, upperLimit.getTime() / 1000);
 		ResultSet resSet = prep.executeQuery();
 		return parseQuery(resSet);
