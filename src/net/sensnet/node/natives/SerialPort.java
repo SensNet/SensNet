@@ -19,9 +19,12 @@ public class SerialPort {
 
 	public static void setBaudRate(String port, int baud) {
 		if (loaded) {
-			setBaudRate0(port, baud);
+			System.out.println("Baud set for " + port + " retuned: "
+					+ setBaudRate0(port.trim(), baud));
+		} else {
+			System.err.println("Call to baudrate set not funtional!");
 		}
 	}
 
-	private native static void setBaudRate0(String port, int baud);
+	private native static int setBaudRate0(String port, int baud);
 }

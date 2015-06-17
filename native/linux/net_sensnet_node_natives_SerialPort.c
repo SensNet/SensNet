@@ -1,15 +1,20 @@
 #include <jni.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <errno.h>
+#include <stdio.h>
 #include "net_sensnet_node_natives_SerialPort.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBaudRate0 (JNIEnv *env, jclass clazz, jstring port, jint baud) {
+JNIEXPORT int JNICALL Java_net_sensnet_node_natives_SerialPort_setBaudRate0 (JNIEnv *env, jclass clazz, jstring port, jint baud) {
+    printf("CALL");
     int fd;
-    const char *p = (*env)->GetStringUTFChars(env, port, 0);
+    const char *p = (*env)->GetStringUTFChars(env, port, (jboolean*)0);
+    //const char *p = "/dev/ttyUSB1";
+    printf("Setting baudrate of %s...\n", p);
     speed_t bd = B9600;
     
     if(baud <= 0)
@@ -76,14 +81,15 @@ JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBaudRate0 (JN
         bd = B4000000;
     
     fd = open(p, O_RDWR);
+    int *resfd = &fd;
     struct termios settings;
     tcgetattr(fd, &settings);
-    cfsetospeed(&settings, bd);
     tcsetattr(fd, TCSANOW, &settings);
     tcflush(fd, TCOFLUSH);
     close(fd);
     printf("Set baudrate of %s to %d", p, baud);
     (*env)->ReleaseStringUTFChars(env, port, p);
+    return fd;
 }
 
 #ifdef __cplusplus

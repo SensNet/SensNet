@@ -44,6 +44,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 			getLoger().warn("Serial interface not found!");
 			return null;
 		}
+		System.out.println("Initializing shield....");
 		try (PrintWriter wr = new PrintWriter(new FileWriter(inter), true)) {
 			try (BufferedReader read = new BufferedReader(new FileReader(inter))) {
 				wr.println("AT+RST");
