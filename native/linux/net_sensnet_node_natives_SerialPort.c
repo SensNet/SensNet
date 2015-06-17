@@ -82,6 +82,7 @@ JNIEXPORT void JNICALL Java_net_sensnet_node_natives_SerialPort_setBaudRate0 (JN
     tcsetattr(fd, TCSANOW, &settings);
     tcflush(fd, TCOFLUSH);
     close(fd);
+    printf("Set baudrate of %s to %d", p, baud);
     (*env)->ReleaseStringUTFChars(env, port, p);
 }
 

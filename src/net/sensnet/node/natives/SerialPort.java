@@ -19,7 +19,6 @@ public class SerialPort {
 
 	public static void setBaudRate(String port, int baud) {
 		if (loaded) {
-			System.out.println("Set baudrate of '" + port + "' to " + baud);
 			setBaudRate0(port, baud);
 		}
 	}
