@@ -42,7 +42,7 @@ map.addLayer(markers);
 var refresh = function() {
 	var old = markers;
 	markers = new L.FeatureGroup();
-	$.getJSON("/api/json/sensors/particle?near=now", function( data ) {
+	$.getJSON("/api/json/sensors/particlesensnet?near=now", function( data ) {
 		var dat = [];
 		for(var i = 0; i < data.length; i++) {
 			var lat = makeCoordinate(data[i][0]);
@@ -53,7 +53,7 @@ var refresh = function() {
 			m.bindPopup(popup);
 				markers.addLayer(m);
 				dat.push({lat: lat, lng: lng, count: data[i][2]});
-				$.getJSON("/api/json/nodes?forsensor="+data[i][4], function(data) {
+				$.getJSON("/api/json/nodes?forsensor="+data[i][5], function(data) {
 					var overview = $("#node-overview");
 						if($("#node"+data[0]).length == 0) {
 							var panel = document.createElement('div');
@@ -78,7 +78,7 @@ var refresh = function() {
 							overview.append(panel);
 					}
 						var pan = $("#snesorsby"+data[0]);
-						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=4&class=2", function(data){
+						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=2&class=4", function(data){
 							for(var j = 0; j< data.length;j++) {	
 								if($("#sensor_"+data[j][0]).length == 0) {	
 								var row = document.createElement("tr");
