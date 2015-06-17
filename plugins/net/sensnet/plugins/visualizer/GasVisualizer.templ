@@ -14,10 +14,28 @@ attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</
 maxZoom: 18
 }
 );
+var cfg = {
+		// radius should be small ONLY if scaleRadius is true (or small radius is intended)
+		"radius": 20,
+		"maxOpacity": .8,
+		// scales the radius based on map zoom
+		"scaleRadius": false,
+		// if set to false the heatmap uses the global maximum for colorization
+		// if activated: uses the data maximum within the current map boundaries
+		// (there will always be a red spot with useLocalExtremas true)
+		"useLocalExtrema": false,
+		// which field name in your data represents the latitude - default "lat"
+		latField: 'lat',
+		// which field name in your data represents the longitude - default "lng"
+		lngField: 'lng',
+		// which field name in your data represents the data value - default "value"
+		valueField: 'count'
+		};
+		var heatmapLayer = new HeatmapOverlay(cfg);
 var map = new L.Map('half-map', {
 center: new L.LatLng(51.00, 10),
 zoom: 4,
-layers: [baseLayer]
+layers: [baseLayer, heatmapLayer]
 });
 var markers = new L.FeatureGroup();
 map.addLayer(markers);
@@ -30,8 +48,8 @@ var refresh = function() {
 			var lat = makeCoordinate(data[i][0]);
 			var lng = makeCoordinate(data[i][1]);
 			var m = L.marker([lat, lng]);
-			var popup = L.popup().setLatLng([lat, lng])
-		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][4]+"</b><br/>"+data[i][2] +" ppm</p>");
+			var popup = L.popup().setLatLng([lat, lng]).setContent("<p style='text-align:center'><b>Sensor #"+data[i][4]+"</b><br/>"+data[i][2] +" ppm</p>");
+			dat.push({lat: lat, lng: lng, count: data[i][2]});
 			m.bindPopup(popup);
 				markers.addLayer(m);
 				$.getJSON("/api/json/nodes?forsensor="+data[i][3], function(data) {
