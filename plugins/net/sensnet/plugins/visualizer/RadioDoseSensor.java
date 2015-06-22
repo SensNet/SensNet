@@ -113,7 +113,7 @@ public class RadioDoseSensor extends SensorIndexer {
 		PreparedStatement sensors = DatabaseConnection
 				.getInstance()
 				.prepare(
-						"SELECT `from` FROM datapoints WHERE type=1 AND class=3 AND received <= ? GROUP BY `from`");
+						"SELECT `from` FROM datapoints WHERE type=3 AND class=3 AND received <= ? GROUP BY `from`");
 		sensors.setLong(1, upperLimit.getTime() / 1000);
 		ResultSet resSet = sensors.executeQuery();
 		if (resSet.last()) {

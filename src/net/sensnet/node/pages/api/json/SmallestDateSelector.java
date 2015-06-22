@@ -24,13 +24,15 @@ public class SmallestDateSelector extends APIPage {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
 		int type = Integer.parseInt(req.getParameter("type"));
+		int sensorClass = Integer.parseInt(req.getParameter("class"));
 		PreparedStatement prep;
 		try {
 			prep = DatabaseConnection
 					.getInstance()
 					.prepare(
-							"SELECT received FROM datapoints WHERE type=? ORDER BY received ASC LIMIT 1");
+							"SELECT received FROM datapoints WHERE type=? AND class=? ORDER BY received ASC LIMIT 1");
 			prep.setInt(1, type);
+			prep.setInt(2, sensorClass);
 			ResultSet res = prep.executeQuery();
 			if (res.first()) {
 				resp.getWriter().println(res.getLong(1));
