@@ -1,6 +1,8 @@
 package net.sensnet.node;
 
-
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 
 public class DatabaseConnection {
     private Connection connection;
@@ -17,12 +23,28 @@ public class DatabaseConnection {
     private Statement adHoc;
     private static final int CONNECTION_TIMEOUT = 24 * 60 * 60;
 
+    private static final Logger l;
+    static {
+        Logger l1 = Logger.getLogger(DatabaseConnection.class.getName());
+        l1.setUseParentHandlers(false);
+        OutputStream out;
+        try {
+            out = new FileOutputStream("dbconn.log");
+            l1.addHandler(new StreamHandler(out, new SimpleFormatter()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        l = l1;
+    }
+
     public DatabaseConnection() {
+        l.info("New connection for " + Thread.currentThread().getId());
         try {
             Class.forName(config.getJDBCDriver());
         } catch (ClassNotFoundException e) {
             System.err.println("Error loading database driver!");
             e.printStackTrace();
+            l.log(Level.SEVERE, "Error while loading driver", e);
         }
         tryConnect();
     }
@@ -60,6 +82,7 @@ public class DatabaseConnection {
 
     private void tryConnect() {
         try {
+            l.info("Real connection for " + Thread.currentThread().getId());
             connection = DriverManager.getConnection(config.getDB()
                     + "?zeroDateTimeBehavior=convertToNull",
                     config.getDBUser(), config.getDBPW());
@@ -68,7 +91,9 @@ public class DatabaseConnection {
             ps.setInt(1, CONNECTION_TIMEOUT);
             ps.execute();
             ps.close();
+            l.info("Timeout established for " + Thread.currentThread().getId());
             adHoc = connection.createStatement();
+            l.info("ad Hoc created for " + Thread.currentThread().getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,13 +101,16 @@ public class DatabaseConnection {
 
     private void ensureOpen() {
         if (System.currentTimeMillis() - lastAction > CONNECTION_TIMEOUT * 1000L) {
+            l.info("ping for " + Thread.currentThread().getId());
             try {
                 ResultSet rs = adHoc.executeQuery("SELECT 1");
                 rs.close();
                 lastAction = System.currentTimeMillis();
+                l.info("ping succeeded for " + Thread.currentThread().getId());
                 return;
             } catch (SQLException e) {
             }
+            l.info("ping failed for " + Thread.currentThread().getId());
             statements.clear();
             tryConnect();
         }
