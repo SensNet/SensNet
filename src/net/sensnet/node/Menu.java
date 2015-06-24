@@ -8,7 +8,7 @@ import net.sensnet.node.plugins.PagePlugin;
 import net.sensnet.node.plugins.PlainPagePlugin;
 
 public class Menu {
-	private static Menu instance = new Menu();
+	private static final Menu instance = new Menu();
 	private TreeSet<DataVisualizerPlugin> sensorsMenu = new TreeSet<DataVisualizerPlugin>();
 	private LinkedList<PagePlugin> pageMenu = new LinkedList<PagePlugin>();
 	private LinkedList<PlainPagePlugin> plainItems = new LinkedList<PlainPagePlugin>();
