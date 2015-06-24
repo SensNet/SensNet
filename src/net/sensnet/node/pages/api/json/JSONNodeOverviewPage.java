@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +15,7 @@ import net.sensnet.node.dbobjects.Sensor;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class JSONNodeOverviewPage extends JSONApiPage {
 	public static final String PATH = "/api/json/nodes";
@@ -27,8 +28,11 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 				Node n = Sensor.getBySensorUid(
 						Integer.parseInt(req.getParameter("forsensor")))
 						.getNode();
-				return new JSONArray(new String[] { n.getUid() + "",
-						n.getName(), n.getDescription() });
+				HashMap<String, Object> obj = new HashMap<String, Object>();
+				obj.put("uid", n.getUid() + "");
+				obj.put("name", n.getName());
+				obj.put("description", n.getDescription());
+				return new JSONArray(new JSONObject(obj));
 			} catch (NumberFormatException | IOException
 					| InvalidNodeAuthException e) {
 				e.printStackTrace();
@@ -57,11 +61,11 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 		JSONArray jsonRes = new JSONArray();
 		resSet.beforeFirst();
 		while (resSet.next()) {
-			LinkedList<String> res = new LinkedList<String>();
-			res.add(resSet.getInt("uid") + "");
-			res.add(resSet.getString("name"));
-			res.add(resSet.getString("description"));
-			jsonRes.put(res);
+			HashMap<String, Object> res = new HashMap<String, Object>();
+			res.put("uid", resSet.getInt("uid") + "");
+			res.put("name", resSet.getString("name"));
+			res.put("description", resSet.getString("description"));
+			jsonRes.put(new JSONObject(res));
 		}
 		return jsonRes;
 	}

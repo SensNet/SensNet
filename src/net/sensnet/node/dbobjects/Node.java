@@ -17,6 +17,7 @@ import net.sensnet.node.supercommunications.HttpSyncAction;
 import net.sensnet.node.supercommunications.SuperCommunicationsManager;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Node implements Syncable {
 	private int uid;
@@ -110,15 +111,15 @@ public class Node implements Syncable {
 		prep.setInt(2, uid);
 		ResultSet resSet = prep.executeQuery();
 		resSet.last();
-		String[][] res = new String[resSet.getRow()][];
+		JSONObject[] res = new JSONObject[resSet.getRow()];
 		resSet.beforeFirst();
 		int count = 0;
 		while (resSet.next()) {
-			String[] thing = new String[3];
-			thing[0] = resSet.getInt("from") + "";
-			thing[1] = resSet.getLong("received") + "";
-			thing[2] = resSet.getInt("battery") + " %";
-			res[count++] = thing;
+			HashMap<String, String> thing = new HashMap<String, String>();
+			thing.put("from", resSet.getInt("from") + "");
+			thing.put("received", resSet.getLong("received") + "");
+			thing.put("battery", resSet.getInt("battery") + " %");
+			res[count++] = new JSONObject(thing);
 		}
 		return new JSONArray(res);
 	}
@@ -135,15 +136,15 @@ public class Node implements Syncable {
 		prep.setInt(4, sensorClass);
 		ResultSet resSet = prep.executeQuery();
 		resSet.last();
-		String[][] res = new String[resSet.getRow()][];
+		JSONObject[] res = new JSONObject[resSet.getRow()];
 		resSet.beforeFirst();
 		int count = 0;
 		while (resSet.next()) {
-			String[] thing = new String[3];
-			thing[0] = resSet.getInt("from") + "";
-			thing[1] = resSet.getLong("received") + "";
-			thing[2] = resSet.getInt("battery") + " %";
-			res[count++] = thing;
+			HashMap<String, String> thing = new HashMap<String, String>();
+			thing.put("from", resSet.getInt("from") + "");
+			thing.put("received", resSet.getLong("received") + "");
+			thing.put("battery", resSet.getInt("battery") + " %");
+			res[count++] = new JSONObject(thing);
 		}
 		return new JSONArray(res);
 	}
