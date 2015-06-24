@@ -22,7 +22,6 @@ import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.pages.RegisterNodePage;
 import net.sensnet.node.pages.RegisterSensorPage;
 import net.sensnet.node.pages.SettingsPage;
-import net.sensnet.node.pages.api.json.BLEGasPhaseShiftApiPage;
 import net.sensnet.node.pages.api.json.JSONNodeOverviewPage;
 import net.sensnet.node.pages.api.json.ServerStatus;
 import net.sensnet.node.pages.api.json.SmallestDateSelector;
@@ -54,7 +53,6 @@ public class SensNetNode extends HttpServlet {
 		mapping.put(RegisterNodePage.PATH, new RegisterNodePage("RgisterNode"));
 		mapping.put(SettingsPage.PATH, new SettingsPage());
 		mapping.put(JSONNodeOverviewPage.PATH, new JSONNodeOverviewPage());
-		mapping.put(BLEGasPhaseShiftApiPage.PATH, new BLEGasPhaseShiftApiPage());
 		mapping.put(SmallestDateSelector.PATH, new SmallestDateSelector());
 		mapping.put(ServerStatus.PATH, new ServerStatus());
 		mapping.put(NodeAckPage.PATH, new NodeAckPage());
