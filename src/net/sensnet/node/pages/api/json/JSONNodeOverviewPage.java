@@ -35,7 +35,7 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 				obj.put("uid", n.getUid() + "");
 				obj.put("name", n.getName());
 				obj.put("description", n.getDescription());
-				return new JSONArray(new JSONObject(obj));
+				return new JSONArray(new JSONObject[] { new JSONObject(obj) });
 			} catch (NumberFormatException | IOException
 					| InvalidNodeAuthException e) {
 				e.printStackTrace();

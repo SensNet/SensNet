@@ -140,9 +140,9 @@ public class Node implements Syncable {
 		resSet.beforeFirst();
 		int count = 0;
 		while (resSet.next()) {
-			HashMap<String, String> thing = new HashMap<String, String>();
-			thing.put("from", resSet.getInt("from") + "");
-			thing.put("received", resSet.getLong("received") + "");
+			HashMap<String, Object> thing = new HashMap<String, Object>();
+			thing.put("uid", resSet.getInt("from") + "");
+			thing.put("lastseen", resSet.getLong("received") + "");
 			thing.put("battery", resSet.getInt("battery") + " %");
 			res[count++] = new JSONObject(thing);
 		}
