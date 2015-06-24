@@ -28,6 +28,9 @@ public class JSONNodeOverviewPage extends JSONApiPage {
 				Node n = Sensor.getBySensorUid(
 						Integer.parseInt(req.getParameter("forsensor")))
 						.getNode();
+				if (n == null) {
+					return new JSONArray();
+				}
 				HashMap<String, Object> obj = new HashMap<String, Object>();
 				obj.put("uid", n.getUid() + "");
 				obj.put("name", n.getName());
