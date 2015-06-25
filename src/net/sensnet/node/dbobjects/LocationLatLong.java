@@ -1,5 +1,7 @@
 package net.sensnet.node.dbobjects;
 
+import net.sensnet.node.SensNetNodeConfiguration;
+
 public class LocationLatLong {
 	private int lat, lng;
 
@@ -9,16 +11,15 @@ public class LocationLatLong {
 	}
 
 	public int getLat() {
-		// Frankfurt(Main) Fair
-		// if (lat == 0) {
-		return 5011350;
-		// }
-		// return lat;
+		if (lat == 0) {
+			return SensNetNodeConfiguration.getInstance().getLocationLat();
+		}
+		return lat;
 	}
 
 	public int getLng() {
 		if (lng == 0) {
-			return 863810;
+			return SensNetNodeConfiguration.getInstance().getLocationLng();
 		}
 		return lng;
 	}

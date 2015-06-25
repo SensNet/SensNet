@@ -149,4 +149,22 @@ public class SensNetNodeConfiguration {
 	public String getMapSource() {
 		return p.getProperty("node.mapsource");
 	}
+
+	public int getLocationLat() {
+		return Integer.parseInt(p.getProperty("node.location.lat"));
+	}
+
+	public int getLocationLng() {
+		return Integer.parseInt(p.getProperty("node.location.long"));
+	}
+
+	public void setLocationLat(int lat) {
+		p.setProperty("node.location.lat", lat + "");
+		store();
+	}
+
+	public void setLocationLong(int lng) {
+		p.setProperty("node.location.long", lng + "");
+		store();
+	}
 }
