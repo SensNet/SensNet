@@ -97,7 +97,7 @@ public class SensNetSensorReceiver extends HardwareInputPlugin {
 							}
 							short major = header[1];
 							short minor = header[2];
-							if (header[0] == 1 || major != MAJOR_VERSION) {
+							if (header[0] == 0 && major == MAJOR_VERSION) {
 								short sensorClass = header[5];
 								short sensorType = header[6];
 								short datalength = header[27];
