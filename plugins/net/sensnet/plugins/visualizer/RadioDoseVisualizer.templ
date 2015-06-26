@@ -145,7 +145,7 @@ function update() {
 		return;
 	}
 	$.getJSON("/api/json/serverstatus", function( data ) {
-			var serverTimeCurrent = data[0];
+			var serverTimeCurrent = data[0]["systemtime"];
 			var newDate = Math.round(minDate + (((serverTimeCurrent - minDate) / 1000)*document.getElementById("timeselect").value));
 			currentDate = newDate;
 			refresh();
