@@ -4,11 +4,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.plugins.SensorIndexer;
+
+import org.json.JSONObject;
 
 public class RadioDoseSensor extends SensorIndexer {
 
@@ -52,7 +55,7 @@ public class RadioDoseSensor extends SensorIndexer {
 		return 1;
 	}
 
-	public static int[][] getDoses(Date from, Date to) throws SQLException {
+	public static JSONObject[] getDoses(Date from, Date to) throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
@@ -63,7 +66,8 @@ public class RadioDoseSensor extends SensorIndexer {
 		return parseQuery(resSet);
 	}
 
-	public static int[][] getLatestDosesFromAllSensors() throws SQLException {
+	public static JSONObject[] getLatestDosesFromAllSensors()
+			throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
@@ -72,22 +76,22 @@ public class RadioDoseSensor extends SensorIndexer {
 		return parseQuery(resSet);
 	}
 
-	public static int[] getLatestAvgDosesFromSensor(int sensor, Date upperLimit)
-			throws SQLException {
+	public static JSONObject getLatestAvgDosesFromSensor(int sensor,
+			Date upperLimit) throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
 				.prepare(
 						"SELECT receivernode, `from`, received, dose, a.locationlat AS lat, a.locationlong AS lng FROM sensor_radiodose LEFT JOIN datapoints a ON (datapoint = a.id) WHERE `from` = ? AND received <= ? ORDER BY received DESC LIMIT 0,5 ");
 		prep.setInt(1, sensor);
 		prep.setLong(2, upperLimit.getTime() / 1000);
-		int[] res = new int[4];
 		ResultSet resSet = prep.executeQuery();
 		int count = 0;
+		HashMap<String, Object> out = new HashMap<String, Object>();
 		if (resSet.last()) {
 			count++;
 			resSet.first();
-			res[0] = resSet.getInt("lat");
-			res[1] = resSet.getInt("lng");
+			out.put("lat", resSet.getInt("lat") + "");
+			out.put("lng", resSet.getInt("lng") + "");
 			int avg = resSet.getInt("dose");
 			for (int i = 0; i < 4; i++) {
 				count++;
@@ -98,17 +102,17 @@ public class RadioDoseSensor extends SensorIndexer {
 				}
 			}
 			avg = avg /= count;
-			res[2] = avg;
+			out.put("count", avg);
 			resSet.previous();
-			res[3] = resSet.getInt("from");
+			out.put("uid", resSet.getInt("from"));
 			resSet.close();
-			return res;
+			return new JSONObject(out);
 		}
 		resSet.close();
 		return null;
 	}
 
-	public static int[][] getLatestAvgDosesFromAllSensors(Date upperLimit)
+	public static JSONObject[] getLatestAvgDosesFromAllSensors(Date upperLimit)
 			throws SQLException {
 		PreparedStatement sensors = DatabaseConnection
 				.getInstance()
@@ -117,7 +121,7 @@ public class RadioDoseSensor extends SensorIndexer {
 		sensors.setLong(1, upperLimit.getTime() / 1000);
 		ResultSet resSet = sensors.executeQuery();
 		if (resSet.last()) {
-			int[][] res = new int[resSet.getRow()][];
+			JSONObject[] res = new JSONObject[resSet.getRow()];
 			resSet.beforeFirst();
 			int i = 0;
 			while (resSet.next()) {
@@ -128,10 +132,10 @@ public class RadioDoseSensor extends SensorIndexer {
 			return res;
 		}
 		resSet.close();
-		return new int[0][0];
+		return new JSONObject[0];
 	}
 
-	public static int[][] getDoses(Date from, Date to, int receiverNode)
+	public static JSONObject[] getDoses(Date from, Date to, int receiverNode)
 			throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()
@@ -144,26 +148,27 @@ public class RadioDoseSensor extends SensorIndexer {
 		return parseQuery(resSet);
 	}
 
-	private static int[][] parseQuery(ResultSet resSet) throws SQLException {
+	private static JSONObject[] parseQuery(ResultSet resSet)
+			throws SQLException {
 		if (resSet.last()) {
-			int[][] res = new int[resSet.getRow()][];
+			JSONObject[] res = new JSONObject[resSet.getRow()];
 			resSet.beforeFirst();
 			int i = 0;
 			while (resSet.next()) {
-				int[] in = new int[6];
-				in[0] = resSet.getInt("lat");
-				in[1] = resSet.getInt("lng");
-				in[2] = resSet.getInt("dose");
-				in[3] = resSet.getInt("received");
-				in[4] = resSet.getInt("from");
-				in[5] = resSet.getInt("receivernode");
-				res[i++] = in;
+				HashMap<String, Object> in = new HashMap<String, Object>();
+				in.put("lat", resSet.getInt("lat") + "");
+				in.put("lng", resSet.getInt("lng") + "");
+				in.put("dose", resSet.getInt("dose") + "");
+				in.put("received", resSet.getInt("received") + "");
+				in.put("from", resSet.getInt("from") + "");
+				in.put("receivernode", resSet.getInt("receivernode") + "");
+				res[i++] = new JSONObject(in);
 			}
 			resSet.close();
 			return res;
 		}
 		resSet.close();
-		return new int[0][];
+		return new JSONObject[0];
 	}
 
 	public static String makeCoordinate(int coord) {
