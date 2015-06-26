@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.dbobjects.DataPoint;
 import net.sensnet.node.pages.NodesOverviewPage;
 import net.sensnet.node.plugins.SensorIndexer;
+
+import org.json.JSONObject;
 
 public class ParticleSensor extends SensorIndexer {
 
@@ -52,29 +55,30 @@ public class ParticleSensor extends SensorIndexer {
 		return 2;
 	}
 
-	private static String[][] parseQuery(ResultSet resSet) throws SQLException {
+	private static JSONObject[] parseQuery(ResultSet resSet)
+			throws SQLException {
 		if (resSet.last()) {
-			String[][] res = new String[resSet.getRow()][];
+			JSONObject[] res = new JSONObject[resSet.getRow()];
 			resSet.beforeFirst();
 			int i = 0;
 			while (resSet.next()) {
-				String[] in = new String[7];
-				in[0] = resSet.getInt("lat") + "";
-				in[1] = resSet.getInt("lng") + "";
-				in[2] = resSet.getInt("particles") + "";
-				in[5] = resSet.getInt("received") + "";
-				in[5] = resSet.getInt("from") + "";
-				in[6] = resSet.getInt("receivernode") + "";
-				res[i++] = in;
+				HashMap<String, Object> in = new HashMap<String, Object>();
+				in.put("lat", resSet.getInt("lat") + "");
+				in.put("lng", resSet.getInt("lng") + "");
+				in.put("particles", resSet.getInt("particles") + "");
+				in.put("received", resSet.getInt("received") + "");
+				in.put("from", resSet.getInt("from") + "");
+				in.put("receivernode", resSet.getInt("receivernode") + "");
+				res[i++] = new JSONObject(in);
 			}
 			resSet.close();
 			return res;
 		}
 		resSet.close();
-		return new String[0][];
+		return new JSONObject[0];
 	}
 
-	public static String[][] getLatestDosesFromAllSensors(Date upperLimit)
+	public static JSONObject[] getLatestDosesFromAllSensors(Date upperLimit)
 			throws SQLException {
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()

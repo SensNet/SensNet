@@ -45,30 +45,30 @@ var refresh = function() {
 	$.getJSON("/api/json/sensors/particlesensnet?near=now", function( data ) {
 		var dat = [];
 		for(var i = 0; i < data.length; i++) {
-			var lat = makeCoordinate(data[i][0]);
-			var lng = makeCoordinate(data[i][1]);
+			var lat = makeCoordinate(data[i]["lat"]);
+			var lng = makeCoordinate(data[i]["lng"]);
 			var m = L.marker([lat, lng]);
 			var popup = L.popup().setLatLng([lat, lng])
-		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i][5]+"</b><br/>"+data[i][2] +" particles/l</p>");
+		    .setContent("<p style='text-align:center'><b>Sensor #"+data[i]["from"]+"</b><br/>"+data[i]["particles"] +" particles/l</p>");
 			m.bindPopup(popup);
 				markers.addLayer(m);
-				dat.push({lat: lat, lng: lng, count: data[i][2]});
-				$.getJSON("/api/json/nodes?forsensor="+data[i][5], function(data) {
+				dat.push({lat: lat, lng: lng, count: data[i]["particles"]});
+				$.getJSON("/api/json/nodes?forsensor="+data[i]["from"], function(data) {
 					var overview = $("#node-overview");
-						if($("#node"+data[0]).length == 0) {
+						if($("#node"+data[0]["uid"]).length == 0) {
 							var panel = document.createElement('div');
-							panel.setAttribute("id", "node"+data[0]);
+							panel.setAttribute("id", "node"+data[0]["uid"]);
 							panel.setAttribute("class", "panel panel-default");
 							var heading = document.createElement('div');
 							heading.setAttribute("class", "panel-heading");
-							heading.innerHTML = data[1];
+							heading.innerHTML = data[0]["name"];
 							var body = document.createElement('div');
 							body.setAttribute("class", "panel-body");
 							var bodyText = document.createElement("p");
-							bodyText.innerHTML = data[2];
+							bodyText.innerHTML = data[0]["description"];
 							var table = document.createElement("table");
 							table.setAttribute("class", "table");
-							table.setAttribute("id", "snesorsby"+data[0]);
+							table.setAttribute("id", "snesorsby"+data[0]["uid"]);
 							table.innerHTML = "<tr><th>Sensor #</th><th>Battery</th><th>Last seen</th></tr>";
 							$(body).append(bodyText);
 							var pan = $(panel);
@@ -77,33 +77,33 @@ var refresh = function() {
 							pan.append(table);
 							overview.append(panel);
 					}
-						var pan = $("#snesorsby"+data[0]);
-						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]+"&type=2&class=4", function(data){
+						var pan = $("#snesorsby"+data[0]["uid"]);
+						$.getJSON("/api/json/nodes?sensorsbynode="+data[0]["uid"]+"&type=2&class=4", function(data){
 							for(var j = 0; j< data.length;j++) {	
-								if($("#sensor_"+data[j][0]).length == 0) {	
+								if($("#sensor_"+data[j]["uid"]).length == 0) {	
 								var row = document.createElement("tr");
-									row.setAttribute("id", "sensor_"+data[j][0]);
+									row.setAttribute("id", "sensor_"+data[j]["uid"]);
 							var id = document.createElement("td");
-							id.innerHTML = data[j][0];
+							id.innerHTML = data[j]["uid"];
 							$(row).append(id);
 							var battery = document.createElement("td");
-							battery.innerHTML = data[j][2];
+							battery.innerHTML = data[j]["battery"];
 							$(row).append(battery);
 							var lastseen = document.createElement("td");
-							lastseen.innerHTML = new Date(data[j][1] * 1000).format('Y-m-d h:i:s e');
+							lastseen.innerHTML = new Date(data[j]["lastseen"] * 1000).format('Y-m-d h:i:s e');
 							$(row).append(lastseen);
 							pan.append(row);
-								} else {http://localhost:8081/ahttp://localhost:8081/api/json/sensors/particle?near=nowpi/json/sensors/particle?near=now
-									var row = $("#sensor_"+data[j][0]);
+								} else {
+									var row = $("#sensor_"+data[j]["uid"]);
 									row.empty();
 							var id = document.createElement("td");
-							id.innerHTML = data[j][0];
+							id.innerHTML = data[j]["uid"];
 							$(row).append(id);
 							var battery = document.createElement("td");
-							battery.innerHTML = data[j][2];
+							battery.innerHTML = data[j]["battery"];
 							$(row).append(battery);
 							var lastseen = document.createElement("td");
-							lastseen.innerHTML = new Date(data[j][1] * 1000).format('Y-m-d h:i:s e');
+							lastseen.innerHTML = new Date(data[j]["lastseen"] * 1000).format('Y-m-d h:i:s e');
 							$(row).append(lastseen);
 								}
 						}
