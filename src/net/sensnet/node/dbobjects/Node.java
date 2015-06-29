@@ -94,6 +94,9 @@ public class Node implements Syncable {
 						}
 					});
 		}
+		if (Node.getByUid(uid) != null) {
+			return;
+		}
 		PreparedStatement prep = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO nodes SET uid=?, name=?, description=?");
 		prep.setInt(1, uid);
