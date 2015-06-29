@@ -68,6 +68,11 @@ public class Node implements Syncable {
 		if (query.next()) {
 			Node node = new Node(query);
 			cache.put(uid, node);
+			try {
+				node.commit();
+			} catch (IOException | InvalidNodeAuthException e) {
+				e.printStackTrace();
+			}
 			return node;
 		} else {
 			return null;
