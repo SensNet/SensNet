@@ -167,4 +167,8 @@ public class SensNetNodeConfiguration {
 		p.setProperty("node.location.long", lng + "");
 		store();
 	}
+
+	public boolean isHSTSEnabled() {
+		return Boolean.getBoolean(p.getProperty("node.hsts", "true"));
+	}
 }
