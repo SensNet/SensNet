@@ -56,7 +56,7 @@ public class SuperCommunicationsManager implements Runnable {
 		return instance;
 	}
 
-	public synchronized void putJob(HttpSyncAction job) throws IOException {
+	public synchronized void putJob(HttpSyncable job) throws IOException {
 		File file = new File(TARGET_FOLDER, FILE_FORM.format(new Date()));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		writer.write(job.getPath());
