@@ -25,7 +25,12 @@ public abstract class JSONApiPage extends Page {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
 		try {
-			resp.getWriter().println(getData(req).toString());
+			JSONArray obj = getData(req);
+			if (obj != null) {
+				resp.getWriter().println(getData(req).toString());
+			} else {
+				resp.getWriter().println(new JSONArray());
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

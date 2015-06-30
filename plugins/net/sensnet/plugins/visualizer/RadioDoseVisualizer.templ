@@ -16,7 +16,7 @@ var minDate;
 var currentDate = "now";
 window.onload = function() {
 $.getJSON("/api/smallestdate?class=3&type=3", function( data ) {
-	minDate = data[0]["eraliest"];
+	minDate = data[0]["first"];
 });
 var baseLayer = L.tileLayer(
 '<?=$mapsource?>',{

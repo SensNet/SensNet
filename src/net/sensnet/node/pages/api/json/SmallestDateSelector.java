@@ -30,55 +30,15 @@ public class SmallestDateSelector extends JSONApiPage {
 			prep.setInt(1, type);
 			prep.setInt(2, sensorClass);
 			ResultSet res = prep.executeQuery();
-			JSONObject obj = null;
 			if (res.first()) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("eraliest", res.getLong(1));
-				obj = new JSONObject(map);
+				map.put("first", res.getLong(1));
+				return new JSONArray(new JSONObject[] { new JSONObject(map) });
 			}
-			return new JSONArray(obj);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-
-	// public SmallestDateSelector() {
-	// super("Smallest date selector");
-	// }
-	//
-	// @Override
-	// public void doGet(HttpServletRequest req, HttpServletResponse resp,
-	// Map<String, Object> vars) throws IOException {
-	// int type = Integer.parseInt(req.getParameter("type"));
-	// int sensorClass = Integer.parseInt(req.getParameter("class"));
-	// PreparedStatement prep;
-	// try {
-	// prep = DatabaseConnection
-	// .getInstance()
-	// .prepare(
-	// "SELECT received FROM datapoints WHERE type=? AND class=? ORDER BY received ASC LIMIT 1");
-	// prep.setInt(1, type);
-	// prep.setInt(2, sensorClass);
-	// ResultSet res = prep.executeQuery();
-	// if (res.first()) {
-	// resp.getWriter().println(res.getLong(1));
-	// }
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// @Override
-	// public boolean reallyNeedsLogin() {
-	// return false;
-	// }
-	//
-	// @Override
-	// public void doAction(HttpServletRequest req, HttpServletResponse resp)
-	// throws SQLException, IOException, InvalidNodeAuthException {
-	// // TODO Auto-generated method stub
-	//
-	// }
-
 }
