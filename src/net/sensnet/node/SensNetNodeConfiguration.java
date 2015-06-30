@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import net.sensnet.node.dbobjects.Node;
-import net.sensnet.node.pages.NodeAckPage;
+import net.sensnet.node.pages.api.system.NodeAckPage;
 import net.sensnet.node.util.ConnUtils;
 
 public class SensNetNodeConfiguration {

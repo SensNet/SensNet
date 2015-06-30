@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sensnet.node.DatabaseConnection;
 import net.sensnet.node.InvalidNodeAuthException;
-import net.sensnet.node.pages.APIPage;
+import net.sensnet.node.pages.api.system.APIPage;
 
 public class SmallestDateSelector extends APIPage {
 	public static final String PATH = "/api/smallestdate";

@@ -1,4 +1,4 @@
-package net.sensnet.node.pages;
+package net.sensnet.node.pages.api.system;
 
 import java.io.IOException;
 import java.sql.SQLException;

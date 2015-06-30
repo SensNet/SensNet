@@ -1,4 +1,4 @@
-package net.sensnet.node.pages;
+package net.sensnet.node.pages.api.system;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -7,24 +7,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sensnet.node.InvalidNodeAuthException;
-import net.sensnet.node.dbobjects.Node;
+import net.sensnet.node.dbobjects.DataPoint;
 
-public class RegisterNodePage extends APIPage {
-	public static final String PATH = "/api/regsiter/node";
-
-	public RegisterNodePage(String name) {
+public class DataPointSubmitPage extends APIPage {
+	public static final String PATH = "/api/submit/datapoint";
+	public DataPointSubmitPage(String name) {
 		super(name);
 	}
 
 	@Override
 	public void doAction(HttpServletRequest req, HttpServletResponse resp)
 			throws SQLException, IOException, InvalidNodeAuthException {
-		Node n = new Node(req);
-		n.commit();
+		DataPoint dp = new DataPoint(req);
+		dp.commit();
 	}
 
 	@Override
 	public boolean reallyNeedsLogin() {
 		return false;
 	}
+
 }
