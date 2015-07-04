@@ -2,6 +2,7 @@ package net.sensnet.node;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -29,9 +31,12 @@ public class DatabaseConnection {
         l1.setUseParentHandlers(false);
         OutputStream out;
         try {
-            out = new FileOutputStream("dbconn.log");
-            l1.addHandler(new StreamHandler(out, new SimpleFormatter()));
+            FileHandler fh = new FileHandler("dbconn.log");
+            fh.setFormatter(new SimpleFormatter());
+            l1.addHandler(fh);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         l = l1;
