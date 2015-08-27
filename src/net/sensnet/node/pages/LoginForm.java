@@ -2,7 +2,6 @@ package net.sensnet.node.pages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -47,19 +46,8 @@ public class LoginForm extends Form {
 				req.getSession().setAttribute("user", u);
 			}
 			return u != null;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (InvalidNodeAuthException e) {
+		} catch (SQLException | NoSuchAlgorithmException | IOException
+				| InvalidNodeAuthException e) {
 			e.printStackTrace();
 			return false;
 		}
