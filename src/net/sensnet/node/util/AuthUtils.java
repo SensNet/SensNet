@@ -38,9 +38,9 @@ public class AuthUtils {
 		s.setString(1, usr);
 		ResultSet res;
 		if (!(res = s.executeQuery()).first()) {
-
+			res.close();
+			return false;
 		}
-		//System.out.println(res.getInt("id"));
 		res.close();
 		
 		return true;
@@ -55,7 +55,9 @@ public class AuthUtils {
 	public static void registerNewUserDB(String usr, String pw)
 			throws SQLException {
 		PreparedStatement s = DatabaseConnection.getInstance().prepare(
-				"INSERT INTO users (name, pw, readonly) VALUES ('" + usr + "','" + pw + "','0')");
+				"INSERT INTO users (name, pw, readonly) VALUES (?, ?,'0')");
+		s.setString(1, usr);
+		s.setString(2, pw);
         s.executeUpdate();
 	}
 

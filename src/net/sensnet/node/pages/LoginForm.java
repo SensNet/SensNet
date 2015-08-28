@@ -32,8 +32,8 @@ public class LoginForm extends Form {
 	public boolean submit(PrintWriter out, HttpServletRequest req) {
 		try {
 			String usr = req.getParameter("user");
-			System.out.println(req.getParameter("creatUser"));
-			System.out.println(req.getParameter("creatPw"));
+			System.out.println(req.getParameter("createUser"));
+			System.out.println(req.getParameter("createPw"));
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
 			messageDigest.update(req.getParameter("pw").getBytes());
 			String pw = byteArrayToHexString(messageDigest.digest());
@@ -49,19 +49,8 @@ public class LoginForm extends Form {
 				req.getSession().setAttribute("user", u);
 			}
 			return u != null;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (InvalidNodeAuthException e) {
+		} catch (SQLException | NoSuchAlgorithmException | IOException
+				| InvalidNodeAuthException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -69,24 +58,25 @@ public class LoginForm extends Form {
 	
 	public String register(PrintWriter out, HttpServletRequest req) {
 		try {
-			String usr = req.getParameter("creatUser");
-			//System.out.println(req.getParameter("creatUser"));
-			//System.out.println(req.getParameter("creatPw"));
+			String usr = req.getParameter("createUser");
+
+			if (!req.getParameter("createPw").equals(req.getParameter("validatePw"))) {
+				return "Passwords don't match.";
+			}
+			
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-			messageDigest.update(req.getParameter("creatPw").getBytes());
+			messageDigest.update(req.getParameter("createPw").getBytes());
 			String pw = byteArrayToHexString(messageDigest.digest());
 			if (usr == null || usr.trim().isEmpty() || pw == null
 					|| pw.trim().isEmpty()) {
 				return null;
 			}
 			
-			//System.out.println(pw);
 			if (AuthUtils.checkUserExistenceDB(usr)) {
 				return "Username already exists";
 			}
 			
 			else {
-				//System.out.println("do Register");
 				AuthUtils.registerNewUserDB(usr, pw);
 				return "Success! You can now log in.";
 			}
