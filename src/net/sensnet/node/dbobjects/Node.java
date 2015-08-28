@@ -83,21 +83,19 @@ public class Node implements Syncable {
 	public void commit() throws IOException, SQLException,
 			InvalidNodeAuthException {
 		if (!SensNetNodeConfiguration.getInstance().isRootNode()) {
-			SuperCommunicationsManager.getInstance().putJob(
-					new HttpSyncable() {
+			SuperCommunicationsManager.getInstance().putJob(new HttpSyncable() {
 
-						@Override
-						public String getPostData()
-								throws UnsupportedEncodingException {
-							return "&desciption=" + description + "&name="
-									+ name + "&uid=" + uid;
-						}
+				@Override
+				public String getPostData() throws UnsupportedEncodingException {
+					return "&desciption=" + description + "&name=" + name
+							+ "&uid=" + uid;
+				}
 
-						@Override
-						public String getPath() {
-							return RegisterNodePage.PATH;
-						}
-					});
+				@Override
+				public String getPath() {
+					return RegisterNodePage.PATH;
+				}
+			});
 		}
 		if (Node.getByUid(uid) != null) {
 			return;

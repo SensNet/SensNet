@@ -92,7 +92,7 @@ public class SensNetNode extends HttpServlet {
 		}
 		if (((p.needsLogin() && SensNetNodeConfiguration.getInstance()
 				.isLoginRequired()) || p.reallyNeedsLogin())
-				&& !MainPage.isLoggedIn(req)) {
+				&& !Page.isLoggedIn(req)) {
 			req.getSession().setAttribute("redirOrig", pathInfo);
 			resp.sendRedirect("/login");
 			return;

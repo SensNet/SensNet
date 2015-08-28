@@ -2,7 +2,6 @@ package net.sensnet.node.pages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -55,15 +54,16 @@ public class LoginForm extends Form {
 			return false;
 		}
 	}
-	
+
 	public String register(PrintWriter out, HttpServletRequest req) {
 		try {
 			String usr = req.getParameter("createUser");
 
-			if (!req.getParameter("createPw").equals(req.getParameter("validatePw"))) {
+			if (!req.getParameter("createPw").equals(
+					req.getParameter("validatePw"))) {
 				return "Passwords don't match.";
 			}
-			
+
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
 			messageDigest.update(req.getParameter("createPw").getBytes());
 			String pw = byteArrayToHexString(messageDigest.digest());
@@ -71,11 +71,11 @@ public class LoginForm extends Form {
 					|| pw.trim().isEmpty()) {
 				return null;
 			}
-			
+
 			if (AuthUtils.checkUserExistenceDB(usr)) {
 				return "Username already exists";
 			}
-			
+
 			else {
 				AuthUtils.registerNewUserDB(usr, pw);
 				return "Success! You can now log in.";
@@ -87,7 +87,7 @@ public class LoginForm extends Form {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		} 
+		}
 	}
 
 	@Override

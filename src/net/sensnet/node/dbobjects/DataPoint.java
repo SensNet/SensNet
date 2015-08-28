@@ -108,31 +108,29 @@ public class DataPoint implements Syncable {
 	public void commit() throws IOException, SQLException,
 			InvalidNodeAuthException {
 		if (!SensNetNodeConfiguration.getInstance().isRootNode()) {
-			SuperCommunicationsManager.getInstance().putJob(
-					new HttpSyncable() {
+			SuperCommunicationsManager.getInstance().putJob(new HttpSyncable() {
 
-						@Override
-						public String getPostData()
-								throws UnsupportedEncodingException {
-							return "&type="
-									+ type
-									+ "&sensor="
-									+ from.getId()
-									+ "&data="
-									+ URLEncoder.encode(Base64.getEncoder()
-											.encodeToString(values), "UTF-8")
-									+ "&lat=" + location.getLat() + "&long="
-									+ location.getLng() + "&battery=" + battery
-									+ "&time=" + time + "&receiver="
-									+ receiverNode.getUid() + "&temperature="
-									+ temperature + "&class=" + sensorClass;
-						}
+				@Override
+				public String getPostData() throws UnsupportedEncodingException {
+					return "&type="
+							+ type
+							+ "&sensor="
+							+ from.getId()
+							+ "&data="
+							+ URLEncoder.encode(Base64.getEncoder()
+									.encodeToString(values), "UTF-8") + "&lat="
+							+ location.getLat() + "&long=" + location.getLng()
+							+ "&battery=" + battery + "&time=" + time
+							+ "&receiver=" + receiverNode.getUid()
+							+ "&temperature=" + temperature + "&class="
+							+ sensorClass;
+				}
 
-						@Override
-						public String getPath() {
-							return DataPointSubmitPage.PATH;
-						}
-					});
+				@Override
+				public String getPath() {
+					return DataPointSubmitPage.PATH;
+				}
+			});
 		}
 		PreparedStatement prep = DatabaseConnection
 				.getInstance()

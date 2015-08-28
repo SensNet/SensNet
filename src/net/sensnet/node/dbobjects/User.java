@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import net.sensnet.node.DatabaseConnection;
 
-
 public class User {
 	private String name;
 	private boolean readOnly;

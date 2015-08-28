@@ -12,7 +12,7 @@ import net.sensnet.node.dbobjects.Sensor;
 
 public class RegisterSensorPage extends APIPage {
 	public static final String PATH = "/api/register/sensor";
-	
+
 	public RegisterSensorPage(String name) {
 		super(name);
 	}

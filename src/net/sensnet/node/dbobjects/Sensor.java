@@ -71,20 +71,18 @@ public class Sensor implements Syncable {
 	public void commit() throws IOException, SQLException,
 			InvalidNodeAuthException {
 		if (!SensNetNodeConfiguration.getInstance().isRootNode()) {
-			SuperCommunicationsManager.getInstance().putJob(
-					new HttpSyncable() {
+			SuperCommunicationsManager.getInstance().putJob(new HttpSyncable() {
 
-						@Override
-						public String getPostData()
-								throws UnsupportedEncodingException {
-							return "&uid=" + id + "&node=" + node.getUid();
-						}
+				@Override
+				public String getPostData() throws UnsupportedEncodingException {
+					return "&uid=" + id + "&node=" + node.getUid();
+				}
 
-						@Override
-						public String getPath() {
-							return RegisterSensorPage.PATH;
-						}
-					});
+				@Override
+				public String getPath() {
+					return RegisterSensorPage.PATH;
+				}
+			});
 		}
 		PreparedStatement prep = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO sensors SET uid=?, node=?");

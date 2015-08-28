@@ -29,36 +29,36 @@ public class AuthUtils {
 		res.close();
 		return u;
 	}
-	
+
 	public static boolean checkUserExistenceDB(String usr) {
 		PreparedStatement s;
 		try {
 			s = DatabaseConnection.getInstance().prepare(
 					"SELECT id FROM users WHERE name=?");
-		s.setString(1, usr);
-		ResultSet res;
-		if (!(res = s.executeQuery()).first()) {
+			s.setString(1, usr);
+			ResultSet res;
+			if (!(res = s.executeQuery()).first()) {
+				res.close();
+				return false;
+			}
 			res.close();
-			return false;
-		}
-		res.close();
-		
-		return true;
-		
+
+			return true;
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			return false;
 		}
 	}
-	
+
 	public static void registerNewUserDB(String usr, String pw)
 			throws SQLException {
 		PreparedStatement s = DatabaseConnection.getInstance().prepare(
 				"INSERT INTO users (name, pw, readonly) VALUES (?, ?,'0')");
 		s.setString(1, usr);
 		s.setString(2, pw);
-        s.executeUpdate();
+		s.executeUpdate();
 	}
 
 	public static User checkUserAgaistSuperNode(String usr, String pw)
