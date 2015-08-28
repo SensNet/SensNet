@@ -2,6 +2,7 @@ package net.sensnet.node.pages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -31,6 +32,8 @@ public class LoginForm extends Form {
 	public boolean submit(PrintWriter out, HttpServletRequest req) {
 		try {
 			String usr = req.getParameter("user");
+			System.out.println(req.getParameter("creatUser"));
+			System.out.println(req.getParameter("creatPw"));
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
 			messageDigest.update(req.getParameter("pw").getBytes());
 			String pw = byteArrayToHexString(messageDigest.digest());
@@ -46,11 +49,55 @@ public class LoginForm extends Form {
 				req.getSession().setAttribute("user", u);
 			}
 			return u != null;
-		} catch (SQLException | NoSuchAlgorithmException | IOException
-				| InvalidNodeAuthException e) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return false;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		} catch (InvalidNodeAuthException e) {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public String register(PrintWriter out, HttpServletRequest req) {
+		try {
+			String usr = req.getParameter("creatUser");
+			//System.out.println(req.getParameter("creatUser"));
+			//System.out.println(req.getParameter("creatPw"));
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+			messageDigest.update(req.getParameter("creatPw").getBytes());
+			String pw = byteArrayToHexString(messageDigest.digest());
+			if (usr == null || usr.trim().isEmpty() || pw == null
+					|| pw.trim().isEmpty()) {
+				return null;
+			}
+			
+			//System.out.println(pw);
+			if (AuthUtils.checkUserExistenceDB(usr)) {
+				return "Username already exists";
+			}
+			
+			else {
+				//System.out.println("do Register");
+				AuthUtils.registerNewUserDB(usr, pw);
+				return "Success! You can now log in.";
+			}
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} 
 	}
 
 	@Override

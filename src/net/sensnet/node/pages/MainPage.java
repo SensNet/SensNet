@@ -35,17 +35,26 @@ public class MainPage extends Page {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp,
 			Map<String, Object> vars) throws IOException {
 		LoginForm lg = Form.getForm(req, LoginForm.class);
-		if (!lg.submit(resp.getWriter(), req)) {
-			resp.getWriter().println("Invalid Login");
+		
+		String registerResponse = lg.register(resp.getWriter(), req);
+		if (registerResponse != null) {
+			resp.getWriter().println(registerResponse);
 			doGet(req, resp, vars);
-		} else {
-			String redir = (String) req.getSession().getAttribute("redirOrig");
-			if (redir == null) {
-				redir = "/";
+		}
+		
+		else {
+			if (!lg.submit(resp.getWriter(), req)) {
+				resp.getWriter().println("Invalid Login");
+				doGet(req, resp, vars);
 			} else {
-				req.getSession().setAttribute("redirOrig", null);
+				String redir = (String) req.getSession().getAttribute("redirOrig");
+				if (redir == null) {
+					redir = "/";
+				} else {
+					req.getSession().setAttribute("redirOrig", null);
+				}
+				resp.sendRedirect(redir);
 			}
-			resp.sendRedirect(redir);
 		}
 	}
 

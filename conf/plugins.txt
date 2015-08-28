@@ -8,8 +8,8 @@
 
 ## === VISUALIZER ===
 net.sensnet.plugins.visualizer.RadioDoseVisualizer
-net.sensnet.plugins.visualizer.GasVisualizer
-net.sensnet.plugins.visualizer.ParticleVisualizer
+#net.sensnet.plugins.visualizer.GasVisualizer
+#net.sensnet.plugins.visualizer.ParticleVisualizer
 
 net.sensnet.plugins.pages.foundation.SensNetWiki
 net.sensnet.plugins.pages.foundation.AboutPagePlugin

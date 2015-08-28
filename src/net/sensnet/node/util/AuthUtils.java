@@ -29,6 +29,35 @@ public class AuthUtils {
 		res.close();
 		return u;
 	}
+	
+	public static boolean checkUserExistenceDB(String usr) {
+		PreparedStatement s;
+		try {
+			s = DatabaseConnection.getInstance().prepare(
+					"SELECT id FROM users WHERE name=?");
+		s.setString(1, usr);
+		ResultSet res;
+		if (!(res = s.executeQuery()).first()) {
+
+		}
+		//System.out.println(res.getInt("id"));
+		res.close();
+		
+		return true;
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static void registerNewUserDB(String usr, String pw)
+			throws SQLException {
+		PreparedStatement s = DatabaseConnection.getInstance().prepare(
+				"INSERT INTO users (name, pw, readonly) VALUES ('" + usr + "','" + pw + "','0')");
+        s.executeUpdate();
+	}
 
 	public static User checkUserAgaistSuperNode(String usr, String pw)
 			throws MalformedURLException, IOException, SQLException,
