@@ -3,14 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="bin-plugins" path="plugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="jetty-http-9.2.1.v20140609.jar"/>
-	<classpathentry kind="lib" path="jetty-io-9.2.1.v20140609.jar"/>
-	<classpathentry kind="lib" path="jetty-security-9.2.1.v20140609.jar"/>
-	<classpathentry kind="lib" path="jetty-server-9.2.1.v20140609.jar"/>
-	<classpathentry kind="lib" path="jetty-servlet-9.2.1.v20140609.jar"/>
-	<classpathentry kind="lib" path="jetty-util-9.2.1.v20140609.jar"/>
-	<classpathentry kind="lib" path="mysql-connector-java-5.1.31-bin.jar"/>
-	<classpathentry kind="lib" path="org.json.jar"/>
-	<classpathentry kind="lib" path="servlet-api-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-http-9.2.1.v20140609.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-io-9.2.1.v20140609.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-security-9.2.1.v20140609.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-server-9.2.1.v20140609.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-servlet-9.2.1.v20140609.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-util-9.2.1.v20140609.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.31-bin.jar"/>
+	<classpathentry kind="lib" path="lib/org.json.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api-3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,3 +5,5 @@
 /bin-plugins/
 /job_cache/
 *.log
+*.log.*
+
