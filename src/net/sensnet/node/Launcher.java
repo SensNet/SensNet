@@ -29,95 +29,99 @@ import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 public class Launcher {
-	public static void main(String[] args) throws Exception {
-		SensNetNodeConfiguration conf;
-		if (args.length != 1) {
-			InputStream ins;
-			File confFile = new File("conf/node.properties");
-			if (confFile.exists()) {
-				ins = new FileInputStream(confFile);
-			} else {
-				ins = Launcher.class.getResourceAsStream("node.properties");
-			}
-			conf = new SensNetNodeConfiguration(ins);
-		} else {
-			conf = new SensNetNodeConfiguration(new FileInputStream(new File(
-					args[0])));
-		}
-		DatabaseConnection.init(conf);
-		Server s = new Server(new InetSocketAddress(conf.getHostName(),
-				conf.getPort()));
-		((QueuedThreadPool) s.getThreadPool()).setMaxThreads(20);
-		ServletContextHandler h = new ServletContextHandler(
-				ServletContextHandler.SESSIONS);
-		h.setInitParameter(SessionManager.__SessionCookieProperty,
-				"Node-Session");
-		h.addServlet(SensNetNode.class, "/*");
-		HandlerList hl = new HandlerList();
-		hl.setHandlers(new Handler[] { generateStaticContext(), h });
-		s.setHandler(hl);
-		s.start();
-		Logger logger = Log.getRootLogger();
-		logger.info("Loading plugins...");
-		try (BufferedReader read = new BufferedReader(new FileReader(new File(
-				"conf/plugins.txt")))) {
-			String line;
-			while ((line = read.readLine()) != null) {
-				if (line.startsWith("#") || line.trim().isEmpty()) {
-					continue;
-				}
-				try {
-					Class<?> forName = Class.forName(line);
-					Constructor<?> c = forName
-							.getConstructor(SensNetNodeConfiguration.class);
-					Object plugin = c.newInstance(SensNetNodeConfiguration
-							.getInstance());
-					if (!(plugin instanceof Plugin)) {
-						throw new InstantiationException("Class not a plugin!");
-					}
-					if (plugin instanceof HardwareInputPlugin) {
-						new Thread((HardwareInputPlugin) plugin).start();
-					} else if (plugin instanceof DataVisualizerPlugin) {
-						DataVisualizerPlugin dvp = (DataVisualizerPlugin) plugin;
-						PageMapping.getInstance().put(
-								"/sensors/" + dvp.getSensorTypeName(),
-								new PluginPage(dvp));
-						PageMapping.getInstance().put(
-								"/api/json/sensors/" + dvp.getSensorTypeName(),
-								dvp.getDatapointJSONApiPage());
-						Menu.getInstance().addSensorsItem(dvp);
-					} else if (plugin instanceof PagePlugin) {
-						PagePlugin pp = (PagePlugin) plugin;
-						PageMapping.getInstance().put("/" + pp.getPathName(),
-								pp.getPage());
-						Menu.getInstance().addPageItem(pp);
-					} else if (plugin instanceof PlainPagePlugin) {
-						PlainPagePlugin pp = (PlainPagePlugin) plugin;
-						PageMapping.getInstance().put("/" + pp.getPath(),
-								pp.getPage());
-						Menu.getInstance().addRawPageItem(pp);
-					}
-					logger.info("Loaded plugin '" + forName.getName() + "'.");
-				} catch (ClassNotFoundException | InstantiationException
-						| IllegalAccessException | NoSuchMethodException
-						| SecurityException | IllegalArgumentException
-						| InvocationTargetException e) {
-					logger.warn("Error loading plugin " + line + ".", e);
-				}
-			}
-		} catch (IOException e) {
-			logger.warn(
-					"No plugins.txt found or couldn't read file! No plugin loaded.",
-					e);
-		}
-		logger.info("Finished plugin loading.");
-	}
+    public static void main(String[] args) throws Exception {
+        Logger logger = Log.getRootLogger();
+        SensNetNodeConfiguration conf;
+        if (args.length != 1) {
+            InputStream ins;
+            File confFile = new File("conf/node.properties");
+            if (confFile.exists()) {
+                ins = new FileInputStream(confFile);
+                logger.info("Using conf/node.properties");
+            } else {
+                ins = Launcher.class.getResourceAsStream("node.properties");
+                logger.info("Using default");
+            }
+            conf = new SensNetNodeConfiguration(ins);
+        } else {
+            conf = new SensNetNodeConfiguration(new FileInputStream(new File(
+                    args[0])));
+            logger.info("Using " + args[0]);
+        }
 
-	private static Handler generateStaticContext() {
-		final ResourceHandler rh = new ResourceHandler();
-		rh.setResourceBase("static/");
-		ContextHandler ch = new ContextHandler("/static");
-		ch.setHandler(rh);
-		return ch;
-	}
+        DatabaseConnection.init(conf);
+        Server s = new Server(new InetSocketAddress(conf.getHostName(),
+                conf.getPort()));
+        ((QueuedThreadPool) s.getThreadPool()).setMaxThreads(20);
+        ServletContextHandler h = new ServletContextHandler(
+                ServletContextHandler.SESSIONS);
+        h.setInitParameter(SessionManager.__SessionCookieProperty,
+                "Node-Session");
+        h.addServlet(SensNetNode.class, "/*");
+        HandlerList hl = new HandlerList();
+        hl.setHandlers(new Handler[] { generateStaticContext(), h });
+        s.setHandler(hl);
+        s.start();
+        logger.info("Loading plugins...");
+        try (BufferedReader read = new BufferedReader(new FileReader(new File(
+                "conf/plugins.txt")))) {
+            String line;
+            while ((line = read.readLine()) != null) {
+                if (line.startsWith("#") || line.trim().isEmpty()) {
+                    continue;
+                }
+                try {
+                    Class<?> forName = Class.forName(line);
+                    Constructor<?> c = forName
+                            .getConstructor(SensNetNodeConfiguration.class);
+                    Object plugin = c.newInstance(SensNetNodeConfiguration
+                            .getInstance());
+                    if (!(plugin instanceof Plugin)) {
+                        throw new InstantiationException("Class not a plugin!");
+                    }
+                    if (plugin instanceof HardwareInputPlugin) {
+                        new Thread((HardwareInputPlugin) plugin).start();
+                    } else if (plugin instanceof DataVisualizerPlugin) {
+                        DataVisualizerPlugin dvp = (DataVisualizerPlugin) plugin;
+                        PageMapping.getInstance().put(
+                                "/sensors/" + dvp.getSensorTypeName(),
+                                new PluginPage(dvp));
+                        PageMapping.getInstance().put(
+                                "/api/json/sensors/" + dvp.getSensorTypeName(),
+                                dvp.getDatapointJSONApiPage());
+                        Menu.getInstance().addSensorsItem(dvp);
+                    } else if (plugin instanceof PagePlugin) {
+                        PagePlugin pp = (PagePlugin) plugin;
+                        PageMapping.getInstance().put("/" + pp.getPathName(),
+                                pp.getPage());
+                        Menu.getInstance().addPageItem(pp);
+                    } else if (plugin instanceof PlainPagePlugin) {
+                        PlainPagePlugin pp = (PlainPagePlugin) plugin;
+                        PageMapping.getInstance().put("/" + pp.getPath(),
+                                pp.getPage());
+                        Menu.getInstance().addRawPageItem(pp);
+                    }
+                    logger.info("Loaded plugin '" + forName.getName() + "'.");
+                } catch (ClassNotFoundException | InstantiationException
+                        | IllegalAccessException | NoSuchMethodException
+                        | SecurityException | IllegalArgumentException
+                        | InvocationTargetException e) {
+                    logger.warn("Error loading plugin " + line + ".", e);
+                }
+            }
+        } catch (IOException e) {
+            logger.warn(
+                    "No plugins.txt found or couldn't read file! No plugin loaded.",
+                    e);
+        }
+        logger.info("Finished plugin loading.");
+    }
+
+    private static Handler generateStaticContext() {
+        final ResourceHandler rh = new ResourceHandler();
+        rh.setResourceBase("static/");
+        ContextHandler ch = new ContextHandler("/static");
+        ch.setHandler(rh);
+        return ch;
+    }
 }
